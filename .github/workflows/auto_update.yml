@@ -2,6 +2,8 @@ name: Auto Update MAS Traditional Chinese
 # Version: 1.0.1 - Triggering re-scan
 
 on:
+  push: # 每次推送代碼時執行
+    branches: [ main ]
   schedule:
     - cron: '0 0 * * *' # 每天凌晨執行一次
   workflow_dispatch: # 支援手動觸發
