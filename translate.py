@@ -204,7 +204,9 @@ def main():
             print(f"{target['name']} 無變動。"); continue
         print(f"正在處理 {target['name']}...")
         result = process_content(content, target['type'], cache)
-        with open(target['output'], "w", encoding="utf-8-sig", newline='') as f: f.write(result)
+        # PS1 建議不帶 BOM，CMD 建議帶 BOM
+        encoding = "utf-8" if target['type'] == "ps1" else "utf-8-sig"
+        with open(target['output'], "w", encoding=encoding, newline='') as f: f.write(result)
         hashes[target['name']] = curr_hash
         updated = True
     if updated:
