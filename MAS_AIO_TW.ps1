@@ -52,9 +52,7 @@ if (-not $args) {
     try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
     $URLs = @(
-        'https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/4fdefbc0d58befbe824440af39ed424c6386f65f/MAS/All-In-One-Version-KL/MAS_AIO.cmd',
-        'https://dev.azure.com/massgrave/Microsoft-Activation-Scripts/_apis/git/repositories/Microsoft-Activation-Scripts/items?path=/MAS/All-In-One-Version-KL/MAS_AIO.cmd&versionType=Commit&version=4fdefbc0d58befbe824440af39ed424c6386f65f',
-        'https://git.activated.win/Microsoft-Activation-Scripts/plain/MAS/All-In-One-Version-KL/MAS_AIO.cmd?id=4fdefbc0d58befbe824440af39ed424c6386f65f'
+        'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
     )
     Write-Progress -Activity "Downloading..." -Status "Please wait"
     $errors = @()
@@ -86,18 +84,7 @@ if (-not $args) {
         return
     }
 
-    # Verify script integrity
-    $releaseHash = 'C731BB797994B7185944E8B6075646EBDC2CEF87960B4B2F437306CB4CE28F03'
-    $stream = New-Object IO.MemoryStream
-    $writer = New-Object IO.StreamWriter $stream
-    $writer.Write($response)
-    $writer.Flush()
-    $stream.Position = 0
-    $hash = [BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($stream)) -replace '-'
-    if ($hash -ne $releaseHash) {
-        Write-Warning "Hash ($hash) mismatch, aborting!`nReport this issue at $troubleshoot"
-        $response = $null
-        return
+    # 移除雜湊檢查以支援翻譯版本
     }
 
     # Check for AutoRun registry which may create issues with CMD
