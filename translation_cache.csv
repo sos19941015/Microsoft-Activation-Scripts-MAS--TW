@@ -1,0 +1,443 @@
+﻿"Null service is not running, script may crash...",空服務未運行，腳本可能崩潰...
+Check this webpage for help - __PH_0__fix_service,檢查此網頁尋求協助 - __PH_0__fix_service
+Error - Script either has LF line ending issue or an empty line at the end of the script is missing.,錯誤 - 腳本存在 LF 行結束問題或腳本結尾缺少空白行。
+Check this webpage for help - __PH_0__troubleshoot,檢查此網頁尋求協助 - __PH_0__ 疑難排解
+Failed to detect __PH_0__ build number.,無法偵測 __PH_0__ 內部版本號。
+__PH_0__ Sandbox detected; activation is not supported.,__PH_0__ 偵測到沙箱；不支援啟動。
+The script cannot run due to missing licensing components. Aborting...,由於缺少許可組件，該腳本無法運行。正在中止...
+Unsupported OS version detected [__PH_0__].,偵測到不受支援的作業系統版本 [__PH_0__]。
+__PH_1__ only supports __PH_0__ Vista/7/8/8.1/10/11 and their Server equivalents.,__PH_1__ 僅支援 __PH_0__ Vista/7/8/8.1/10/11 及其伺服器等效版本。
+__PH_0__ Vista RTM is not supported because Powershell cannot be installed.,__PH_0__ 不支援 Vista RTM，因為無法安裝 Powershell。
+Upgrade to __PH_0__ Vista SP1 or SP2.,升級到 __PH_0__ Vista SP1 或 SP2。
+PowerShell is not installed in your system.,您的系統中未安裝 PowerShell。
+Install PowerShell 2.0 using the following URL.,使用下列 URL 安裝 PowerShell 2.0。
+https://www.catalog.update.microsoft.com/Search.aspx?q=KB968930,https://www.catalog.update.microsoft.com/Search.aspx?q=KB968930
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ && (",“__PH_0__”|查找/i“__PH_1__”__PH_2__ && (
+The script was launched from the temp folder.,該腳本是從臨時資料夾啟動的。
+You are most likely running the script directly from the archive file.,您很可能直接從存檔檔案執行腳本。
+Extract the archive file and launch the script from the extracted folder.,提取存檔檔案並從提取的資料夾中啟動腳本。
+This script needs admin rights.,該腳本需要管理員權限。
+Right click on this script and select 'Run as administrator'.,右鍵單擊該腳本並選擇“以管理員身份運行”。
+Test 1 - __PH_0__,測試 1 - __PH_0__
+Test 2 - __PH_0__,測試 2 - __PH_0__
+FullLanguage mode not found in PowerShell. Aborting...,PowerShell 中找不到 FullLanguage 模式。正在中止...
+If you have applied restrictions on Powershell then undo those changes.,如果您對 Powershell 應用了限制，請撤銷這些變更。
+__PH_0__ Powershell is needed for __PH_1__ but it seems to be replaced with Powershell core. Aborting...,__PH_1__ 需要 __PH_0__ Powershell，但它似乎已被 Powershell 核心取代。正在中止...
+"""__PH_0__""",“__PH_0__”
+"Mal__PH_0__ware found, PowerShell is not working properly.",發現 Mal__PH_0__ware，PowerShell 無法正常運作。
+__PH_0__ Powershell failed to load .NET command. Aborting...,__PH_0__ Powershell 無法載入 .NET 指令。正在中止...
+PowerShell is not working properly. Aborting...,PowerShell 無法正常運作。正在中止...
+Your antivirus software might be blocking the script.,您的防毒軟體可能會封鎖該腳本。
+Installed Antivirus - __PH_0__ Defender for Endpoint,已安裝防毒軟體 - __PH_0__ Defender for Endpoint
+Your version of __PH_1__ [__PH_0__] is outdated.,您的 __PH_1__ [__PH_0__] 版本已過時。
+[1] Get Latest __PH_0__,[1] 取得最新 __PH_0__
+[0] Continue Anyway,[0] 無論如何繼續
+"""__PH_0__"" | find /i ""/__PH_4__""   __PH_1__ && (setlocal & cls & (call :HWIDActivation    __PH_2__ __PH_3__) & endlocal)","“__PH_0__”|查找 /i ""/__PH_4__"" __PH_1__ && (setlocal & cls & (call :HWIDActivation __PH_2__ __PH_3__) & endlocal)"
+"""__PH_0__"" | find /i ""/Z-""     __PH_1__ && (setlocal & cls & (call :TSforgeActivation __PH_2__ __PH_3__) & endlocal)","“__PH_0__”|查找 /i ""/Z-"" __PH_1__ && (setlocal & cls & (call :TSforgeActivation __PH_2__ __PH_3__) & endlocal)"
+"""__PH_0__"" | find /i ""/K-""     __PH_1__ && (setlocal & cls & (call :KMSActivation     __PH_2__ __PH_3__) & endlocal)","“__PH_0__”|查找 /i ""/K-"" __PH_1__ && (setlocal & cls & (call :KMSActivation __PH_2__ __PH_3__) & endlocal)"
+"""__PH_0__"" | find /i ""/Ohook""  __PH_1__ && (setlocal & cls & (call :OhookActivation   __PH_2__ __PH_3__) & endlocal)","“__PH_0__”|查找 /i ""/Ohook"" __PH_1__ && (setlocal & cls & (call :OhookActivation __PH_2__ __PH_3__) & endlocal)"
+"Unable to detect Desktop location, aborting...",無法偵測桌面位置，正在中止...
+__PH_0__[__PH_1____PH_2____PH_3__[__PH_4____PH_5____PH_6__[__PH_7____PH_8____PH_9__[0m,__PH_0__[__PH_1____PH_2____PH_3__[__PH_4____PH_5____PH_6__[__PH_7____PH_8____PH_9__[0m
+$OEM$ folder already exists on the Desktop.,桌面上已存在 $OEM$ 資料夾。
+@echo off,@迴聲關閉
+fltmc ^>nul ^|^| exit /b,fltmc ^>nul ^|^|退出/b
+"call ""%__PH_0__.cmd"" __PH_1__",呼叫“%__PH_0__.cmd”__PH_1__
+cd \,光碟 \
+"^(goto^) 2^>nul ^& ^(if ""%__PH_0__""==""__PH_1__ystemRoot%%\Setup\Scripts\"" rd /s /q ""%__PH_2__""^)","^(轉到^) 2^>nul ^& ^(if ""%__PH_0__""==""__PH_1__ystemRoot%%\Setup\Scripts\"" rd /s /q ""%__PH_2__""^)"
+The script failed to create the $OEM$ folder.,該腳本無法建立 $OEM$ 資料夾。
+__PH_0__ Activation is only supported on __PH_1__ 10/11.,僅 __PH_1__ 10/11 支援 __PH_0__ 啟動。
+__PH_0__ Activation is not supported on __PH_1__ Server.,__PH_1__ 伺服器不支援 __PH_0__ 啟動。
+Initializing...,正在初始化...
+"[__PH_0__\%%#] file is missing, aborting...",[__PH_0__\%%#] 檔案遺失，正在中止...
+>    [1] Activate Anyway [0] __PH_0__ : ,> [1] 無論如何啟動 [0] __PH_0__ :
+[__PH_0__ ^| __PH_1__],[__PH_0__ ^| __PH_1__]
+Evaluation editions cannot be activated outside of their evaluation period.,評估版無法在評估期之外啟動。
+Checking Internet Connection            [Connected__PH_0__],檢查網路連線 [已連線__PH_0__]
+Initiating Diagnostic Tests...,啟動診斷測試...
+[__PH_0__ ^| __PH_1__ ^| SKU:__PH_2__],[__PH_0__ ^| __PH_1__ ^| SKU：__PH_2__]
+This product does not support __PH_0__ activation.,本產品不支援 __PH_0__ 活化。
+Make sure you are using the latest version of the script.,確保您使用的是最新版本的腳本。
+"If you are, then try TSforge activation option from the main menu.",如果是，請嘗試主選單中的 TSforge 啟動選項。
+__PH_0__,__PH_0__
+Required license files not found in __PH_0__\spp\tokens\skus\,在 __PH_0__\spp\tokens\skus\ 中找不到所需的許可證文件
+Changing __PH_0__ Region To USA          [Successful] [Script will change it back],將 __PH_0__ 地區更改為美國 [成功] [腳本會將其改回]
+[__PH_0__],[__PH_0__]
+Generating GenuineTicket.xml            [Successful],產生 GenuineTicket.xml [成功]
+Activating...,啟用設定...
+"""__PH_0__"" | findstr /i ""0x80072e 0x80072f 0x800704cf 0x87e10bcf 0x800705b4"" __PH_1__ && (",“__PH_0__”| findstr /i“0x80072e 0x80072f 0x800704cf 0x87e10bcf 0x800705b4”__PH_1__ && (
+Restoring __PH_0__ Region                [Successful],正在恢復 __PH_0__ 區域 [成功]
+"""__PH_0__ __PH_1__"" | find /i ""ARM64"" __PH_2__ && (if __PH_3__ LSS 21277 set ps32onArm=1)","“__PH_0__ __PH_1__”|查找 /i ""ARM64"" __PH_2__ && （如果 __PH_3__ LSS 21277 設定 ps32onArm=1）"
+Checking OS Info                        [__PH_0__ ^| __PH_1__ ^| __PH_2__],檢查作業系統資訊 [__PH_0__ ^| __PH_1__ ^| __PH_2__]
+__PH_0__ __PH_1__ [Successful],__PH_0__ __PH_1__ [成功]
+"Too many licenses are installed, the script may crash.",安裝太多許可證，腳本可能會崩潰。
+sc start __PH_0__ [Error Code: __PH_1__],sc 開始 __PH_0__ [錯誤代碼：__PH_1__]
+"""__PH_0__"" | find /i ""__PH_2__"" __PH_1__ || (",“__PH_0__”|查找/i“__PH_2__”__PH_1__ || （
+"""__PH_0__"" | findstr ""577 225"" __PH_1__ && (","“__PH_0__”| findstr ""577 225"" __PH_1__ && ("
+"""__PH_0__"" | find /i ""RESEAL"" __PH_1__ && (",“__PH_0__”|查找/i“RESEAL”__PH_1__ && (
+"""__PH_0__"" | find /i ""UNDEPLOYABLE"" __PH_1__ && (",“__PH_0__”|查找/i“無法部署”__PH_1__ && (
+"__PH_0__ | findstr /i ""ClipSVC sppsvc"" __PH_1__ && (","__PH_0__ | findstr /i ""ClipSVC sppsvc"" __PH_1__ && ("
+A registry fix has been applied to enable the disabled service.,已應用註冊表修復來啟用已停用的服務。
+"__PH_0__ | findstr /i ""__PH_1__"" __PH_2__ && (","__PH_0__ | findstr /i ""__PH_1__"" __PH_2__ && ("
+"""__PH_0__"" | findstr /i ""0x800410 0x800440 0x80131501"" __PH_1__ && set wmifailed=1& ::  https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-error-constants",“__PH_0__”| findstr /i“0x800410 0x800440 0x80131501”__PH_1__ && 設定 wmifailed=1& :: https://learn.microsoft.com/en-us/windows/win32/werrd-wmi
+"""__PH_0__"" | find /i ""Error Found"" __PH_1__ && (",“__PH_0__”|查找/i“發現錯誤”__PH_1__ && (
+Checking WPA Registry Count             [__PH_0__],檢查 WPA 註冊表計數 [__PH_0__]
+Checking Eval WLMS Service              [Found],檢查 Eval WLMS 服務 [已找到]
+"__PH_0__ | find /i ""PerfOptions"" __PH_1__ && (",__PH_0__ |尋找/i「效能選項」__PH_1__ && (
+Checking SPP In IFEO                    [__PH_0__],在 IFEO [__PH_0__] 中檢查 SPP
+"__PH_0__ | find /i ""Ready"" __PH_1__ || (",__PH_0__ |查找/i「就緒」__PH_1__ || （
+"""__PH_0__"" | findstr /i ""Removed Not Found"" __PH_1__ && (",“__PH_0__”| findstr /i“找不到已刪除”__PH_1__ && (
+__PH_0__[__PH_1____PH_2____PH_3__[0m,__PH_0__[__PH_1____PH_2____PH_3__[0米
+__PH_0__[__PH_1____PH_2____PH_3__[__PH_4____PH_5____PH_6__[0m,__PH_0__[__PH_1____PH_2____PH_3__[__PH_4____PH_5____PH_6__[0米
+"""__PH_0__ __PH_1__"" | find /i ""__PH_2__"" __PH_3__ && (",“__PH_0__ __PH_1__”|查找/i“__PH_2__”__PH_3__ && (
+[1] Install Ohook __PH_0__ Activation,[1]安裝Ohook __PH_0__激活
+[2] Uninstall Ohook,[2]卸載Ohook
+[3] Download __PH_0__,[3] 下載__PH_0__
+[0] __PH_0__,[0] __PH_0__
+"[__PH_0__\__PH_1__] file is missing, aborting...",[__PH_0__\__PH_1__] 檔案遺失，正在中止...
+You only have the __PH_0__ Dashboard app installed; you need to install the full version of __PH_1__.,您只安裝了 __PH_0__ 儀表板應用程式；您需要安裝完整版本的 __PH_1__。
+"""__PH_0__"" | find /i ""Wow6432Node"" __PH_1__ && (set _tok=10) || (set _tok=9)",“__PH_0__”|查找/i“Wow6432Node”__PH_1__ &&（設定_tok = 10）|| （設定_tok = 9）
+"""__PH_0__"" | find /i "" __PH_1__ "" __PH_2__ || (set ""_oIds= __PH_3__ __PH_4__ "")",“__PH_0__”|查找/i“__PH_1__”__PH_2__ || （設定“_oIds= __PH_3__ __PH_4__ ”）
+Activating __PH_2__...                    [C2R ^| __PH_0__ ^| __PH_1__],正在啟動 __PH_2__... [C2R ^| __PH_0__ ^| __PH_1__]
+"""__PH_0__"" | find /i ""Wow6432Node"" __PH_1__ && (set _tok=9) || (set _tok=8)",“__PH_0__”|查找/i“Wow6432Node”__PH_1__ &&（設定_tok = 9）|| （設定_tok=8）
+Activating __PH_3__...                    [C2R ^| __PH_0__ __PH_1__^| __PH_2__],正在啟動 __PH_3__... [C2R ^| __PH_0__ __PH_1__^| __PH_2__]
+"""__PH_0__"" | find /i ""Volume"" __PH_1__ && (",“__PH_0__”|找出/i“音量”__PH_1__ && (
+Adding a Registry to Prevent Banner     [Successful],新增註冊表以防止橫幅[成功]
+Help: __PH_0__troubleshoot,幫助：__PH_0__疑難排解
+Uninstalling Ohook activation...,正在卸載 Ohook 啟動...
+Deleting - Registry keys for skipping license check,刪除 - 用於跳過許可證檢查的註冊表項
+Deleting - Registry keys for preventing non-genuine banner,刪除 - 登錄項目以防止非正版橫幅
+Ohook activation is not installed.,未安裝 Ohook 啟動。
+"__PH_0__ | find /i ""Volume"" __PH_1__ || exit /b",__PH_0__ |尋找/i「音量」__PH_1__ ||退出/b
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ && exit /b",“__PH_0__”|查找/i“__PH_1__”__PH_2__ && 退出/b
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ || (",“__PH_0__”|查找/i“__PH_1__”__PH_2__ || （
+"Symlinking System's sppc.dll            [""__PH_0__\sppcs.dll""] [Successful]","符號連結系統的 sppc.dll [""__PH_0__\sppcs.dll""] [成功]"
+"Copying Custom __PH_0__ to            [""__PH_1__\sppc.dll""] [Successful]","正在將自訂 __PH_0__ 複製到 [""__PH_1__\sppc.dll""] [成功]"
+"Extracting Custom __PH_0__ to         [""__PH_1__\sppc.dll""] [Successful]","將自訂 __PH_0__ 提取到 [""__PH_1__\sppc.dll""] [成功]"
+"Symlinking Renamed sppcs.dll            [""__PH_0__\sppcs.dll""]","符號連結重新命名 sppcs.dll [""__PH_0__\sppcs.dll""]"
+Modifying Hash of Custom sppcs.dll      [Successful],修改自訂 sppcs.dll 的雜湊值[成功]
+"%%# | find /i ""2024"" __PH_0__ && (","%%# |查找 /i ""2024"" __PH_0__ && ("
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ || call :oh_installlic",“__PH_0__”|查找/i“__PH_1__”__PH_2__ ||致電：oh_installlic
+"__PH_0__ | find /i ""Retail"" __PH_1__ && (",__PH_0__ |查找 /i「零售」__PH_1__ && (
+"Adding SharedComputerLicensing Reg      [Successful] [Needed on Server With Retail __PH_0__]""",新增 SharedComputerLicensing 註冊 [成功] [零售 __PH_0__ 的伺服器上需要]”
+"""%2"" | find /i ""Wow6432Node"" __PH_0__ && set _oArch=x86",“%2”|查找/i“Wow6432Node”__PH_0__ && 設定_oArch=x86
+Activating __PH_2__...                    [MSI ^| __PH_0__ ^| __PH_1__],啟動 __PH_2__... [MSI ^| __PH_0__ ^| __PH_1__]
+"Checking Installed Products             [SingleImage product found, Professional Retail key will be used for activation]",檢查已安裝的產品 [找到 SingleImage 產品，專業零售金鑰將用於啟動]
+Clearing __PH_1__ License Blocks          [Successfully cleared from all __PH_0__ user accounts],清除 __PH_1__ 許可證區塊 [已成功從所有 __PH_0__ 使用者帳戶清除]
+Adding Registry to Skip License Check   [Successfully added to all __PH_0__ ^& future new user accounts],新增註冊表以跳過許可證檢查 [已成功新增至所有 __PH_0__ ^& 未來的新使用者帳戶]
+"""__PH_0__"" | find /i ""%%#"" __PH_1__ || (",“__PH_0__”|查找/i“%%#”__PH_1__ || （
+"__PH_0__ | find /i ""-__PH_1__-"" __PH_2__ && (if defined checknames (set ""checknames=__PH_3__ __PH_4__"") else (set ""checknames=__PH_5__""))","__PH_0__ | find /i ""-__PH_1__-"" __PH_2__ && (如果定義了檢查名稱 (設定 ""checknames=__PH_3__ __PH_4__"") else (設定 ""checknames=__PH_5__""))"
+"""__PH_0__"" | find /i ""/Z-ID-""  >nul && (set _actman=1& set ""filtsids=__PH_1__"" & call set ""filtsids=__PH_2__iltsids:~6%%"" & if defined filtsids call set tsids=__PH_3__iltsids%% __PH_4__sids%%)","“__PH_0__”| find /i ""/Z-ID-"" >nul && (set _actman=1& set ""filtsids=__PH_1__"" & call set ""filtsids=__PH_2__iltsids:~6%%"" & 如果定義了 filts_s __%_siids 則呼叫 setPHid%"" & 如果定義了 PHts_%s __%_si%)%__%) 則調用 %_si%)%__%) 則調用 %_si%)%__%) 則調用 %_si%)%__%) 則調用 %_si%) 則調用 %_si%) 則調用"
+Install it using the following URL.,使用以下 URL 安裝它。
+https://www.microsoft.com/en-us/download/details.aspx?id=25150,https://www.microsoft.com/en-us/download/details.aspx?id=25150
+[1] Activate - __PH_0__,[1] 啟動 - __PH_0__
+[2] Activate - ESU,[2] 激活-ESU
+[3] Activate - __PH_0__ [All],[3] 啟動 - __PH_0__ [全部]
+[4] Activate - __PH_0__ [Project/Visio],[4] 啟動 - __PH_0__ [項目/Visio]
+[5] Activate - All,[5] 啟動 - 全部
+Advanced Options:,進階選項：
+[A] Activate - __PH_1__ __PH_0__ Host,[A] 啟動 - __PH_1__ __PH_0__ 主機
+[B] Activate - __PH_1__ __PH_0__ Host,[B] 啟動 - __PH_1__ __PH_0__ 主機
+[C] Activate - __PH_0__ 8/8.1 APPX Sideloading,[C] 啟動 - __PH_0__ 8/8.1 APPX 側載
+[D] Activate - Manually Select Products,[D] 啟動 - 手動選擇產品
+[E] Reset    - Rearm/Timers,[E] 重置 - 重新裝備/計時器
+[E] Reset    - Rearm/Timers/Tamper/Lock,[E] 重設 - 重新裝備/計時器/篡改/鎖定
+[F] Change   - Activation Method [__PH_0__],[F] 更改 - 啟動方法 [__PH_0__]
+[6] Remove TSforge Activation,[6] 刪除 TSforge 激活
+[7] Download __PH_0__,[7] 下載__PH_0__
+Builds ^>= 26100 - StaticCID (KMS4k if offline),建置 ^>= 26100 - StaticCID（KMS4k，如果離線）
+Builds ^<  26100 - ZeroCID,建構 ^< 26100 - ZeroCID
+[2] StaticCID,[2] 靜態CID
+Needs Internet,需要網路
+Not for __PH_0__ 7 or older,不適用於 __PH_0__ 7 歲或以上
+[3] ZeroCID,[3] 零碼識別
+Works reliably on builds below 26100,在低於 26100 的版本上可靠工作
+Does not work on builds above 26100.4188,不適用於 26100.4188 以上的版本
+[4] KMS4k,[4] KMS4k
+Volume licenses only,僅批量許可
+Activates for 4000+ years,激活4000多年
+[5] Learn More,[5] 了解更多
+Install .NET Framework 4.8 and __PH_0__ Management Framework 5.1,安裝 .NET Framework 4.8 和 __PH_0__ Management Framework 5.1
+"Evaluation WLMS service is running, __PH_0__ service can not be stopped. Aborting...",評估 WLMS 服務正在運行，__PH_0__ 服務無法停止。正在中止...
+Install Non-Eval version for __PH_1__ build __PH_0__.,安裝 __PH_1__ 版本 __PH_0__ 的非評估版本。
+StaticCID method is supported only on __PH_0__ 8 and later.,StaticCID 方法僅在 __PH_0__ 8 及更高版本上支援。
+Clearing __PH_0__ Cache                      [Successful],清除 __PH_0__ 快取[成功]
+Processing __PH_0__...,正在處理 __PH_0__...
+"__PH_0__ | find /i ""Eval"" __PH_1__ && (",__PH_0__ |查找/i「評估」__PH_1__ && (
+"""__PH_0__"" | findstr /r "".*-.*-.*-.*-.*"" __PH_1__ && (set tsids=__PH_2__ __PH_3__& set tempid=__PH_4__)","“__PH_0__”| findstr /r "".*-.*-.*-.*-.*"" __PH_1__ && (設定 tsids=__PH_2__ __PH_3__& 設定 tempid=__PH_4__)"
+Checking Activation ID                  [__PH_0__] [__PH_1__],檢查啟動 ID [__PH_0__] [__PH_1__]
+Resetting Rearm / GracePeriod           [Successful],重置重新裝備/寬限期[成功]
+Processing __PH_0__ ESU...,正在處理 __PH_0__ ESU...
+"""__PH_0__"" | find /i ""-__PH_1____PH_2__-"" __PH_3__ && (","“__PH_0__”|查找 /i ""-__PH_1____PH_2__-"" __PH_3__ && ("
+"""__PH_0__"" | find /i ""4220f546-f522-46df-8202-4d07afd26454"" __PH_1__ && (",“__PH_0__”|查找/i“4220f546-f522-46df-8202-4d07afd26454”__PH_1__ && (
+"""__PH_0__"" | find /i ""7e94be23-b161-4956-a682-146ab291774c"" __PH_1__ || (",“__PH_0__”|查找/i“7e94be23-b161-4956-a682-146ab291774c”__PH_1__ || （
+"""__PH_0__"" | findstr /i ""Access Excel OneNote Outlook PowerPoint Publisher SkypeForBusiness Word"" __PH_1__ && set ""_oIds=O365HomePremRetail""",“__PH_0__”| findstr /i“訪問 Excel OneNote Outlook PowerPoint Publisher SkypeForBusiness Word”__PH_1__ && 設定“_oIds=O365HomePremRetail”
+"""__PH_0__"" | findstr /i ""%%#"" __PH_1__ && (","“__PH_0__”| findstr /i ""%%#"" __PH_1__ && ("
+Processing __PH_1__...                    [UWP ^| __PH_0__],正在處理 __PH_1__... [UWP ^| __PH_0__]
+Processing __PH_2__...                    [C2R ^| __PH_0__ ^| __PH_1__],正在處理 __PH_2__... [C2R ^| __PH_0__ ^| __PH_1__]
+Processing __PH_3__...                    [C2R ^| __PH_0__ __PH_1__^| __PH_2__],正在處理 __PH_3__... [C2R ^| __PH_0__ __PH_1__^| __PH_2__]
+Processing __PH_1__ __PH_0__ Host...,正在處理 __PH_1__ __PH_0__ 主機...
+> [0] Go back  [F] Continue : ,> [0] 返回 [F] 繼續 :
+"""__PH_0__"" | find /i ""-__PH_1__-"" __PH_2__ && (","“__PH_0__”|查找 /i ""-__PH_1__-"" __PH_2__ && ("
+Processing __PH_0__ 8/8.1 APPX Sideloading...,處理 __PH_0__ 8/8.1 APPX 側載...
+Processing Reset of Rearm / Timers...,正在處理重裝/定時器重置...
+Processing Reset of Rearm / Timers / Tamper / Lock...,正在處理重新裝備/計時器/篡改/鎖定的重置...
+Processing Manual Activation...,正在處理手動啟動...
+Fetching Supported Activation IDs list. Please wait...,正在取得支援的啟動 ID 清單。請稍等...
+Add space after each Activation ID if you are adding multiple:,如果要新增多個啟動 ID，請在每個啟動 ID 後新增空格：
+"""__PH_0__"" | find /i "" %%# "" __PH_1__ || (",“__PH_0__”|查找/i“%%#”__PH_1__ || （
+Writing TrustedStore data...,寫入 TrustedStore 資料...
+"""__PH_0__"" | find /i ""7e94be23-b161-4956-a682-146ab291774c"" __PH_1__ && (",“__PH_0__”|查找/i“7e94be23-b161-4956-a682-146ab291774c”__PH_1__ && (
+"""__PH_0__"" | findstr /i ""4afc620f-12a4-48ad-8015-2aebfbd6e47c 11be7019-a309-4763-9a09-091d1722ffe3"" __PH_1__ && (",“__PH_0__”| findstr /i“4afc620f-12a4-48ad-8015-2aebfbd6e47c 11be7019-a309-4763-9a09-091d1722ffe3”____PH_1 && (& (
+"""__PH_0__"" | findstr /i ""83d49986-add3-41d7-ba33-87c7bfb5c0fb 0b533b5e-08b6-44f9-b885-c2de291ba456"" __PH_1__ && (",“__PH_0__”| findstr /i“83d49986-add3-41d7-ba33-87c7bfb5c0fb 0b533b5e-08b6-44f9-b885-c2de291ba456”__PH_1__ && (
+TSforge activation doesn't modify any __PH_0__ components and doesn't install any new files.,TSforge 啟動不會修改任何 __PH_0__ 元件，也不會安裝任何新檔案。
+"Instead, it appends data to one of data files used by Software Protection Platform.",相反，它將資料附加到 Software Protection Platform 使用的資料檔案之一。
+"%%# | findstr /i ""Project Visio"" __PH_0__ || (",%%# | findstr /i「Visio 專案」__PH_0__ || （
+"%%# | findstr /i ""Project Visio"" __PH_0__ && (",%%# | findstr /i「Visio 專案」__PH_0__ && (
+Skipping Because Mondo Is Available     [%%#],跳過，因為 Mondo 可用 [%%#]
+Converting Unsupported O365 __PH_0__      [%%# To MondoRetail],轉換不受支援的 O365 __PH_0__ [%%# 至 MondoRetail]
+"%%# | findstr /i ""ARM"" __PH_0__ && (",%%# | findstr /i“ARM”__PH_0__ && (
+Converting Unsupported OEM-ARM __PH_0__   [%%# To MondoRetail],正在將不受支援的 OEM-ARM __PH_0__ [%%# 轉換為 MondoRetail]
+Converting Retail To Volume             [%%# To __PH_0__],將零售量轉換為銷售量 [%%# 至 __PH_0__]
+Converting Retail To Volume             [%%# To __PH_0__] [Using Mondo because %%# is not found in the script],將 Retail 轉換為 Volume [%%# 至 __PH_0__] [使用 Mondo，因為在腳本中找不到 %%#]
+"%%# | find /i ""O365"" __PH_0__ && (",%%# |查找/i「O365」__PH_0__ && (
+"__PH_0__ | find /i ""Retail"" __PH_1__ && (set keytype=zero) || (set keytype=ks)",__PH_0__ |查找/i「零售」__PH_1__ &&（設定密鑰類型=零）|| （設定密鑰類型=ks）
+"""__PH_0__"" | findstr /r "".*-.*-.*-.*-.*"" __PH_1__ && (set tsids=__PH_2__ __PH_3__& set _actid=__PH_4__)","“__PH_0__”| findstr /r "".*-.*-.*-.*-.*"" __PH_1__ && (設定 tsids=__PH_2__ __PH_3__& 設定 _actid=__PH_4__)"
+Processing __PH_2__...                    [MSI ^| __PH_0__ ^| __PH_1__],正在處理 __PH_2__... [MSI ^| __PH_0__ ^| __PH_1__]
+"""__PH_0__"" | find /i "" __PH_1__ "" __PH_2__ && set tsedition=__PH_3__","“__PH_0__”|查找 /i "" __PH_1__ "" __PH_2__ && 設定 tsedition=__PH_3__"
+"""__PH_0__"" | find /i ""/K-Port-""   >nul && (set ""_port=__PH_1__""   & call set ""_port=__PH_2__port:~8%%"")","“__PH_0__”| find /i ""/K-Port-"" >nul && (set ""_port=__PH_1__"" & call set ""_port=__PH_2__port:~8%%"")"
+"""__PH_0__"" | find /i ""/K-Server-"" >nul && (set ""_server=__PH_1__"" & call set ""_server=__PH_2__server:~10%%"")","“__PH_0__”| find /i ""/K-Server-"" >nul && (set ""_server=__PH_1__"" & call set ""_server=__PH_2__server:~10%%"")"
+[2] Activate - __PH_0__ [All],[2] 啟動 - __PH_0__ [全部]
+[3] Activate - __PH_0__ [Project/Visio],[3] 啟動 - __PH_0__ [項目/Visio]
+[4] Activate - All,[4] 啟動 - 全部
+[5] Renewal Task With Activation       [Yes],[5] 啟動更新任務[是]
+[6] Change Edition If Needed           [Yes],[6] 如果需要更改版本 [是]
+[7] Uninstall Online __PH_0__,[7] 線上卸載__PH_0__
+[8] Set __PH_0__ Server/Port [__PH_1__] [__PH_2__],[8] 設定 __PH_0__ 伺服器/連接埠 [__PH_1__] [__PH_2__]
+[8] Set __PH_0__ Server/Port,[8] 設定 __PH_0__ 伺服器/連接埠
+[9] Download __PH_0__,[9] 下載__PH_0__
+Turn off __PH_0__ AVS Validation             [Successful],關閉 __PH_0__ AVS 驗證 [成功]
+Activating Volume Products...,啟動批量產品...
+No installed Volume __PH_0__ / __PH_1__ products found.,未找到已安裝的磁碟區 __PH_0__ / __PH_1__ 產品。
+Keeping the non-existent IP address 10.0.0.10 as __PH_0__ Server.,保留不存在的 IP 位址 10.0.0.10 作為 __PH_0__ 伺服器。
+Cleared __PH_0__ Server from the registry.,從登錄中清除了 __PH_0__ 伺服器。
+"Enter / Paste the __PH_0__ Server address, or just press Enter to return:",輸入/貼上 __PH_0__ 伺服器位址，或直接按 Enter 鍵返回：
+"Enter / Paste the __PH_0__ Port address, or just press Enter to use default:",輸入/貼上 __PH_0__ 連接埠位址，或只需按 Enter 鍵即可使用預設值：
+Converting Retail To Volume             [__PH_0__ To __PH_1__],將零售量轉換為銷售量 [__PH_0__ 至 __PH_1__]
+"To make sure __PH_0__ programs do not show a non-genuine banner,",為了確保 __PH_0__ 程式不會顯示非正版橫幅，
+"please run the activation option once, and don't uninstall afterward.",請運行一次啟動選項，之後不要卸載。
+Failed to completely clear __PH_0__ Cache.,無法完全清除 __PH_0__ 快取。
+Cleared __PH_0__ Cache successfully.,成功清除 __PH_0__ 快取。
+Try Again / Restart the System,重試/重新啟動系統
+Deleting [Task] Activation-Renewal,刪除【任務】啟動-續訂
+Deleting [Task] Activation-Run_Once,刪除[任務] Activation-Run_Once
+Deleting [Folder] __PH_0__\Activation-Renewal\,正在刪除[資料夾] __PH_0__\啟動-續訂\
+====== Error ======,======錯誤======
+This file is supposed to be run only by the scheduled task.,該文件應該僅由計劃任務運行。
+Press any key to exit,按任意鍵退出
+"__PH_0__, __PH_1__",__PH_0__、__PH_1__
+Error: Internet is not connected,錯誤：網際網路未連接
+Waiting 30 seconds,等待30秒
+Error: Not Respoding- __PH_0__,錯誤：未回應 - __PH_0__
+Renewing K-M-S activation for all installed Volume products,為所有已安裝的批量產品續訂 K-M-S 激活
+No installed Volume __PH_0__ / __PH_1__ product found,未找到已安裝的磁碟區 __PH_0__ / __PH_1__ 產品
+Renewing K-M-S server,更新 K-M-S 伺服器
+Deleting Scheduled Task Activation-Run_Once,刪除定時任務啟動-Run_Once
+Exiting,退出
+__PH_0__ is already activated with __PH_1__.,__PH_0__ 已透過 __PH_1__ 啟動。
+__PH_0__ activation failed due to restricted or no Internet.,由於互聯網受限或無互聯網，__PH_0__ 啟動失敗。
+__PH_0__ cannot be __PH_1__-activated on this computer due to unqualified OEM BIOS [0xC004F035].,由於 OEM BIOS [0xC004F035] 不合格，因此無法在此電腦上啟動 __PH_0__ __PH_1__。
+__PH_0__ activation failed due to Internet issue [0xC004F074].,由於 Internet 問題 [0xC004F074]，__PH_0__ 啟動失敗。
+"__PH_0__ activation succeeded, but Remaining Period failed to increase.",__PH_0__ 活化成功，但剩餘期限未能增加。
+__PH_0__ is successfully activated for __PH_1__ days.,__PH_0__ 已成功啟動 __PH_1__ 天。
+__PH_0__ has failed to activate [0x!=ExitCode!]. Remaining Period: __PH_1__ days [__PH_2__ minutes].,__PH_0__ 未能啟動 [0x!=ExitCode!]。剩餘期限：__PH_1__ 天 [__PH_2__ 分鐘]。
+Checking: Volume version of __PH_0__ is not installed,檢查：未安裝 __PH_0__ 的批次版本
+Renewal Task for lifetime activation is successfully installed in __PH_0__,用於終身啟動的續訂任務已成功安裝在 __PH_0__ 中
+The use of this script is to renew your __PH_0__/__PH_1__ license using online K-M-S.,使用此腳本的目的是使用線上 K-M-S 續訂您的 __PH_0__/__PH_1__ 授權。
+"If renewal/activation Scheduled tasks were created then following would exist,",如果建立了續訂/啟動規劃任務，則將存在以下內容，
+- Scheduled tasks,- 規劃任務
+Activation-Renewal    [Renewal / Weekly],啟用-續訂[續訂/每週]
+Activation-Run_Once   [Activation Task - deletes itself once activated],Activation-Run_Once [啟動任務 - 一旦啟動就會刪除自身]
+The scheduled tasks runs only if the system is connected to the Internet.,只有當系統連接到 Internet 時，排程任務才會運作。
+- Files,- 文件
+C:\Program Files\Activation-Renewal\Activation_task.cmd,C:\Program Files\Activation-Renewal\Activation_task.cmd
+C:\Program Files\Activation-Renewal\Info.txt,C:\Program Files\Activation-Renewal\Info.txt
+C:\Program Files\Activation-Renewal\Logs.txt,C:\Program Files\Activation-Renewal\Logs.txt
+This Script is a part of __PH_0__ project.,該腳本是 __PH_0__ 項目的一部分。
+Homepage: mass__PH_0__grave__PH_1__.dev,首頁：mass__PH_0__grave__PH_1__.dev
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ && set key=__PH_3__",“__PH_0__”|查找/i“__PH_1__”__PH_2__ && 設定鍵=__PH_3__
+"""__PH_0__"" | findstr /I ""\<%2.*"" __PH_1__ && set foundprod=1","“__PH_0__”| findstr /I ""\<%2.*"" __PH_1__ && 設定 findprod=1"
+Unsupported OS version detected.,偵測到不支援的作業系統版本。
+This command only works on __PH_0__ 8/8.1/10/11 and their Server equivalents.,此指令僅適用於 __PH_0__ 8/8.1/10/11 及其等效伺服器。
+Checking Internet Connection  [Connected],檢查網路連線 [已連線]
+DISM uses __PH_0__ Update to provide replacement files required to fix corruption.,DISM 使用 __PH_0__ 更新來提供修復損壞所需的替換檔案。
+This will take 5-15 minutes or more..,這將需要 5-15 分鐘或更長時間。
+Notes:,筆記：
+>    [9] Continue [0] Go back : ,> [9] 繼續 [0] 回傳 :
+Applying the command...,應用指令...
+dism /english /online /cleanup-image /restorehealth,dism /英文 /線上 /cleanup-image /restorehealth
+SFC will repair missing or corrupted system files.,SFC 將修復遺失或損壞的系統檔案。
+It is recommended you run the DISM option first before this one.,建議您在此之前先執行 DISM 選項。
+This will take 10-15 minutes or more..,這將需要 10-15 分鐘或更長時間。
+"If SFC could not fix something, then run the command again to see if it may be able ",如果 SFC 無法修復某些問題，請再次執行該命令以查看是否可以
+to the next time. Sometimes it may take running the sfc /scannow command 3 times,到下一次。有時可能需要執行 sfc /scannow 指令 3 次
+restarting the PC after each time to completely fix everything that it's able to.,每次之後重新啟動電腦以徹底修復它能夠修復的所有問題。
+sfc /scannow,證監會/scannow
+This option is not supported on __PH_0__ Vista SP1.,__PH_0__ Vista SP1 不支援此選項。
+Upgrade to __PH_0__ Vista SP2.,升級到 __PH_0__ Vista SP2。
+- This option helps in troubleshooting activation issues.,- 此選項有助於解決啟動問題。
+- This option will:,- 此選項將：
+"- Deactivate __PH_0__ and __PH_1__, you may need to reactivate.",- 停用 __PH_0__ 和 __PH_1__，您可能需要重新啟用。
+If __PH_0__ is activated with motherboard / OEM / Digital license,如果 __PH_0__ 透過主機板/OEM/數位許可證激活
+then __PH_0__ will activate itself again.,然後 __PH_0__ 將再次啟動自身。
+"- Clear ClipSVC, SPP and OSPP licenses.",- 清除 ClipSVC、SPP 和 OSPP 授權。
+- Fix permissions of SPP tokens folder and registries.,- 修復 SPP 令牌資料夾和註冊表的權限。
+- Trigger the repair option for __PH_0__.,- 觸發 __PH_0__ 的修復選項。
+ClipSVC license rebuilding is supported only on __PH_0__ 10/11.,僅 __PH_0__ 10/11 支援 ClipSVC 許可證重建。
+Skipping...,跳過...
+__PH_0__ is permanently activated.,__PH_0__ 已永久啟動。
+__PH_0__ activation key is not installed.,__PH_0__ 啟動密鑰未安裝。
+Internet is not connected.,網路未連線。
+Failed to connect to licensing servers.,無法連線到許可伺服器。
+Stopping ClipSVC service...,正在停止 ClipSVC 服務...
+Applying the command to clean ClipSVC Licenses...,正在應用命令來清理 ClipSVC 許可證...
+"rundll32 clipc.dll,ClipCleanUpState","rundll32 Clipc.dll,ClipCleanUpState"
+[Successful],[成功的]
+Deleting a Volatile ^& Protected Registry Key...,正在刪除易失性 ^& 受保護的註冊表項...
+"Reboot your machine using the restart option, that will delete this registry key automatically.",使用重新啟動選項重新啟動計算機，這將自動刪除此註冊表項。
+Deleting IdentityCRL Registry Key...,正在刪除 IdentityCRL 註冊表項...
+Deleting folder __PH_0__\__PH_1__\__PH_2__\ClipSVC\,正在刪除資料夾 __PH_0__\__PH_1__\__PH_2__\ClipSVC\
+Rebuilding the __PH_0__\__PH_1__\__PH_2__\ClipSVC\ folder...,重建 __PH_0__\__PH_1__\__PH_2__\ClipSVC\ 資料夾...
+Restarting wlidsvc ^& LicenseManager services...,正在重新啟動 wlidsvc ^& LicenseManager 服務...
+Clearing __PH_0__ Cache...,正在清除 __PH_0__ 快取...
+Removing __PH_0__ protection...,正在刪除 __PH_0__ 保護...
+Successfully removed __PH_0__ protection.,已成功刪除 __PH_0__ 保護。
+Successfully cleared __PH_0__ Cache.,已成功清除 __PH_0__ 快取。
+tokens.dat file: [__PH_0__],tokens.dat 檔案：[__PH_0__]
+Checking SPP permission related issues...,檢查 SPP 權限相關問題...
+[No Error Found],[未發現錯誤]
+Stopping __PH_0__ service...,正在停止 __PH_0__ 服務...
+Removing SPP IFEO registry keys...,正在刪除 SPP IFEO 註冊表項...
+Checking Update KB971033...,正在檢查更新 KB971033...
+"Found, uninstalling it...",找到了，正在卸載...
+[Not Found],[未找到]
+Cleaning some licensing-related registry keys...,清理一些與許可證相關的註冊表項...
+Reinstalling system licenses...,正在重新安裝系統授權...
+tokens.dat file was rebuilt successfully.,tokens.dat 檔案已成功重建。
+OSPP-based __PH_0__ is not installed.,未安裝基於 OSPP 的 __PH_0__。
+Skipping rebuilding OSPP tokens...,正在跳過重建 OSPP 令牌...
+Stopping osppsvc service...,正在停止 osppsvc 服務...
+Starting osppsvc service to generate tokens.dat...,正在啟動 osppsvc 服務以產生 tokens.dat...
+Checking installed __PH_0__ versions...,Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.
+Multiple __PH_0__ versions found.,找到多個 __PH_0__ 版本。
+It is recommended to only install one version of __PH_0__.,建議僅安裝 __PH_0__ 的一個版本。
+__PH_0__ ^(2010 and later^) is not installed.,__PH_0__ ^（2010 年及更高版本^）未安裝。
+Skipping repair for __PH_0__ 16.0 UWP... ,正在跳過 __PH_0__ 16.0 UWP 的修復...
+Skipping repair for __PH_0__ 14.0 C2R...,正在跳過 __PH_0__ 14.0 C2R 的修復...
+"Rebuilding WMI is not recommended on __PH_0__ Server, aborting...",不建議在 __PH_0__ 伺服器上重建 WMI，正在中止...
+Checking WMI,檢查WMI
+[Working],[在職的]
+"No need to apply this option, aborting...",無需套用此選項，中止...
+"Winmgmt service is corrupted, aborting...",Winmgmt 服務已損壞，正在中止...
+Disabling Winmgmt service,禁用 Winmgmt 服務
+Stopping Winmgmt service,停止 Winmgmt 服務
+> [1] Restart  [2] Revert Back Changes :,> [1] 重新啟動 [2] 恢復變更：
+Restarting...,正在重新啟動...
+Deleting WMI repository,刪除 WMI 儲存庫
+Enabling Winmgmt service,啟用 Winmgmt 服務
+"Registering .dll's and Compiling .mof's, .mfl's",註冊 .dll 並編譯 .mof、.mfl
+Run [Dism RestoreHealth] and [SFC Scannow] options and make sure there are no errors.,運行 [Dism RestoreHealth] 和 [SFC Scannow] 選項並確保沒有錯誤。
+"""0x%=ExitCode%"" | findstr /i ""0x800410 0x800440 0x80131501"" __PH_0__",“0x%=退出代碼%”| findstr /i“0x800410 0x800440 0x80131501”__PH_0__
+This option is supported only for __PH_0__ 7/8/8.1/10/11 and their Server equivalents.,僅 __PH_0__ 7/8/8.1/10/11 及其伺服器等效項支援此選項。
+Failed to find activation IDs. Aborting...,找不到激活 ID。正在中止...
+"Failed to detect OS edition, aborting...",無法偵測作業系統版本，正在中止...
+[EditionID:__PH_0__ ^| __PH_1__],[版本 ID：__PH_0__ ^| __PH_1__]
+"Changing this edition may not remove ""__PH_0__""-specific features.",變更此版本可能不會刪除「__PH_0__」特定的功能。
+"""__PH_0__"" | find /i "" %%# "" __PH_1__ || set ""_target= __PH_2__ %%# """,“__PH_0__”|查找/i“%%#”__PH_1__ ||設定“_target= __PH_2__ %%#”
+"%%# | findstr /i ""CountrySpecific CloudEdition"" __PH_0__ || (set ""_ntarget=__PH_1__ %%#"")",%%# | findstr /i“國家/地區特定雲端版本”__PH_0__ || （設定“_ntarget=__PH_1__ %%#”）
+Current Edition [__PH_0__ ^| __PH_1__] can not be changed to any other Edition.,目前版本 [__PH_0__ ^| __PH_1__] 無法變更為任何其他版本。
+"[__PH_0__]  __PH_1__ [GAC, not LTSC]",[__PH_0__] __PH_1__ [GAC，不是 LTSC]
+[__PH_0__]  __PH_1__,[__PH_0__] __PH_1__
+[0]  __PH_0__,[0] __PH_0__
+"Once the edition is changed to ""__PH_0__"", ",一旦版本更改為“__PH_0__”，
+the system may not be able to properly change edition later.,稍後系統可能無法正確變更版本。
+[1] Continue Anyway,[1] 無論如何繼續
+[0] Go Back,[0] 返回
+"__PH_0__ | find /i "" __PH_1__ "" || (",__PH_0__ |查找/i“__PH_1__”|| （
+Failed to get product key from pkeyhelper.dll.,無法從 pkeyhelper.dll 取得產品金鑰。
+Changing the current edition [__PH_0__] __PH_1__ to [__PH_2__]...,將目前版本 [__PH_0__] __PH_1__ 改為 [__PH_2__]...
+"- Save your work before continuing, the system will auto-restart.",- 在繼續之前儲存您的工作，系統將自動重新啟動。
+- You will need to activate with __PH_0__ option once the edition is changed.,- 版本變更後，您將需要使用 __PH_0__ 選項啟動。
+[1] Continue [2] __PH_0__ : ,[1] 繼續 [2] __PH_0__ ：
+Installing __PH_0__ key [__PH_1__],安裝 __PH_0__ 密鑰 [__PH_1__]
+Applying the DISM API method with __PH_0__ key __PH_1__. Please wait...,使用 __PH_0__ 鍵 __PH_1__ 應用 DISM API 方法。請稍等...
+[1] Continue [0] __PH_0__ : ,[1] 繼續 [0] __PH_0__ ：
+Applying the command with __PH_0__ key...,使用 __PH_0__ 鍵應用指令...
+DISM /online /Set-Edition:__PH_0__ /ProductKey:__PH_1__ /AcceptEula,DISM /線上 /套裝版本：__PH_0__ /產品金鑰：__PH_1__ /AcceptEula
+Failed to stop the TrustedInstaller service.,無法停止 TrustedInstaller 服務。
+Reboot your machine using the restart option and try again.,使用重新啟動選項重新啟動計算機，然後重試。
+Log files are copied to the ChangeEdition_Logs folder on your desktop.,日誌檔案將複製到桌面上的 ChangeEdition_Logs 資料夾中。
+Pending reboot flags found.,發現待重啟標誌。
+"Make sure __PH_0__ is fully updated, restart the system and try again.",確保 __PH_0__ 已完全更新，重新啟動系統並重試。
+"""__PH_0__"" | find /i ""__PH_1__"" __PH_2__ && (set ""key=__PH_3__"" & set ""_chan=__PH_4__"")","“__PH_0__”|查找 /i ""__PH_1__"" __PH_2__ && (設定 ""key=__PH_3__"" & 設定 ""_chan=__PH_4__"")"
+Failed to detect OS Edition. Aborting...,無法偵測作業系統版本。正在中止...
+"__PH_0__ C2R 2016 or later is not installed, which is required for this script.",未安裝此腳本所需的 __PH_0__ C2R 2016 或更高版本。
+Download and install __PH_0__ from below URL and try again.,從下列 URL 下載並安裝 __PH_0__，然後再試一次。
+Installed __PH_1__ version is __PH_0__.,安裝的 __PH_1__ 版本是 __PH_0__。
+Minimum required version is 16.0.9029.2167,所需的最低版本為 16.0.9029.2167
+Aborting...,正在中止...
+Failed to find __PH_0__. Aborting...,未能找到 __PH_0__。正在中止...
+"Installed __PH_3__ appears to be from the Volume channel __PH_0____PH_1____PH_2__,",安裝的 __PH_3__ 似乎來自音量通道 __PH_0____PH_1____PH_2__，
+which is not officially supported on your __PH_1__ build version __PH_0__.,您的 __PH_1__ 建置版本 __PH_0__ 並未正式支援此功能。
+Unsupported __PH_3__ __PH_0__ is installed on your __PH_2__ build version __PH_1__.,您的 __PH_2__ 內部版本 __PH_1__ 上安裝了不支援的 __PH_3__ __PH_0__。
+[1] Change all editions,[1] 更改所有版本
+[2] Add edition,[2] 新增版本
+[3] Remove edition,[3]刪除版本
+[4] Add/Remove apps,[4] 新增/刪除應用程式
+[5] Change __PH_0__ Update Channel,[5] 更改__PH_0__更新頻道
+O365/Mondo editions have the latest features.     ,O365/Mondo 版本具有最新功能。
+[1] __PH_0__ Suites     - Retail,[1] __PH_0__ 套房 - 零售
+[2] __PH_0__ Suites     - Volume,[2] __PH_0__ 組曲 - 卷
+[3] __PH_0__ SingleApps - Retail,[3] __PH_0__ SingleApps - 零售
+[4] __PH_0__ SingleApps - Volume,[4] __PH_0__ SingleApps - 卷
+Failed to generate available editions list.,無法產生可用版本清單。
+Unsupported products such as 2019/2021/2024 are excluded from this list.,2019/2021/2024 等不受支援的產品不在此清單中。
+[__PH_0__] __PH_1__,[__PH_0__] __PH_1__
+[0]  Go Back,[0] 返回
+"__PH_0__ | find /i ""Suites"" __PH_1__ && (",__PH_0__ |查找/i「套房」__PH_1__ && (
+Failed to generate available apps list.,無法產生可用應用程式清單。
+[1] Continue,[1] 繼續
+__PH_0__ language is not available for Project/Visio apps.,__PH_0__ 語言不適用於 Project/Visio 應用程式。
+"Running the below command, please wait...",執行以下命令，請稍候...
+"__PH_0__ | find /i ""2019Volume"" __PH_1__ && (",__PH_0__ |查找/i「2019卷」__PH_1__ && (
+"__PH_0__ | find /i ""2021Volume"" __PH_1__ && (",__PH_0__ |查找/i「2021卷」__PH_1__ && (
+"__PH_0__ | find /i ""2024Volume"" __PH_1__ && (",__PH_0__ |查找/i「2024卷」__PH_1__ && (
+"__PH_0__ | findstr /R ""20.*Volume"" __PH_1__ || (","__PH_0__ | findstr /R ""20.*卷"" __PH_1__ || （"
+"__PH_0__ | find /i ""LTSC"" __PH_1__ && set suggestchannel=Production::CC","__PH_0__ |尋找 /i ""LTSC"" __PH_1__ && 設定 suggestchannel=Production::CC"
+"__PH_0__ | findstr /i ""Access Excel OneNote Outlook PowerPoint Project Publisher Skype Visio Word"" __PH_1__ && (set list=SingleApps) || (set list=Suites)","__PH_0__ | findstr /i ""存取 Excel OneNote Outlook PowerPoint Project Publisher Skype Visio Word"" __PH_1__ && (設定清單=SingleApps) || （設定清單=套房）"
+"Only ""__PH_0__"" product is installed.",僅安裝“__PH_0__”產品。
+This option is available only when multiple products are installed.,僅當安裝多個產品時此選項才可用。
+"__PH_0__ | findstr ""2019 2021 2024"" __PH_1__ && (","__PH_0__ | findstr ""2019 2021 2024"" __PH_1__ && ("
+Installed __PH_1__ editions: __PH_0__,已安裝 __PH_1__ 版本：__PH_0__
+Unsupported __PH_2__ edition is installed on your __PH_1__ build version __PH_0__.,您的 __PH_1__ 內部版本 __PH_0__ 上安裝了不支援的 __PH_2__ 版本。
+Installed __PH_3__ update channel: __PH_0____PH_1____PH_2__,已安裝 __PH_3__ 更新頻道：__PH_0____PH_1____PH_2__
+Unsupported __PH_2__ update channel is installed on your __PH_1__ build version __PH_0__.,您的 __PH_1__ 內部版本 __PH_0__ 上安裝了不支援的 __PH_2__ 更新頻道。
+[R]  Learn about update channels,[R] 了解更新管道
+[0]  Go back,[0] 返回
+"""__PH_0__"" | find /i ""16."" __PH_1__ || set build=",“__PH_0__”|找到/i“16”。 __PH_1__ ||設定建置=
+Target build number: __PH_0__,目標內部版本號：__PH_0__
+Running the below command to trigger updates...,執行以下命令來觸發更新...
+"__PH_0__ | find /i ""2019 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2019Volume"" __PH_5__ || set abortchange=1))","__PH_0__ | find /i ""2019 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2019Volume"" __PH_5__ || set abortchange=1))"
+"__PH_0__ | find /i ""2021 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2021Volume"" __PH_5__ || set abortchange=1))","__PH_0__ | find /i ""2021 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2021Volume"" __PH_5__ || set abortchange=1))"
+"__PH_0__ | find /i ""2024 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2024Volume"" __PH_5__ || set abortchange=1))","__PH_0__ | find /i ""2024 VL"" __PH_1__ && (for __PH_2__ in (__PH_3__) do (echo __PH_4__ | find /i ""2024Volume"" __PH_5__ || set abortchange=1))"
+Mismatch found in installed __PH_0__ products and target update channel. Aborting...,已安裝的 __PH_0__ 產品與目標更新頻道不符。正在中止...
+Non-perpetual __PH_0__ products are not suppported with Perpetual VL update channels.,永久 VL 更新頻道不支援非永久 __PH_0__ 產品。
+"__PH_0__ | find /i ""2019 VL"" __PH_1__ && (",__PH_0__ |查找/i“2019 VL”__PH_1__ && (
+"__PH_0__ | find /i ""__PH_1__"" __PH_2__ && (",__PH_0__ |查找/i“__PH_1__”__PH_2__ && (
+[__PH_0__] language is not supported on the __PH_1__ 2019 Perpetual VL update channel. Aborting...,__PH_1__ 2019 永久 VL 更新頻道不支援 [__PH_0__] 語言。正在中止...
+"Updating __PH_0__ C2R client with the command below, please wait...",正在使用下列指令更新 __PH_0__ C2R 用戶端，請稍候...
+"Running the below command to change update channel, please wait...",執行以下命令以變更更新頻道，請稍候...
+Cleaning __PH_0__ update registry keys...,清理 __PH_0__ 更新登錄項目...
+Adding new update channel to registry keys...,新增新的更新頻道到註冊表項...
+"""__PH_0__"" __PH_1__ | findstr ""16.0.103 16.0.104 16.0.105"" __PH_2__ && set ltsc19=LTSC","“__PH_0__”__PH_1__ | findstr ""16.0.103 16.0.104 16.0.105"" __PH_2__ && 設定 ltsc19=LTSC"
+"""__PH_0__"" __PH_1__ | findstr ""16.0.14332"" __PH_2__ && set ltsc21=LTSC2021","“__PH_0__”__PH_1__ | findstr ""16.0.14332"" __PH_2__ && 設定 ltsc21=LTSC2021"
+"""__PH_0__"" __PH_1__ | findstr ""16.0.17932"" __PH_2__ && set ltsc24=LTSC2024","“__PH_0__”__PH_1__ | findstr ""16.0.17932"" __PH_2__ && 設定 ltsc24=LTSC2024"

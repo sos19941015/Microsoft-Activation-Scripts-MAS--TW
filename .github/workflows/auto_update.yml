@@ -56,11 +56,11 @@ jobs:
             --notes "自動翻譯自 massgravel/Microsoft-Activation-Scripts 原始碼。翻譯工具：deep_translator (Google)。" \
             MAS_AIO_TW.cmd
 
-      - name: Commit and Push Hash Update
+      - name: Commit and Push Updates
         if: steps.check_file.outputs.updated == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add hash.txt
-          git commit -m "chore: update hash.txt [skip ci]"
+          git add hash.txt translation_cache.csv
+          git commit -m "chore: update hash and translation cache [skip ci]"
           git push
