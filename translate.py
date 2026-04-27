@@ -156,7 +156,9 @@ def process_cmd_content(content):
             final_lines.append("chcp 65001 >nul"); inserted_chcp = True
 
     if not inserted_chcp: final_lines.insert(0, "chcp 65001 >nul")
-    return "\r\n".join(final_lines)
+    
+    # 確保結尾有一行空白，並強制使用 CRLF
+    return "\r\n".join(final_lines) + "\r\n"
 
 def main():
     print("正在檢查更新...")
@@ -168,7 +170,7 @@ def main():
     # 強制重新處理以修正對齊問題
     print(f"開始重新處理並修正 UI 對齊...")
     translated_content = process_cmd_content(content)
-    with open(OUTPUT_FILE, "w", encoding="utf-8-sig") as f:
+    with open(OUTPUT_FILE, "w", encoding="utf-8-sig", newline='') as f:
         f.write(translated_content)
     write_local_hash(remote_hash)
     print(f"修正完成！已儲存至 {OUTPUT_FILE}")
