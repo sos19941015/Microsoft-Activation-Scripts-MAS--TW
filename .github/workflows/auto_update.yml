@@ -6,8 +6,7 @@ on:
   workflow_dispatch: # 支援手動觸發
 
 permissions:
-  contents: write # 允許推送 Hash 紀錄
-  releases: write # 允許建立 Release
+  contents: write # 允許推送 Hash 紀錄以及建立 Release
 
 jobs:
   build:
