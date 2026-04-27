@@ -1588,7 +1588,7 @@ set showfix=1
 ::  Check Safe mode
 
 if defined safeboot_option (
-call :dk_color %Red% "Checking Boot Mode                      [%safeboot_option%]"
+call :dk_color %Red% "檢查啟動模式 [%safeboot_option%]"
 if not defined showfix (
 call :dk_color %Blue% "Safe mode found. Reboot the system and run in normal mode."
 echo:
@@ -17458,7 +17458,7 @@ echo:
 echo  - 版本變更後，您將需要使用 HWID 選項啟動。
 %line%
 echo:
-choice /C:21 /N /M "[1] 繼續 [2] %_exitmsg% ： "
+choice /C:21 /N /M "[1] Continue [2] %_exitmsg% : "
 if !errorlevel!==1 exit /b
 )
 
@@ -17520,7 +17520,7 @@ echo 將目前版本 [%osedition%] %fullbuild% 改為 [%targetedition%]...
 echo:
 call :dk_color %Blue% "Important - Save your work before continuing, the system will auto-restart."
 echo:
-choice /C:01 /N /M "[1] 繼續 [0] %_exitmsg% ： "
+choice /C:01 /N /M "[1] Continue [0] %_exitmsg% : "
 if %errorlevel%==1 exit /b
 
 echo:

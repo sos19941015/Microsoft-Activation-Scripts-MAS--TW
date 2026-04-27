@@ -32,10 +32,10 @@ jobs:
       - name: Run Translation Script
         run: python translate.py
 
-      - name: Check if MAS_AIO_TW.cmd was generated
+      - name: Check Update Status
         id: check_file
         run: |
-          if [ -f "MAS_AIO_TW.cmd" ]; then
+          if [ -f "MAS_AIO_TW.cmd" ] || [ -f "MAS_AIO_TW.ps1" ]; then
             echo "updated=true" >> $GITHUB_OUTPUT
           else
             echo "updated=false" >> $GITHUB_OUTPUT
@@ -52,9 +52,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "v${{ steps.date.outputs.date }}" \
-            --title "MAS AIO 台灣繁體中文版 v${{ steps.date.outputs.date }}" \
-            --notes "自動翻譯自 massgravel/Microsoft-Activation-Scripts 原始碼。翻譯工具：deep_translator (Google)。" \
-            MAS_AIO_TW.cmd
+            --title "MAS 繁體中文自動翻譯版 v${{ steps.date.outputs.date }}" \
+            --notes "自動監控官方原始碼並翻譯：`MAS_AIO_TW.cmd` (批次檔) 與 `MAS_AIO_TW.ps1` (PowerShell)。" \
+            MAS_AIO_TW.cmd MAS_AIO_TW.ps1
 
       - name: Commit and Push Updates
         if: steps.check_file.outputs.updated == 'true'

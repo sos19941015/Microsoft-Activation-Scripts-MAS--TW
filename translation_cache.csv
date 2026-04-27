@@ -770,3 +770,5 @@ __PH_1__ activation doesn't modify any __PH_0__ components and doesn't install a
 Checking installed __PH_0__ versions...,檢查已安裝的 __PH_0__ 版本...
 "Once the edition is changed to ""__PH_0__"",","一旦版本更改為""__PH_0__""，"
 "Only ""__PH_0__"" product is installed.","僅安裝""__PH_0__""產品。"
+"Failed to create __PH_0__ file in temp folder, aborting!",無法在臨時資料夾中建立 __PH_0__ 文件，正在中止!
+"Failed to retrieve __PH_0__ from any of the available repositories, aborting!",無法從任何可用儲存庫檢索 __PH_0__，正在中止!
