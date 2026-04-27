@@ -114,8 +114,14 @@ def normalize_translated(text):
 
 def process_content(content, file_type, cache):
     if (file_type == "ps1"):
+        # 1. 在開頭加入註解，防止編碼隱形字元破壞第一個語法
+        content = "# MAS Traditional Chinese Version\r\n" + content
+        
+        # 2. 替換下載來源
         new_cmd_url = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd"
         content = re.sub(r'\$URLs = @\(.*?\)', f'$URLs = @(\n        \'{new_cmd_url}\'\n    )', content, flags=re.DOTALL)
+        
+        # 3. 移除 SHA256 雜湊檢查邏輯 (修正：移除替換字串中多餘的右括號)
         content = re.sub(r'# Verify script integrity.*?return\s+\}', '# 移除雜湊檢查以支援翻譯版本\n', content, flags=re.DOTALL)
 
     lines = content.splitlines()
