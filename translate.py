@@ -114,6 +114,17 @@ def process_content(content, file_type, cache):
     processed_lines_with_markers = []
     final_placeholders = {}
     
+    if (file_type == "ps1"):
+        # 1. 替換下載來源為您的 GitHub 專案
+        new_cmd_url = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd"
+        content = re.sub(r'\$URLs = @\(.*?\)', f'$URLs = @(\n        \'{new_cmd_url}\'\n    )', content, flags=re.DOTALL)
+        
+        # 2. 移除 SHA256 雜湊檢查邏輯 (從 Verify script integrity 開始到 return)
+        content = re.sub(r'# Verify script integrity.*?return\s+\}', '# 移除雜湊檢查以支援翻譯版本\n    }', content, flags=re.DOTALL)
+        
+        # 重新取得行列表
+        lines = content.splitlines()
+
     marker_counter = 0
     for line in lines:
         processed_line = line
