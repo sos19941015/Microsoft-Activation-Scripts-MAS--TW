@@ -1,7 +1,4 @@
-﻿# This script is hosted on <b>https://get.activated.win</b> for <b>https://massgrave.dev</b><br><br>
-# Having trouble launching this script? Check <a href="https://massgrave.dev">https://massgrave.dev</a> for help.<hr><pre>
-
-if (-not $args) {
+﻿if (-not $args) {
     Write-Host ''
     Write-Host 'Need help? Check our homepage: ' -NoNewline
     Write-Host 'https://massgrave.dev' -ForegroundColor Green
@@ -85,7 +82,7 @@ if (-not $args) {
     }
 
     # 移除雜湊檢查以支援翻譯版本
-    }
+
 
     # Check for AutoRun registry which may create issues with CMD
     $paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"

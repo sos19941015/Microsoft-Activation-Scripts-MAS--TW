@@ -25,15 +25,21 @@ HASH_FILE = "hash.txt"
 CACHE_FILE = "translation_cache.csv"
 
 def get_remote_content(url):
+    """獲取遠端內容並清理 HTML 標籤 (針對 PS1 版)"""
     response = requests.get(url)
     response.raise_for_status()
-    content = response.text
-    # 針對 PS1 版 (index.html) 進行清理，移除 HTML 註解部分
+    raw_content = response.text
+    
     if "index.html" in url:
-        # 只保留 PowerShell 代碼部分（通常在 <title> 之後或由 # 包裹的內容）
-        # 官方 index.html 其實是一個巧妙的混合體，我們直接提取即可
-        pass 
-    return hashlib.sha256(response.content).hexdigest(), content
+        match = re.search(r'<pre>(.*?)</pre>', raw_content, re.DOTALL | re.IGNORECASE)
+        if match:
+            clean_content = match.group(1).strip()
+        else:
+            clean_content = re.sub(r'^.*?<pre>', '', raw_content, flags=re.DOTALL | re.IGNORECASE)
+            clean_content = re.sub(r'</pre>.*?$', '', clean_content, flags=re.DOTALL | re.IGNORECASE).strip()
+        return hashlib.sha256(clean_content.encode('utf-8')).hexdigest(), clean_content
+        
+    return hashlib.sha256(response.content).hexdigest(), raw_content
 
 def load_hashes():
     hashes = {}
@@ -69,13 +75,11 @@ def save_cache(cache):
     except: pass
 
 def protect_text(text, file_type):
-    # 通用指令與符號保護
-    common_cmd = [r'\bfind\b', r'\bfindstr\b', r'\bsc\b', r'\breg\b', r'\bping\b', r'\bcls\b', r'\btitle\b', r'\bcolor\b']
+    cmd_keywords = [r'\bfind\b', r'\bfindstr\b', r'\bsc\b', r'\breg\b', r'\bping\b', r'\bcls\b', r'\btitle\b', r'\bcolor\b', r'\bmode\b']
     if file_type == "cmd":
-        if any(re.search(kw, text, re.I) for kw in common_cmd) or any(c in text for c in ['|', '>', '<', '&', '^']):
+        if any(re.search(kw, text, re.I) for kw in cmd_keywords) or any(c in text for c in ['|', '>', '<', '&', '^']):
             return text, [], "", ""
     elif file_type == "ps1":
-        # PS1 保護指令如 Invoke-RestMethod, Invoke-Expression, Write-Host 等
         ps_cmd = [r'\bInvoke-.*?\b', r'\bGet-.*?\b', r'\bSet-.*?\b', r'\bWrite-.*?\b', r'\bcmd\b', r'\bpowershell\b', r'\|', r'\$']
         if any(re.search(kw, text, re.I) for kw in ps_cmd):
             return text, [], "", ""
@@ -109,29 +113,22 @@ def normalize_translated(text):
     return text
 
 def process_content(content, file_type, cache):
+    if (file_type == "ps1"):
+        new_cmd_url = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd"
+        content = re.sub(r'\$URLs = @\(.*?\)', f'$URLs = @(\n        \'{new_cmd_url}\'\n    )', content, flags=re.DOTALL)
+        content = re.sub(r'# Verify script integrity.*?return\s+\}', '# 移除雜湊檢查以支援翻譯版本\n', content, flags=re.DOTALL)
+
     lines = content.splitlines()
     translatable_items = [] 
     processed_lines_with_markers = []
     final_placeholders = {}
     
-    if (file_type == "ps1"):
-        # 1. 替換下載來源為您的 GitHub 專案
-        new_cmd_url = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd"
-        content = re.sub(r'\$URLs = @\(.*?\)', f'$URLs = @(\n        \'{new_cmd_url}\'\n    )', content, flags=re.DOTALL)
-        
-        # 2. 移除 SHA256 雜湊檢查邏輯 (從 Verify script integrity 開始到 return)
-        content = re.sub(r'# Verify script integrity.*?return\s+\}', '# 移除雜湊檢查以支援翻譯版本\n    }', content, flags=re.DOTALL)
-        
-        # 重新取得行列表
-        lines = content.splitlines()
-
     marker_counter = 0
     for line in lines:
         processed_line = line
         items_to_process = [] 
 
         if file_type == "cmd":
-            # CMD 規則
             echo_match = re.match(r'^(\s*echo[:\s]\s*)(.*)$', line, re.IGNORECASE)
             if echo_match and not echo_match.group(2).startswith('.'):
                 items_to_process.append((echo_match.group(2), echo_match.start(2), echo_match.end(2)))
@@ -139,12 +136,9 @@ def process_content(content, file_type, cache):
                 for m in re.finditer(r'("[^"]*[a-zA-Z]+[^"]*")', line):
                     items_to_process.append((m.group(1).strip('"'), m.start(1)+1, m.end(1)-1))
         else:
-            # PS1 規則
-            # 處理 Write-Host "..."
             write_match = re.search(r'(Write-Host\s+.*?"|Write-Output\s+.*?")([^"]+)"', line, re.IGNORECASE)
             if write_match:
                 items_to_process.append((write_match.group(2), write_match.start(2), write_match.end(2)))
-            # 處理選單文字
             menu_match = re.search(r'("\s*\[\d+\]\s+)([^"]+)"', line)
             if menu_match:
                 items_to_process.append((menu_match.group(2), menu_match.start(2), menu_match.end(2)))
@@ -200,31 +194,23 @@ def main():
     hashes = load_hashes()
     cache = load_cache()
     updated = False
-    
     for target in TARGETS:
         print(f"正在檢查 {target['name']} 更新...")
         try:
             curr_hash, content = get_remote_content(target['url'])
         except Exception as e:
             print(f"下載失敗 {target['name']}: {e}"); continue
-            
         if hashes.get(target['name']) == curr_hash and os.path.exists(target['output']):
-            print(f"{target['name']} 無變動。")
-            continue
-            
+            print(f"{target['name']} 無變動。"); continue
         print(f"正在處理 {target['name']}...")
         result = process_content(content, target['type'], cache)
-        with open(target['output'], "w", encoding="utf-8-sig", newline='') as f:
-            f.write(result)
+        with open(target['output'], "w", encoding="utf-8-sig", newline='') as f: f.write(result)
         hashes[target['name']] = curr_hash
         updated = True
-        
     if updated:
-        save_hashes(hashes)
-        save_cache(cache)
+        save_hashes(hashes); save_cache(cache)
         print("所有處理已完成。")
-    else:
-        print("沒有任何更新。")
+    else: print("沒有任何更新。")
 
 if __name__ == "__main__":
     main()

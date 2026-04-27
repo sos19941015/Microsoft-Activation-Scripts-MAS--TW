@@ -1588,7 +1588,7 @@ set showfix=1
 ::  Check Safe mode
 
 if defined safeboot_option (
-call :dk_color %Red% "檢查啟動模式 [%safeboot_option%]"
+call :dk_color %Red% "Checking Boot Mode                      [%safeboot_option%]"
 if not defined showfix (
 call :dk_color %Blue% "Safe mode found. Reboot the system and run in normal mode."
 echo:
