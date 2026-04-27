@@ -44,7 +44,7 @@ def save_cache(cache):
 
 def protect_text(text):
     if not text.strip() or not re.search(r'[a-zA-Z\u4e00-\u9fa5]', text):
-        return text, []
+        return text, [], "", ""
     
     # 針對選單對齊，保留開頭和結尾的空格
     l_spaces = len(text) - len(text.lstrip())
