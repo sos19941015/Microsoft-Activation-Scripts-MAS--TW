@@ -1,4 +1,5 @@
 name: Auto Update MAS Traditional Chinese
+# Version: 1.0.1 - Triggering re-scan
 
 on:
   schedule:
