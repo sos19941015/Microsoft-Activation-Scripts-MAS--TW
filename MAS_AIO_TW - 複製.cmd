@@ -95,7 +95,7 @@ cls
 pushd "%~dp0"
 >nul findstr /v "$" "%~nx0" && (
 echo:
-echo 錯誤 - 腳本存在 LF 行結束問題或腳本結尾缺少空白行。 
+echo 錯誤 - 腳本存在 LF 行結束問題或腳本結尾缺少空白行。
 echo:
 echo:
 echo 檢查此網頁尋求協助 - %mas%troubleshoot
@@ -140,7 +140,7 @@ call :dk_setvar
 
 if %winbuild% EQU 1 (
 %eline%
-echo 無法偵測 Windows 內部版本號。 
+echo 無法偵測 Windows 內部版本號。
 echo:
 setlocal EnableDelayedExpansion
 set fixes=%fixes% %mas%troubleshoot
@@ -151,7 +151,7 @@ goto dk_done
 if exist "%Systemdrive%\Users\WDAGUtilityAccount" (
 sc query gcs | find /i "RUNNING" %nul% && (
 %eline%
-echo Windows 偵測到沙箱;不支援啟動。 
+echo Windows 偵測到沙箱;不支援啟動。
 echo 由於缺少許可組件，該腳本無法運行。正在中止...
 echo:
 goto dk_done
@@ -160,12 +160,12 @@ goto dk_done
 
 if %winbuild% LSS 6001 (
 %nceline%
-echo 偵測到不受支援的作業系統版本 [%winbuild%]。 
-echo MAS 僅支援 Windows Vista/7/8/8.1/10/11 及其伺服器等效版本。 
+echo 偵測到不受支援的作業系統版本 [%winbuild%]。
+echo MAS 僅支援 Windows Vista/7/8/8.1/10/11 及其伺服器等效版本。
 if %winbuild% EQU 6000 (
 echo:
-echo Windows 不支援 Vista RTM，因為無法安裝 Powershell。 
-echo 升級到 Windows Vista SP1 或 SP2。 
+echo Windows 不支援 Vista RTM，因為無法安裝 Powershell。
+echo 升級到 Windows Vista SP1 或 SP2。
 )
 goto dk_done
 )
@@ -173,9 +173,9 @@ goto dk_done
 if %winbuild% LSS 7600 if not exist "%SysPath%\WindowsPowerShell\v1.0\Modules" (
 %nceline%
 if not exist %ps% (
-echo 您的系統中未安裝 PowerShell。 
+echo 您的系統中未安裝 PowerShell。
 )
-echo 使用下列 URL 安裝 PowerShell 2.0。 
+echo 使用下列 URL 安裝 PowerShell 2.0。
 echo:
 echo https://www.catalog.update.microsoft.com/Search.aspx?q=KB968930
 if %_unattended%==0 start https://www.catalog.update.microsoft.com/Search.aspx?q=KB968930
@@ -204,10 +204,10 @@ setlocal EnableDelayedExpansion
 echo "!_batf!" | find /i "!_ttemp!" %nul1% && (
 if /i not "!_work!"=="!_ttemp!" (
 %eline%
-echo 該腳本是從臨時資料夾啟動的。 
-echo 您很可能直接從存檔檔案執行腳本。 
+echo 該腳本是從臨時資料夾啟動的。
+echo 您很可能直接從存檔檔案執行腳本。
 echo:
-echo 提取存檔檔案並從提取的資料夾中啟動腳本。 
+echo 提取存檔檔案並從提取的資料夾中啟動腳本。
 goto dk_done
 )
 )
@@ -219,8 +219,8 @@ goto dk_done
 %nul1% fltmc || (
 if not defined _elev %psc% "start cmd.exe -arg '/c \"!_PSarg!\"' -verb runas" && exit /b
 %eline%
-echo 該腳本需要管理員權限。 
-echo 右鍵單擊該腳本並選擇"以管理員身份運行"。 
+echo 該腳本需要管理員權限。
+echo 右鍵單擊該腳本並選擇"以管理員身份運行"。
 goto dk_done
 )
 
@@ -243,7 +243,7 @@ REM check LanguageMode
 
 echo: !tstresult2! | findstr /i "ConstrainedLanguage RestrictedLanguage NoLanguage" %nul1% && (
 echo PowerShell 中找不到 FullLanguage 模式。正在中止...
-echo 如果您對 Powershell 應用了限制，請撤銷這些變更。 
+echo 如果您對 Powershell 應用了限制，請撤銷這些變更。
 set fixes=%fixes% %mas%fix_powershell
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%fix_powershell"
 goto dk_done
@@ -262,7 +262,7 @@ REM check for Mal-ware that may cause issues with Powershell
 
 for /r "%ProgramFiles%\" %%f in (secureboot.exe) do if exist "%%f" (
 echo "%%f"
-echo 發現 Mal%blank%ware，PowerShell 無法正常運作。 
+echo 發現 Mal%blank%ware，PowerShell 無法正常運作。
 set fixes=%fixes% %mas%remove_mal%w%ware
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%remove_mal%w%ware"
 goto dk_done
@@ -286,7 +286,7 @@ echo PowerShell 無法正常運作。正在中止...
 
 if /i "!tstresult2!"=="FullLanguage" (
 echo:
-echo 您的防毒軟體可能會封鎖該腳本。 
+echo 您的防毒軟體可能會封鎖該腳本。
 echo:
 sc query sense | find /i "RUNNING" %nul% && (
 echo 已安裝防毒軟體 - Microsoft Defender for Endpoint
@@ -366,12 +366,12 @@ if not "%%C"=="" set old=
 if defined old (
 echo ________________________________________________
 %eline%
-echo 您的 MAS [%masver%] 版本已過時。 
+echo 您的 MAS [%masver%] 版本已過時。
 echo ________________________________________________
 echo:
 if not %_unattended%==1 (
 echo [1] 取得最新 MAS
-echo [0] 無論如何繼續 
+echo [0] 無論如何繼續
 echo:
 call :dk_color %_Green% "使用鍵盤 [1,0] 選擇選單選項:"
 choice /C:10 /N
@@ -449,7 +449,7 @@ echo:
 echo:
 echo:
 if %winbuild% GEQ 10240 if %winbuild% LEQ 19045 if not defined _serexist if not defined _evalexist if not defined _ltscexist (
-call :dk_color2 %_Green% "       提示:" %_White% "  若要在 W10 EOL 之後啟動 ESU 更新，請使用 TSforge 選項。 
+call :dk_color2 %_Green% "       提示:" %_White% "  若要在 W10 EOL 之後啟動 ESU 更新，請使用 TSforge 選項。
 )
 echo:
 echo:
@@ -475,15 +475,15 @@ echo:             [3] TSforge - Windows / Office / ESU
 echo:             [4] Online KMS - Windows / Office
 echo:             __________________________________________________ 
 echo:
-echo:             [5]檢查啟動狀態 
-echo:             [6] 更改 Windows 版本 
-echo:             [7] 更改 Office 版本 
+echo:             [5]檢查啟動狀態
+echo:             [6] 更改 Windows 版本
+echo:             [7] 更改 Office 版本
 echo:             __________________________________________________      
 echo:
-echo:             [8] 故障排除 
-echo:             [E] 附加內容 
-echo:             [H] 幫助 
-echo:             [0] 退出 
+echo:             [8] 故障排除
+echo:             [E] 附加內容
+echo:             [H] 幫助
+echo:             [0] 退出
 echo:       ______________________________________________________________
 echo:
 call :dk_color2 %_White% "         " %_Green% "使用鍵盤選擇選單選項 [1,2,3...E,H,0] :"
@@ -526,12 +526,12 @@ echo:
 echo:
 echo:           ______________________________________________________
 echo:           
-echo:                [1] 解壓縮$OEM$資料夾 
+echo:                [1] 解壓縮$OEM$資料夾
 echo:                  
 echo:                [2] 下載正版Windows / Office 
 echo:                ____________________________________________      
 echo:                                                                          
-echo:                [0] 進入主選單 
+echo:                [0] 進入主選單
 echo:           ______________________________________________________
 echo:
 call :dk_color2 %_White% "             " %_Green% "使用鍵盤 [1,2,0] 選擇選單選項:"
@@ -553,7 +553,7 @@ if not defined terminal mode 76, 30
 
 if exist "!desktop!\$OEM$\" (
 %eline%
-echo 桌面上已存在 $OEM$ 資料夾。 
+echo 桌面上已存在 $OEM$ 資料夾。
 echo _____________________________________________________
 echo:
 call :dk_color %_Yellow% "按 [0] 鍵至 %_exitmsg%..."
@@ -583,7 +583,7 @@ echo:            [6] HWID [Windows] ^+ Ohook [Office] ^+ TSforge [ESU]
 echo:            [7] TSforge [Windows / ESU] ^+ Ohook [Office]
 echo:
 call :dk_color2 %_White% "            [R] " %_Green% "自述文件"
-echo:            [0] 返回 
+echo:            [0] 返回
 echo:         ____________________________________________________________
 echo:  
 call :dk_color2 %_White% "             " %_Green% "使用鍵盤選擇選單選項:"
@@ -626,7 +626,7 @@ if not exist "!_dir!\SetupComplete.cmd" set _error=1
 
 if defined _error (
 %eline%
-echo 該腳本無法建立 $OEM$ 資料夾。 
+echo 該腳本無法建立 $OEM$ 資料夾。
 if exist "!desktop!\$OEM$\.*" rmdir /s /q "!desktop!\$OEM$\" %nul%
 ) else (
 echo:
@@ -677,15 +677,15 @@ for %%A in (%_act% %_NoEditionChange%) do (if "%%A"=="1" set _unattended=1)
 
 if %winbuild% LSS 10240 (
 %eline%
-echo 偵測到不受支援的作業系統版本 [%winbuild%]。 
-echo 僅 Windows 10/11 支援 HWID 啟動。 
+echo 偵測到不受支援的作業系統版本 [%winbuild%]。
+echo 僅 Windows 10/11 支援 HWID 啟動。
 call :dk_color %Blue% "使用主選單中的 TSforge 啟動選項。"
 goto dk_done
 )
 
 if exist "%SystemRoot%\Servicing\Packages\Microsoft-Windows-Server*Edition~*.mum" (
 %eline%
-echo Windows 伺服器不支援 HWID 啟動。 
+echo Windows 伺服器不支援 HWID 啟動。
 call :dk_color %Blue% "使用主選單中的 TSforge 啟動選項。"
 goto dk_done
 )
@@ -760,7 +760,7 @@ reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v EditionID %nul2
 %eline%
 echo [%winos% ^| %winbuild%]
 echo:
-echo 評估版無法在評估期之外啟動。 
+echo 評估版無法在評估期之外啟動。
 call :dk_color %Blue% "使用主選單中的 TSforge 啟動選項重設評估期。"
 set fixes=%fixes% %mas%evaluation_editions
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%evaluation_editions"
@@ -842,13 +842,13 @@ if not defined key (
 %eline%
 echo [%winos% ^| %winbuild% ^| SKU:%osSKU%]
 if not defined skunotfound (
-echo 本產品不支援 HWID 活化。 
-echo 確保您使用的是最新版本的腳本。 
-echo 如果是，請嘗試主選單中的 TSforge 啟動選項。 
+echo 本產品不支援 HWID 活化。
+echo 確保您使用的是最新版本的腳本。
+echo 如果是，請嘗試主選單中的 TSforge 啟動選項。
 set fixes=%fixes% %mas%
 echo %mas%
 ) else (
-echo 在 %SysPath%\spp\tokens\skus\ 中找不到所需的許可證文件 
+echo 在 %SysPath%\spp\tokens\skus\ 中找不到所需的許可證文件
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 )
@@ -1353,7 +1353,7 @@ del "!_ttemp!\chklen" %nul%
 
 if !len! GTR 6000 (
 %eline%
-echo 安裝太多許可證，腳本可能會崩潰。 
+echo 安裝太多許可證，腳本可能會崩潰。
 call :dk_color %Blue% "%_fixmsg%"
 timeout /t 30
 )
@@ -1700,7 +1700,7 @@ call :dk_color %Red% "啟用停用服務 [失敗] [%serv_cste%]"
 if not defined showfix (
 echo:
 echo %serv_cste% | findstr /i "ClipSVC sppsvc" %nul% && (
-echo 已應用註冊表修復來啟用已停用的服務。 
+echo 已應用註冊表修復來啟用已停用的服務。
 call :dk_color %Blue% "使用重新啟動選項重新啟動電腦以修復此錯誤。"
 ) || (
 set fixes=%fixes% %mas%in-place_repair_upgrade
@@ -2222,7 +2222,7 @@ $wpaKey.Close()
 :dk_color
 
 if %_NCS% EQU 1 (
-echo %esc%[%~1%~2%esc%[0米 
+echo %esc%[%~1%~2%esc%[0米
 ) else if exist %ps% (
 %psc% write-host -back '%1' -fore '%2' '%3'
 ) else if not exist %ps% (
@@ -2233,7 +2233,7 @@ exit /b
 :dk_color2
 
 if %_NCS% EQU 1 (
-echo %esc%[%~1%~2%esc%[%~3%~4%esc%[0米 
+echo %esc%[%~1%~2%esc%[%~3%~4%esc%[0米
 ) else if exist %ps% (
 %psc% write-host -back '%1' -fore '%2' '%3' -NoNewline; write-host -back '%4' -fore '%5' '%6'
 ) else if not exist %ps% (
@@ -2250,7 +2250,7 @@ if %_unattended%==1 timeout /t 2 & exit /b
 
 if defined fixes (
 call :dk_color %White% "遵循上述所有藍線。   "
-call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略 
+call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略
 choice /C:10 /N
 if !errorlevel!==2 exit /b
 if !errorlevel!==1 (start %selfgit% & start %github% & for %%# in (%fixes%) do (start %%#))
@@ -2502,7 +2502,7 @@ echo:
 if defined checknames (call :dk_color %_Yellow% "                Close [!checknames!] before proceeding...")
 echo         ____________________________________________________________
 echo:
-echo                 [1] 安裝 Ohook Office 激活 
+echo                 [1] 安裝 Ohook Office 激活
 echo:
 echo                 [2]卸載Ohook
 echo                 ____________________________________________
@@ -2644,7 +2644,7 @@ call :dk_color %Red% "檢查已安裝的 Office [未找到]"
 
 if defined ohub (
 echo:
-echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。 
+echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。
 )
 call :dk_color %Blue% "從下面的 URL 下載並安裝 Office，然後再試一次。"
 set fixes=%fixes% %mas%genuine-installation-media
@@ -2731,7 +2731,7 @@ goto :starto16c2r
 )
 
 if defined noOsppc (
-call :dk_color %Red% "檢查 OSPPC.DLL [未找到。正在中止啟動...]"
+call :dk_color %Red% "检查 OSPPC.DLL [未找到。正在中止啟動...]"
 call :dk_color %Blue% "%_fixmsg%"
 set error=1
 goto :starto16c2r
@@ -2939,7 +2939,7 @@ if exist "%%~G" (set _unerror=1&echo Failed to rename sppcs.dll back to "%%~A\Mi
 
 reg query HKCU\Software\Microsoft\Office\16.0\Common\Licensing\Resiliency %nul% && (
 echo:
-echo 刪除 - 用於跳過許可證檢查的註冊表項 
+echo 刪除 - 用於跳過許可證檢查的註冊表項
 
 reg load HKU\DEF_TEMP %SystemDrive%\Users\Default\NTUSER.DAT %nul%
 reg query HKU\DEF_TEMP\Software\Microsoft\Office\16.0\Common\Licensing\Resiliency %nul% && reg delete HKU\DEF_TEMP\Software\Microsoft\Office\16.0\Common\Licensing\Resiliency /f
@@ -2971,7 +2971,7 @@ reg unload HKU\%%# %nul%
 set "kmskey=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform\0ff1ce15-a989-479d-af46-f275c6370663"
 reg query "%kmskey%" %nul% && (
 echo:
-echo 刪除 - 登錄項目以防止非正版橫幅 
+echo 刪除 - 登錄項目以防止非正版橫幅
 reg delete "%kmskey%" /f
 )
 
@@ -2983,7 +2983,7 @@ echo ___________________________________________________________________________
 echo:
 
 if not defined _present (
-echo 未安裝 Ohook 啟動。 
+echo 未安裝 Ohook 啟動。
 ) else (
 if defined _unerror (
 call :dk_color %Red% "無法卸載 Ohook 啟動。"
@@ -4383,8 +4383,8 @@ if /i not %_actmethod%==Auto set _unattended=1
 if %winbuild% LSS 7600 (
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install %nul2% | find /i "0x1" %nul1% || (
 %eline%
-echo 您的系統中未安裝.NET 3.5 Framework。 
-echo 使用以下 URL 安裝它。 
+echo 您的系統中未安裝.NET 3.5 Framework。
+echo 使用以下 URL 安裝它。
 echo:
 echo https://www.microsoft.com/en-us/download/details.aspx?id=25150
 if %_unattended%==0 start https://www.microsoft.com/en-us/download/details.aspx?id=25150
@@ -4410,24 +4410,24 @@ echo               [1] 啟動 - Windows
 echo               [2] 啟動 - ESU
 echo               [3] 啟動 - Office [全部]
 echo               [4] 啟動 - Office [項目/Visio]
-echo               [5] 啟動 - 全部 
+echo               [5] 啟動 - 全部
 echo               _______________________________________________  
 echo: 
 echo                   進階選項:
 echo:
-echo               [A] 啟動 - Windows %KS% 主機 
-echo               [B] 啟動 - Office %KS% 主機 
-echo               [C] 啟動 - Windows 8/8.1 APPX 側載 
-echo               [D] 啟動 - 手動選擇產品 
+echo               [A] 啟動 - Windows %KS% 主機
+echo               [B] 啟動 - Office %KS% 主機
+echo               [C] 啟動 - Windows 8/8.1 APPX 側載
+echo               [D] 啟動 - 手動選擇產品
 if defined _vis (
-echo               [E] 重置 - 重新裝備/計時器 
+echo               [E] 重置 - 重新裝備/計時器
 ) else (
-echo               [E] 重設 - 重新裝備/計時器/篡改/鎖定 
+echo               [E] 重設 - 重新裝備/計時器/篡改/鎖定
 )
 echo               [F] 更改 - 啟動方法 [%_actmethod%]
 echo               _______________________________________________       
 echo:
-echo               [6] 刪除 TSforge 激活 
+echo               [6] 刪除 TSforge 激活
 echo               [7] 下載Office
 echo               [0] %_exitmsg%
 echo        ______________________________________________________________
@@ -4473,21 +4473,21 @@ echo                  Builds ^<  26100 - ZeroCID
 echo              __________________________________________________
 echo: 
 echo              [2] 靜態CID
-echo                  需要網路 
-echo                  不適用於 Windows 7 歲或以上 
+echo                  需要網路
+echo                  不適用於 Windows 7 歲或以上
 echo              __________________________________________________
 echo:
-echo              [3] 零碼識別 
-echo                  在低於 26100 的版本上可靠工作 
-echo                  不適用於 26100.4188 以上的版本 
+echo              [3] 零碼識別
+echo                  在低於 26100 的版本上可靠工作
+echo                  不適用於 26100.4188 以上的版本
 echo              __________________________________________________
 echo:
 echo              [4] KMS4k
-echo                  僅 Volume 許可證 
-echo                  激活4000多年 
+echo                  僅 Volume 許可證
+echo                  激活4000多年
 echo              __________________________________________________
 echo:
-echo              [5] 了解更多 
+echo              [5] 了解更多
 echo              [0] %_exitmsg%
 echo        ______________________________________________________________
 echo:
@@ -4553,7 +4553,7 @@ sc stop %_slser% %nul%
 if !errorlevel! EQU 1051 (
 %eline%
 echo 評估 WLMS 服務正在運行，%_slser% 服務無法停止。正在中止...
-echo 安裝 Windows 版本 %winbuild% 的非評估版本。 
+echo 安裝 Windows 版本 %winbuild% 的非評估版本。
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 goto dk_done
@@ -4596,7 +4596,7 @@ set tsmethod=ZeroCID
 
 if %winbuild% LSS 9200 if /i %tsmethod%==StaticCID (
 %eline%
-echo StaticCID 方法僅在 Windows 8 及更高版本上支援。 
+echo StaticCID 方法僅在 Windows 8 及更高版本上支援。
 goto dk_done
 )
 
@@ -5241,7 +5241,7 @@ call :dk_color %Gray% "檢查已安裝的 Office [未找到]"
 
 if defined ohub (
 echo:
-echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。 
+echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。
 )
 call :dk_color %Blue% "從下面的 URL 下載並安裝 Office，然後再試一次。"
 if %_actwin%==0 set fixes=%fixes% %mas%genuine-installation-media
@@ -5923,9 +5923,9 @@ mode 100, 30
 title  Remove TSforge Activation %masver%
 
 echo:
-echo TSforge 啟動不會修改任何 Windows 元件，也不會安裝任何新檔案。 
+echo TSforge 啟動不會修改任何 Windows 元件，也不會安裝任何新檔案。
 echo:
-echo 相反，它將資料附加到 Software Protection Platform 使用的資料檔案之一。 
+echo 相反，它將資料附加到 Software Protection Platform 使用的資料檔案之一。
 echo:
 call :dk_color %Gray% "如果您想重置啟動狀態，"
 call :dk_color %Blue% "%_fixmsg%"
@@ -12134,7 +12134,7 @@ echo:
 echo               [1] 啟動 - Windows
 echo               [2] 啟動 - Office [全部]
 echo               [3] 啟動 - Office [項目/Visio]
-echo               [4] 啟動 - 全部 
+echo               [4] 啟動 - 全部
 echo               _______________________________________________  
 echo: 
 if %_norentsk%==0 (
@@ -12153,7 +12153,7 @@ echo:
 if defined _server (
 echo               [8] 設定 %KS% 伺服器/連接埠 [%_server%] [%_port%]
 ) else (
-echo               [8] 設定 %KS% 伺服器/連接埠 
+echo               [8] 設定 %KS% 伺服器/連接埠
 )
 echo               [9] 下載Office
 echo               [0] %_exitmsg%
@@ -12480,7 +12480,7 @@ call :dk_color %Red% "檢查已安裝的 Office [未找到]"
 
 if defined ohub (
 echo:
-echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。 
+echo 您只安裝了 Office 儀表板應用程式;您需要安裝完整版本的 Office。
 )
 call :dk_color %Blue% "從下面的 URL 下載並安裝 Office，然後再試一次。"
 set fixes=%fixes% %mas%genuine-installation-media
@@ -12658,7 +12658,7 @@ if %_actoff%==1 call :_taskgetids osppid %ospp% office
 
 if not defined sppwid if not defined sppoid if not defined osppid (
 if not defined keyerror (
-echo 未找到已安裝的 Volume Windows / Office 產品。 
+echo 未找到已安裝的 Volume Windows / Office 產品。
 ) else (
 call :dk_color %Red% "無法安裝 Volume Windows / Office 產品。"
 )
@@ -12697,12 +12697,12 @@ if defined _C16R (
 REM  mass{}grave{dot}dev/office-license-is-not-genuine
 set _server=10.0.0.10
 call :_taskregserv
-echo 保留不存在的 IP 位址 10.0.0.10 作為 %KS% 伺服器。 
+echo 保留不存在的 IP 位址 10.0.0.10 作為 %KS% 伺服器。
 )
 )
 if not defined _C16R (
 call :_taskclear-cache
-echo 從登錄中清除了 %KS% 伺服器。 
+echo 從登錄中清除了 %KS% 伺服器。
 )
 )
 )
@@ -12945,8 +12945,8 @@ if %winbuild% GEQ 9200 if defined _C16R (
 echo:
 call :dk_color %Gray% "注意-"
 echo:
-echo 為了確保 Office 程式不會顯示非正版橫幅， 
-echo 請運行一次啟動選項，之後不要卸載。 
+echo 為了確保 Office 程式不會顯示非正版橫幅，
+echo 請運行一次啟動選項，之後不要卸載。
 echo %uline%
 )
 
@@ -12959,19 +12959,19 @@ call :ks_clearstuff
 
 %nul% reg query "HKLM\%SPPk%\%_wApp%" && (
 set error_=9
-echo 無法完全清除 %KS% 快取。 
+echo 無法完全清除 %KS% 快取。
 reg query "HKLM\%SPPk%\%_wApp%" /s %nul2% | findstr /i "127.0.0.2" %nul1% && echo KMS38 activation is locked.
 call :dk_color %Blue% "%_fixmsg%"
 echo:
 ) || (
-echo 成功清除 %KS% 快取。 
+echo 成功清除 %KS% 快取。
 )
 
 if defined error_ (
 if "%error_%"=="1" (
 echo %uline%
 %eline%
-echo 重試/重新啟動系統 
+echo 重試/重新啟動系統
 echo %uline%
 )
 ) else (
@@ -12992,7 +12992,7 @@ goto :dk_done
 set "key=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\taskcache\tasks"
 
 reg query "%key%" /f Path /s | find /i "\Activation-Renewal" %nul1% && (
-echo 刪除【任務】啟動-續訂 
+echo 刪除【任務】啟動-續訂
 schtasks /delete /tn Activation-Renewal /f %nul%
 )
 
@@ -13047,9 +13047,9 @@ if not "%~1"=="Task" (
 echo:
 echo ======錯誤======
 echo:
-echo 該文件應該僅由計劃任務運行。 
+echo 該文件應該僅由計劃任務運行。
 echo:
-echo 按任意鍵退出 
+echo 按任意鍵退出
 pause >nul
 exit /b
 )
@@ -13134,8 +13134,8 @@ goto _taskend
 )
 
 echo:
-echo 錯誤:網際網路未連接 
-echo 等待30秒 
+echo 錯誤:網際網路未連接
+echo 等待30秒
 
 timeout /t 30 >nul
 set /a loop=%loop%+1
@@ -13176,13 +13176,13 @@ call :_taskgetids osppid %ospp% office
 ::========================================================================================================================================
 
 echo:
-echo 為所有已安裝的 Volume 產品續訂 K-M-S 激活 
+echo 為所有已安裝的 Volume 產品續訂 K-M-S 激活
 
 if not defined sppwid if not defined sppoid if not defined osppid (
 echo:
-echo 未找到已安裝的 Volume Windows / Office 產品 
+echo 未找到已安裝的 Volume Windows / Office 產品
 echo:
-echo 更新 K-M-S 伺服器 
+echo 更新 K-M-S 伺服器
 call :_taskgetserv
 call :_taskregserv
 goto :_skipact
@@ -13207,7 +13207,7 @@ schtasks /delete /tn Activation-Run_Once /f %nul%
 :_taskend
 
 echo:
-echo 退出 
+echo 退出
 echo ______________________________________________________________________
 
 if defined _tserror (exit /b 123456789) else (exit /b 0)
@@ -13277,7 +13277,7 @@ if "%1"=="act_win" if not defined t_name (set prodname=%winos%)
 
 if "%1"=="act_win" if %_kms38% EQU 1 (
 if defined t_name (
-echo %prodname% 已透過 KMS38 啟動。 
+echo %prodname% 已透過 KMS38 啟動。
 ) else (
 call :dk_color %Green% "%prodname% 已透過 KMS38 啟動。"
 )
@@ -13286,7 +13286,7 @@ exit /b
 
 if %errorcode% EQU 12345 (
 if defined t_name (
-echo 由於互聯網受限或無互聯網，%prodname% 啟動失敗。 
+echo 由於互聯網受限或無互聯網，%prodname% 啟動失敗。
 ) else (
 call :dk_color %Red% "由於互聯網受限或無互聯網，%prodname% 啟動失敗。"
 )
@@ -13297,7 +13297,7 @@ exit /b
 
 if %errorcode% EQU -1073418187 if "%1"=="act_win" if %winbuild% LSS 9200 (
 if defined t_name (
-echo 由於 OEM BIOS [0xC004F035] 不合格，因此無法在此電腦上啟動 %prodname% KMS。 
+echo 由於 OEM BIOS [0xC004F035] 不合格，因此無法在此電腦上啟動 %prodname% KMS。
 ) else (
 call :dk_color %Red% "由於 OEM BIOS [0xC004F035] 不合格，因此無法在此電腦上啟動 %prodname% KMS。"
 call :dk_color %Blue% "使用主選單中的 TSforge 啟動選項。"
@@ -13309,7 +13309,7 @@ exit /b
 
 if %errorcode% EQU -1073418124 (
 if defined t_name (
-echo 由於 Internet 問題 [0xC004F074]，%prodname% 啟動失敗。 
+echo 由於 Internet 問題 [0xC004F074]，%prodname% 啟動失敗。
 ) else (
 call :dk_color %Red% "由於 Internet 問題 [0xC004F074]，%prodname% 啟動失敗。"
 if not defined _tserror (
@@ -13330,7 +13330,7 @@ set /a "gpr2=(%gpr%+1440-1)/1440"
 
 if %errorcode% EQU 0 if %gpr% EQU 0 (
 if defined t_name (
-echo %prodname% 活化成功，但剩餘期限未能增加。 
+echo %prodname% 活化成功，但剩餘期限未能增加。
 ) else (
 call :dk_color %Red% "%prodname% 活化成功，但剩餘期限未能增加。"
 )
@@ -13346,7 +13346,7 @@ if %gpr% EQU 259200 set _actpass=0
 
 if %errorcode% EQU 0 if %_actpass% EQU 0 (
 if defined t_name (
-echo %prodname% 已成功啟動 %gpr2% 天。 
+echo %prodname% 已成功啟動 %gpr2% 天。
 ) else (
 call :dk_color %Green% "%prodname% 已成功啟動 %gpr2% 天。"
 )
@@ -13355,7 +13355,7 @@ exit /b
 
 cmd /c exit /b %errorcode%
 if defined t_name (
-echo %prodname% 未能啟動 [0x!=ExitCode!]。剩餘期限:%gpr2% 天 [%gpr% 分鐘]。 
+echo %prodname% 未能啟動 [0x!=ExitCode!]。剩餘期限:%gpr2% 天 [%gpr% 分鐘]。
 ) else (
 call :dk_color %Red% "%prodname% 未能啟動 [0x!=ExitCode!]。剩餘期限:%gpr2% 天 [%gpr% 分鐘]。"
 )
@@ -13418,7 +13418,7 @@ if not defined _taskskip call :_actinfo
 
 if not defined sppoid if not defined osppid if defined t_name (
 echo:
-echo 檢查:未安裝 Office 的 Volume 版本 
+echo 檢查:未安裝 Office 的 Volume 版本
 )
 
 exit /b
@@ -13614,7 +13614,7 @@ if "%keyerror%"=="0" if not defined _tserror (
 call :dk_color %Green% "用於終身啟動的續訂任務已成功安裝在 %_dest% 中"
 exit /b
 )
-echo 用於終身啟動的續訂任務已成功安裝在 %_dest% 中 
+echo 用於終身啟動的續訂任務已成功安裝在 %_dest% 中
 exit /b
 
 ::  Extract the text from batch script without character and file encoding issue
@@ -13629,22 +13629,22 @@ exit /b
 :ks_createInfo.txt
 
 (
-echo   使用此腳本的目的是使用 online K-M-S 續訂您的 Windows/Office 許可證。 
+echo   使用此腳本的目的是使用 online K-M-S 續訂您的 Windows/Office 許可證。
 echo:
-echo   如果建立了續訂/啟動規劃任務，則將存在以下內容， 
+echo   如果建立了續訂/啟動規劃任務，則將存在以下內容，
 echo:
-echo   - 規劃任務 
+echo   - 規劃任務
 echo     啟用-續訂[續訂/每週]
 echo     Activation-Run_Once [啟動任務 - 一旦啟動就會刪除自身]
-echo     只有當系統連接到 Internet 時，排程任務才會運作。 
+echo     只有當系統連接到 Internet 時，排程任務才會運作。
 echo:
-echo   - 文件 
+echo   - 文件
 echo     C:\Program Files\Activation-Renewal\Activation_task.cmd
 echo     C:\Program Files\Activation-Renewal\Info.txt
 echo     C:\Program Files\Activation-Renewal\Logs.txt
 echo ______________________________________________________________________________________________
 echo:
-echo   該腳本是 MAS 項目的一部分。 
+echo   該腳本是 MAS 項目的一部分。
 echo:   
 echo   首頁:mass%w%grave%w%.dev
 )>"%_dest%\Info.txt"
@@ -16029,12 +16029,12 @@ echo:
 call :dk_color2 %_White% "             [1] " %_Green% "幫助"
 echo:             ___________________________________________________
 echo:                                                                      
-echo:             [2] 迪瑪恢復生命值 
+echo:             [2] 迪瑪恢復生命值
 echo:             [3] SFC Scannow
 echo:                                                                      
 echo:             [4]修復WMI
-echo:             [5] 修復許可 
-echo:             [6]修復WPA註冊表 
+echo:             [5] 修復許可
+echo:             [6]修復WPA註冊表
 echo:             ___________________________________________________
 echo:
 echo:             [0] %_exitmsg%
@@ -16063,8 +16063,8 @@ title  Dism /English /Online /Cleanup-Image /RestoreHealth
 
 if %winbuild% LSS 9200 (
 %eline%
-echo 偵測到不支援的作業系統版本。 
-echo 此指令僅適用於 Windows 8/8.1/10/11 及其等效伺服器。 
+echo 偵測到不支援的作業系統版本。
+echo 此指令僅適用於 Windows 8/8.1/10/11 及其等效伺服器。
 goto :at_back
 )
 
@@ -16082,8 +16082,8 @@ call :dk_color2 %_White% "     " %Red% "檢查網路連線[未連線]"
 
 echo %line%
 echo:
-echo      DISM 使用 Windows 更新來提供修復損壞所需的替換檔案。 
-echo      這將需要 5-15 分鐘或更長時間。 
+echo      DISM 使用 Windows 更新來提供修復損壞所需的替換檔案。
+echo      這將需要 5-15 分鐘或更長時間。
 echo %line%
 echo:
 echo      筆記:
@@ -16145,12 +16145,12 @@ echo:
 echo %line%
 echo:    
 echo      SFC will repair missing or corrupted system files.
-echo      建議您在此之前先執行 DISM 選項。 
-echo      這將需要 10-15 分鐘或更長時間。 
+echo      建議您在此之前先執行 DISM 選項。
+echo      這將需要 10-15 分鐘或更長時間。
 echo:
 echo      如果 SFC 無法修復某些問題，請再次執行該命令以查看是否可以 
-echo      到下一次。有時可能需要執行 sfc /scannow 指令 3 次 
-echo      每次之後重新啟動電腦以徹底修復它能夠修復的所有問題。 
+echo      到下一次。有時可能需要執行 sfc /scannow 指令 3 次
+echo      每次之後重新啟動電腦以徹底修復它能夠修復的所有問題。
 echo:   
 echo %line%
 echo:
@@ -16197,8 +16197,8 @@ title  Fix Licensing ^(ClipSVC ^+ SPP ^+ OSPP^)
 
 if %winbuild% EQU 6001 (
 %eline%
-echo Windows Vista SP1 不支援此選項。 
-echo 升級到 Windows Vista SP2。 
+echo Windows Vista SP1 不支援此選項。
+echo 升級到 Windows Vista SP2。
 goto :at_back
 )
 
@@ -16207,16 +16207,16 @@ echo %line%
 echo:   
 echo      筆記:
 echo:
-echo       - 此選項有助於解決啟動問題。 
+echo       - 此選項有助於解決啟動問題。
 echo:
 echo       - 此選項將:
-echo            - 停用 Windows 和 Office，您可能需要重新啟用。 
-echo              如果 Windows 透過主機板/OEM/數位許可證激活 
-echo              然後 Windows 將再次啟動自身。 
+echo            - 停用 Windows 和 Office，您可能需要重新啟用。
+echo              如果 Windows 透過主機板/OEM/數位許可證激活
+echo              然後 Windows 將再次啟動自身。
 echo:
-echo            - 清除 ClipSVC、SPP 和 OSPP 授權。 
-echo            - 修復 SPP 令牌資料夾和註冊表的權限。 
-echo            - 觸發 Office 的修復選項。 
+echo            - 清除 ClipSVC、SPP 和 OSPP 授權。
+echo            - 修復 SPP 令牌資料夾和註冊表的權限。
+echo            - 觸發 Office 的修復選項。
 echo:
 call :dk_color2 %_White% "      - " %Blue% "僅在必要時套用此選項。"
 echo:
@@ -16239,13 +16239,13 @@ call :dk_color %Blue% "重建 ClipSVC 許可證..."
 echo:
 
 if %winbuild% LSS 10240 (
-echo 僅 Windows 10/11 支援 ClipSVC 許可證重建。 
+echo 僅 Windows 10/11 支援 ClipSVC 許可證重建。
 echo 跳過...
 goto :rebuildspptok
 )
 
 %psc% "(([WMISEARCHER]'SELECT Name FROM SoftwareLicensingProduct WHERE LicenseStatus=1 AND GracePeriodRemaining=0 AND PartialProductKey IS NOT NULL AND LicenseDependsOn is NULL').Get()).Name" %nul2% | findstr /i "Windows" %nul1% && (
-echo Windows 已永久啟動。 
+echo Windows 已永久啟動。
 echo 跳過...
 goto :rebuildspptok
 )
@@ -16256,14 +16256,14 @@ for /f "tokens=2 delims==" %%# in ('%psc% "(([WMISEARCHER]'SELECT PartialProduct
 for %%# in (8HV2C QPFCT 3V66T PKCKT WXCHW 8TYMD 6F4BT 8HVX7 KD72Y 7CFBY DRR8H P39PB DYJWX MDWWW 9HKR4 M7V2X 2YV77 WT2RQ MHBPB QPF8P 2YV66 VMJ2C DJ4F6 CKFFD YY74H J8JXD BHDCD T6R4W D32MH RRK69 3PJBP) do if /i "%_partial%"=="%%#" set _keymatch=1
 
 if not defined _keymatch (
-echo HWID 啟動密鑰未安裝。 
+echo HWID 啟動密鑰未安裝。
 echo 跳過...
 goto :rebuildspptok
 )
 
 %psc% "If([Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]'{DCB00C01-570F-4A9B-8D69-199FDBA5723B}')).IsConnectedToInternet){Exit 0}Else{Exit 1}"
 if errorlevel 1 (
-echo 網路未連線。 
+echo 網路未連線。
 echo 跳過...
 goto :rebuildspptok
 )
@@ -16279,7 +16279,7 @@ if !errorlevel!==3 set resfail=1
 )
 
 if defined resfail (
-echo 無法連線到許可伺服器。 
+echo 無法連線到許可伺服器。
 echo 跳過...
 goto :rebuildspptok
 )
@@ -16318,7 +16318,7 @@ echo Deleting a Volatile ^& Protected Registry Key...
 echo [%RegKey%]
 reg query "%RegKey%" %nul% && (
 call :dk_color %Red% "[失敗的]"
-echo 使用重新啟動選項重新啟動計算機，這將自動刪除此註冊表項。 
+echo 使用重新啟動選項重新啟動計算機，這將自動刪除此註冊表項。
 ) || (
 echo [成功的]
 )
@@ -16389,11 +16389,11 @@ echo 正在刪除 KMS38 保護...
 %nul% reg query "HKLM\%SPPk%\%_wApp%" && (
 call :dk_color %Red% "無法刪除 KMS38 保護。"
 ) || (
-echo 已成功刪除 KMS38 保護。 
-echo 已成功清除 KMS 快取。 
+echo 已成功刪除 KMS38 保護。
+echo 已成功清除 KMS 快取。
 )
 ) || (
-echo 已成功清除 KMS 快取。 
+echo 已成功清除 KMS 快取。
 )
 echo:
 
@@ -16506,7 +16506,7 @@ echo:
 if not defined token (
 call :dk_color %Red% "無法重建 tokens.dat 檔案。"
 ) else (
-echo tokens.dat 檔案已成功重建。 
+echo tokens.dat 檔案已成功重建。
 )
 
 if %winbuild% LSS 9200 if not defined _vis (
@@ -16524,7 +16524,7 @@ call :dk_color %Blue% "重建 OSPP 許可證令牌..."
 echo:
 
 sc qc osppsvc %nul% || (
-echo 未安裝基於 OSPP 的 Office。 
+echo 未安裝基於 OSPP 的 Office。
 echo 正在跳過重建 OSPP 令牌...
 goto :repairoffice
 )
@@ -16567,7 +16567,7 @@ echo:
 if not defined token (
 call :dk_color %Red% "無法重建 tokens.dat 檔案。"
 ) else (
-echo tokens.dat 檔案已成功重建。 
+echo tokens.dat 檔案已成功重建。
 )
 
 ::========================================================================================================================================
@@ -16636,15 +16636,15 @@ set /a counter+=1
 
 if %counter% GTR 1 (
 %eline%
-echo 找到多個 Office 版本。 
-echo 建議僅安裝 Office 的一個版本。 
+echo 找到多個 Office 版本。
+echo 建議僅安裝 Office 的一個版本。
 echo ________________________________________________________________
 echo:
 )
 
 echo:
 if %counter% EQU 0 (
-echo Office ^(2010 年及更高版本^)未安裝。 
+echo Office ^(2010 年及更高版本^)未安裝。
 goto :repairend
 ) else if not defined c2r16_68 if not defined c2r16_86 (
 call :dk_color %_Yellow% "將出現一個新窗口，在該窗口中您需要選擇[快速修復]選項。"
@@ -16767,7 +16767,7 @@ echo Winmgmt 服務已損壞，正在中止...
 goto :at_back
 )
 
-echo 禁用 Winmgmt 服務 
+echo 禁用 Winmgmt 服務
 sc config Winmgmt start= disabled %nul%
 if %errorlevel% EQU 0 (
 echo [成功的]
@@ -16778,7 +16778,7 @@ goto :at_back
 )
 
 echo:
-echo 停止 Winmgmt 服務 
+echo 停止 Winmgmt 服務
 %psc% Stop-Service Winmgmt -force %nul%
 %psc% Stop-Service Winmgmt -force %nul%
 %psc% Stop-Service Winmgmt -force %nul%
@@ -16798,7 +16798,7 @@ exit
 )
 
 echo:
-echo 刪除 WMI 儲存庫 
+echo 刪除 WMI 儲存庫
 rmdir /s /q "%SysPath%\wbem\repository\" %nul%
 if exist "%SysPath%\wbem\repository\" (
 call :dk_color %Red% "[失敗的]"
@@ -16807,7 +16807,7 @@ echo [成功的]
 )
 
 echo:
-echo 啟用 Winmgmt 服務 
+echo 啟用 Winmgmt 服務
 sc config Winmgmt start= auto %nul%
 if %errorlevel% EQU 0 (
 echo [成功的]
@@ -16833,7 +16833,7 @@ call :checkwmi
 if defined error (
 call :dk_color %Red% "[未回應]"
 echo:
-echo 運行 [Dism RestoreHealth] 和 [SFC Scannow] 選項並確保沒有錯誤。 
+echo 運行 [Dism RestoreHealth] 和 [SFC Scannow] 選項並確保沒有錯誤。
 ) else (
 call :dk_color %Green% "[在職的]"
 )
@@ -17191,8 +17191,8 @@ title  Change Windows Edition %masver%
 
 if %winbuild% LSS 7600 (
 %eline%
-echo 偵測到不受支援的作業系統版本 [%winbuild%]。 
-echo 僅 Windows 7/8/8.1/10/11 及其伺服器等效項支援此選項。 
+echo 偵測到不受支援的作業系統版本 [%winbuild%]。
+echo 僅 Windows 7/8/8.1/10/11 及其伺服器等效項支援此選項。
 goto dk_done
 )
 
@@ -17303,7 +17303,7 @@ call :dk_color %Red% "====注意===="
 echo:
 echo [EditionID:%osedition% ^| %fullbuild%]
 echo:
-echo 變更此版本可能不會刪除「%osedition%」特定的功能。 
+echo 變更此版本可能不會刪除「%osedition%」特定的功能。
 echo:
 call :dk_color %_Yellow% "按 [7] 繼續..."
 choice /c 7 /n
@@ -17387,10 +17387,10 @@ echo:
 call :dk_color %Red% "====注意===="
 echo:
 echo 一旦版本更改為"%targetedition%"， 
-echo 稍後系統可能無法正確變更版本。 
+echo 稍後系統可能無法正確變更版本。
 echo:
-echo [1] 無論如何繼續 
-echo [0] 返回 
+echo [1] 無論如何繼續
+echo [0] 返回
 echo:
 call :dk_color %_Green% "使用鍵盤 [1,0] 選擇選單選項:"
 choice /C:10 /N
@@ -17425,7 +17425,7 @@ set _chan=Retail
 if not defined key (
 %eline%
 echo [%targetedition% ^| %winbuild%]
-echo 無法從 pkeyhelper.dll 取得產品金鑰。 
+echo 無法從 pkeyhelper.dll 取得產品金鑰。
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 goto dk_done
@@ -17453,9 +17453,9 @@ echo:
 if %_dismapi%==1 (
 call :dk_color %Green% "註釋 -"
 echo:
-echo  - 在繼續之前儲存您的工作，系統將自動重新啟動。 
+echo  - 在繼續之前儲存您的工作，系統將自動重新啟動。
 echo:
-echo  - 版本變更後，您將需要使用 HWID 選項啟動。 
+echo  - 版本變更後，您將需要使用 HWID 選項啟動。
 %line%
 echo:
 choice /C:21 /N /M "[1] Continue [2] %_exitmsg% : "
@@ -17559,7 +17559,7 @@ if not defined key call :changeeditiondata
 if not defined key (
 %eline%
 echo [%targetedition% ^| %winbuild%]
-echo 無法從 pkeyhelper.dll 取得產品金鑰。 
+echo 無法從 pkeyhelper.dll 取得產品金鑰。
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 goto dk_done
@@ -17600,8 +17600,8 @@ for /f %%a in ('%psc% "(Get-Date).ToString('yyyyMMdd-HHmmssfff')"') do set _time
 
 sc query TrustedInstaller | find /i "RUNNING" %nul% && (
 %eline%
-echo 無法停止 TrustedInstaller 服務。 
-echo 使用重新啟動選項重新啟動計算機，然後重試。 
+echo 無法停止 TrustedInstaller 服務。
+echo 使用重新啟動選項重新啟動計算機，然後重試。
 set preperror=1
 exit /b
 )
@@ -17632,7 +17632,7 @@ call :compresslog DISM\dism_%_time%.log ChangeEdition_Logs\DISM %nul%
 
 echo:
 if %winbuild% GEQ 9200 %psc% "if ((Get-WindowsOptionalFeature -Online -FeatureName NetFx3).State -eq 'Enabled') {Write-Host 'Checking .NET Framework 3.5 Status - Enabled'}"
-echo 日誌檔案將複製到桌面上的 ChangeEdition_Logs 資料夾中。 
+echo 日誌檔案將複製到桌面上的 ChangeEdition_Logs 資料夾中。
 echo:
 call :dk_color %Blue% "如果發生錯誤，您應該重新啟動系統，然後再重試。"
 echo:
@@ -17663,9 +17663,9 @@ reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Upd
 
 if defined rebootreq (
 %eline%
-echo 發現待重啟標誌。 
+echo 發現待重啟標誌。
 echo:
-echo 確保 Windows 已完全更新，重新啟動系統並重試。 
+echo 確保 Windows 已完全更新，重新啟動系統並重試。
 )
 exit /b
 
@@ -18053,8 +18053,8 @@ title  Change Office Edition %masver%
 
 if %winbuild% LSS 7600 (
 %eline%
-echo 偵測到不受支援的作業系統版本 [%winbuild%]。 
-echo 僅 Windows 7/8/8.1/10/11 及其伺服器等效項支援此選項。 
+echo 偵測到不受支援的作業系統版本 [%winbuild%]。
+echo 僅 Windows 7/8/8.1/10/11 及其伺服器等效項支援此選項。
 goto dk_done
 )
 
@@ -18111,8 +18111,8 @@ for /f "skip=2 tokens=2*" %%a in ('"reg query %_68%\ClickToRun /v InstallPath" %
 
 if not defined o16c2r_reg (
 %eline%
-echo 未安裝此腳本所需的 Office C2R 2016 或更高版本。 
-echo 從下列 URL 下載並安裝 Office，然後再試一次。 
+echo 未安裝此腳本所需的 Office C2R 2016 或更高版本。
+echo 從下列 URL 下載並安裝 Office，然後再試一次。
 set fixes=%fixes% %mas%genuine-installation-media
 call :dk_color %_Yellow% "%mas%genuine-installation-media"
 goto dk_done
@@ -18126,7 +18126,7 @@ call :ch_getinfo
 
 if %verchk% LSS 9029 (
 %eline%
-echo 安裝的 Office 版本是 %_version%。 
+echo 安裝的 Office 版本是 %_version%。
 echo 所需的最低版本為 16.0.9029.2167
 echo 正在中止...
 call :dk_color %Blue% "從下列 URL 下載並安裝最新的 Office，然後再試一次。"
@@ -18160,8 +18160,8 @@ goto dk_done
 
 if %winbuild% LSS 10240 if defined ltscfound (
 %eline%
-echo 安裝的 Office 似乎來自 Volume 頻道 %ltsc19%%ltsc21%%ltsc24%， 
-echo 您的 Windows 建置版本 %winbuild% 並未正式支援此功能。 
+echo 安裝的 Office 似乎來自 Volume 頻道 %ltsc19%%ltsc21%%ltsc24%，
+echo 您的 Windows 建置版本 %winbuild% 並未正式支援此功能。
 echo 正在中止...
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
@@ -18174,7 +18174,7 @@ if %winbuild% LSS 9200 if %verchk% GTR 12527 set unsupbuild=1
 
 if defined unsupbuild (
 %eline%
-echo 您的 Windows 內部版本 %winbuild% 上安裝了不支援的 Office %verchk%。 
+echo 您的 Windows 內部版本 %winbuild% 上安裝了不支援的 Office %verchk%。
 echo 正在中止...
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
@@ -18195,14 +18195,14 @@ echo:
 echo:
 echo         ____________________________________________________________
 echo:
-echo                 [1] 更改所有版本 
-echo                 [2] 新增版本 
-echo                 [3]刪除版本 
+echo                 [1] 更改所有版本
+echo                 [2] 新增版本
+echo                 [3]刪除版本
 echo:
-echo                 [4] 新增/刪除應用程式 
+echo                 [4] 新增/刪除應用程式
 echo                 ____________________________________________
 echo:
-echo                 [5] 更改Office更新頻道 
+echo                 [5] 更改Office更新頻道
 echo                 [0] %_exitmsg%
 echo         ____________________________________________________________
 echo: 
@@ -18248,7 +18248,7 @@ echo                 [3] Office SingleApps - Retail
 echo                 [4] Office SingleApps - Volume
 echo                 ____________________________________________
 echo:
-echo                 [0] 返回 
+echo                 [0] 返回
 echo         ____________________________________________________________
 echo: 
 call :dk_color2 %_White% "            " %_Green% "使用鍵盤選擇選單選項 [1,2,3,4,0]"
@@ -18281,7 +18281,7 @@ mode 98, 45
 
 if not exist %SystemRoot%\Temp\%list%.txt (
 %eline%
-echo 無法產生可用版本清單。 
+echo 無法產生可用版本清單。
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 goto :oe_goback
@@ -18298,7 +18298,7 @@ echo:
 call :dk_color %Gray% "已安裝 Office 版本:%_oIds%"
 call :dk_color %Gray% "您可以選擇下列 Office 版本之一。"
 if %winbuild% LSS 10240 (
-echo 2019/2021/2024 等不受支援的產品不在此清單中。 
+echo 2019/2021/2024 等不受支援的產品不在此清單中。
 ) else (
 for %%# in (2019 2021 2024) do (
 find /i "%%#" "%SystemRoot%\Temp\%list%.txt" %nul1% || (
@@ -18322,7 +18322,7 @@ set targetedition!counter!=%%A
 
 %line%
 echo:
-echo [0] 返回 
+echo [0] 返回
 echo:
 call :dk_color %_Green% "使用鍵盤輸入選項編號，然後按 Enter 確認:"
 set /p inpt=
@@ -18345,7 +18345,7 @@ set suites=1
 %psc% "$f=[System.IO.File]::ReadAllText('!_batp!') -split ':getappnames\:.*';. ([scriptblock]::Create($f[1]))"
 if not exist %SystemRoot%\Temp\getAppIds.txt (
 %eline%
-echo 無法產生可用應用程式清單。 
+echo 無法產生可用應用程式清單。
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 goto :oe_goback
@@ -18402,8 +18402,8 @@ if defined OneDrive_st   echo [D] OneDrive         : %OneDrive_st%
 if defined Teams_st      echo [T] Teams            : %Teams_st%
 %line%
 echo:
-echo [1] 繼續 
-echo [0] 返回 
+echo [1] 繼續
+echo [0] 返回
 %line%
 echo:
 call :dk_color %_Green% "使用鍵盤選擇選單選項:"
@@ -18497,7 +18497,7 @@ if /i "%_lang%"=="%%#" set langmatched=1
 )
 if not defined langmatched (
 %eline%
-echo %_lang% 語言不適用於 Project/Visio 應用程式。 
+echo %_lang% 語言不適用於 Project/Visio 應用程式。
 call :dk_color %Blue% "從下列 URL 安裝 Project/Visio 支援的語言的 Office。"
 set fixes=%fixes% %mas%genuine-installation-media
 call :dk_color %_Yellow% "%mas%genuine-installation-media"
@@ -18611,7 +18611,7 @@ set targetedition!counter!=%%A
 
 %line%
 echo:
-echo [0] 返回 
+echo [0] 返回
 echo:
 call :dk_color %_Green% "使用鍵盤輸入選項編號，然後按 Enter 確認:"
 set /p inpt=
@@ -18650,7 +18650,7 @@ for %%A in (%_oIds%) do (set /a counter+=1)
 if !counter! LEQ 1 (
 echo:
 echo Error 500 (Server Error)!!1500.That's an error.There was an error. Please try again later.That's all we know.
-echo 僅當安裝多個產品時此選項才可用。 
+echo 僅當安裝多個產品時此選項才可用。
 goto :oe_goback
 )
 
@@ -18675,7 +18675,7 @@ set targetedition!counter!=%%A
 
 %line%
 echo:
-echo [0] 返回 
+echo [0] 返回
 echo:
 call :dk_color %_Green% "使用鍵盤輸入選項編號，然後按 Enter 確認:"
 set /p inpt=
@@ -18736,7 +18736,7 @@ goto :oe_goback
 if defined ltscfound (
 %eline%
 echo 已安裝 Office 更新頻道:%ltsc19%%ltsc21%%ltsc24%
-echo 您的 Windows 內部版本 %winbuild% 上安裝了不支援的 Office 更新頻道。 
+echo 您的 Windows 內部版本 %winbuild% 上安裝了不支援的 Office 更新頻道。
 goto :oe_goback
 )
 )
@@ -18798,8 +18798,8 @@ if defined bypass set bypassFFN=!bypassFFN!%%A
 
 %line%
 echo:
-echo [R] 了解更新管道 
-echo [0] 返回 
+echo [R] 了解更新管道
+echo [0] 返回
 echo:
 call :dk_color %_Green% "使用鍵盤輸入選項編號，然後按 Enter 確認:"
 set /p inpt=
@@ -18857,7 +18857,7 @@ echo %targetchannel% | find /i "2024 VL" %nul% && (for %%A in (%_oIds%) do (echo
 if defined abortchange (
 %eline%
 echo 已安裝的 Office 產品與目標更新頻道不符。正在中止...
-echo 永久 VL 更新頻道不支援非永久 Office 產品。 
+echo 永久 VL 更新頻道不支援非永久 Office 產品。
 goto :oe_goback
 )
 
@@ -18932,7 +18932,7 @@ call :oe_tempcleanup
 echo:
 if defined fixes (
 call :dk_color %White% "遵循上述所有藍線。   "
-call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略 
+call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略
 choice /C:10 /N
 if !errorlevel!==2 goto :oemenu
 if !errorlevel!==1 (start %selfgit% & start %github% & for %%# in (%fixes%) do (start %%#))

@@ -367,6 +367,11 @@ def process_cmd(content: str, cache: dict) -> str:
     inserted_chcp = False
     for chars in line_list:
         line = "".join(chars)
+        
+        # 解決 Windows CMD chcp 65001 解析 Bug：若行尾是非 ASCII 字元，會吞噬下一行
+        if line and ord(line[-1]) > 127:
+            line += " "
+
         if not inserted_chcp and re.match(r"\s*@echo\s+off", line, re.IGNORECASE):
             final_lines.append(line)
             final_lines.append("chcp 65001 >nul")
