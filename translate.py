@@ -258,6 +258,9 @@ def translate_batch(texts: list[str], cache: dict, translator: GoogleTranslator)
 # CMD 處理
 # ─────────────────────────────────────────────
 def should_skip_cmd_line(line: str) -> bool:
+    # 不跳過特定的 set 變數（包含需要翻譯的提示文字）
+    if re.match(r'^\s*set\s+"(_exitmsg|_fixmsg|permerror)=', line, re.IGNORECASE):
+        return False
     return bool(_CMD_SKIP_PATTERNS.search(line))
 
 # %mas% 後面跟著的 URL 路徑後綴（如 troubleshoot、fix_service）絕對不翻譯
@@ -317,6 +320,23 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
                 segments.append((m.start(2), m.start(2) + len(prefix_text), prefix_text))
         else:
             segments.append((m.start(2), m.start(2) + len(text), text))
+        return segments
+
+    # ── set 系列 (特定的提示文字變數) ──────────────────────────
+    m = re.match(r'^(\s*set\s+"(?:_exitmsg|_fixmsg|permerror)=)(.+)("$)', line, re.IGNORECASE)
+    if m:
+        text = m.group(2)
+        if re.search(r'[a-zA-Z]', text):
+            segments.append((m.start(2), m.end(2), text))
+        return segments
+
+    # ── choice /M 系列 ──────────────────────────
+    m = re.search(r'\bchoice\b.*?/M\s+"([^"]+)"', line, re.IGNORECASE)
+    if m:
+        text = m.group(1)
+        if re.search(r'[a-zA-Z]', text):
+            segments.append((m.start(1), m.end(1), text))
+        return segments
 
     return segments
 

@@ -671,3 +671,15 @@ Check if antivirus or firewall is blocking the connection.,檢查防毒軟體或
 Autorun,自動運行
 CMD is working,CMD 正在工作
 "Command is running with x86 Powershell, run it with x64 Powershell instead...",命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行...
+>    [1] Activate Anyway [0] __PH_0__ :,> [1] 無論如何啟動 [0] __PH_0__ :
+Go back,回去
+"Go back to Main Menu, select Troubleshoot and run Fix Licensing option.",返回主選單，選擇故障排除並執行修復許可選項。
+Exit,出口
+"In __PH_0__ folder, run Troubleshoot script and select Fix Licensing option.",在 __PH_0__ 資料夾中，執行故障排除腳本並選擇修復許可選項。
+Error Found In Token Folder,在令牌資料夾中發現錯誤
+Error Found In SPP Registries,SPP 註冊表中發現錯誤
+> [0] Go back  [F] Continue :,> [0] 返回 [F] 繼續 :
+>    [9] Continue [0] Go back :,> [9] 繼續 [0] 回傳 :
+> [1] Restart  [2] Revert Back Changes :,> [1] 重新啟動 [2] 恢復變更:
+[1] Continue [2] __PH_0__ :,[1] 繼續 [2] __PH_0__ :
+[1] Continue [0] __PH_0__ :,[1] 繼續 [0] __PH_0__ :
