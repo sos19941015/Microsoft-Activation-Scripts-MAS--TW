@@ -130,22 +130,23 @@ def get_remote_content(url: str) -> tuple[str, str]:
 # ─────────────────────────────────────────────
 
 # CMD：絕對不翻譯整行的條件
+# 注意：echo 行和 dk_color 行有自己的提取邏輯，不走這裡
 _CMD_SKIP_PATTERNS = re.compile(
     r"""
-    [|<>&^]             # 管道、重定向、連結符
-    | ^\s*:             # 標籤行 (:label)
+    ^\s*:               # 標籤行 (:label)
     | ^\s*rem\b         # 備註行
     | ^\s*if\b          # if 判斷
     | ^\s*for\b         # for 迴圈
     | ^\s*set\b         # set 指定
     | ^\s*goto\b        # goto
-    | ^\s*call\s+:      # call :function（非 dk_color）
     | ^\s*exit\b        # exit
-    | ^\s*[a-z]+\.exe\b # 外部可執行檔
-    | \bfind\b|\bfindstr\b|\breg\b|\bsc\b|\bwmic\b|\bpowershell\b|\bcmd\b
+    | ^\s*[a-z]+\.exe\b # 外部可執行檔呼叫
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+
+# echo 行：若文字部分包含這些符號就是程式碼，整行跳過
+_ECHO_CODE_PATTERNS = re.compile(r'[|<>&]|\^[|<>&]', re.IGNORECASE)
 
 # PS1：整行不翻譯的條件
 _PS1_SKIP_PATTERNS = re.compile(
@@ -266,35 +267,53 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
     """
     從 CMD 行中提取可翻譯的文字片段，回傳 [(start, end, text), ...]。
     策略：
-      - echo 行：取 echo 關鍵字之後的全部文字作為一個片段
-      - call :dk_color 行：取每個引號內的字串片段
-      - 若片段內含 %mas%URL，分割後只翻譯純文字部分
+      - echo 行：取 echo 關鍵字之後的文字，若含管道/重定向則整行是程式碼跳過
+      - call :dk_color 行：逐一取引號內文字片段（多段）
+      - 若片段內含 %mas%URL，只翻譯 URL 之前的說明部分
     """
     segments = []
+    sl = line.strip()
 
-    # echo 系列（echo:, echo   text, echo.text）
-    m = re.match(r"^(\s*echo[: ]\s*)(.+)$", line, re.IGNORECASE)
+    # ── dk_color 系列（call :dk_color / :dk_color2 / :dk_color3）────────
+    # 必須在 echo 之前判斷，因為 dk_color 行沒有 echo
+    if re.search(r"call\s+:dk_color", sl, re.IGNORECASE):
+        for m in re.finditer(r'"([^"]+)"', sl):
+            inner = m.group(1)
+            # 跳過純空白、純變數、純符號片段
+            if not re.search(r'[a-zA-Z]', inner):
+                continue
+            # 保護 %mas%URL 後綴：只取 URL 前的文字
+            mas_m = _MAS_URL_SUFFIX.search(inner)
+            if mas_m:
+                prefix = inner[:mas_m.start()].rstrip()
+                if prefix and re.search(r'[a-zA-Z]', prefix):
+                    # 計算 prefix 在整行的絕對位置
+                    abs_start = line.index('"', line.index(m.group(0))) + 1
+                    # 用 m 的位置更精確
+                    abs_start = m.start(1)
+                    segments.append((abs_start, abs_start + len(prefix), prefix))
+            else:
+                segments.append((m.start(1), m.end(1), inner))
+        return segments
+
+    # ── echo 系列（echo:, echo 空格, echo. 等）──────────────────────────
+    m = re.match(r"^(\s*echo[: .]?\s*)(.+)$", line, re.IGNORECASE)
     if m:
         text = m.group(2).rstrip()
-        if text and not re.match(r"^[.\s%!^]*$", text):
-            # 若含 %mas%URL，只翻譯 %mas% 之前的部分，URL 後綴保留
-            mas_match = _MAS_URL_SUFFIX.search(text)
-            if mas_match:
-                # 只翻譯 URL 前面的說明文字
-                prefix_text = text[:mas_match.start()].rstrip()
-                if prefix_text and re.search(r'[a-zA-Z]', prefix_text):
-                    segments.append((m.start(2), m.start(2) + len(prefix_text), prefix_text))
-            else:
-                segments.append((m.start(2), m.start(2) + len(text), text))
-        return segments  # echo 行只取一段
-
-    # call :dk_color / :dk_color2 / :dk_color3 — 取引號內文字
-    if re.search(r"call\s+:dk_color", line, re.IGNORECASE):
-        for m in re.finditer(r'"([^"]*[a-zA-Z\u4e00-\u9fff][^"]*)"', line):
-            inner = m.group(1)
-            start = m.start(1)
-            end = m.end(1)
-            segments.append((start, end, inner))
+        # 純空行或純符號跳過
+        if not text or re.match(r'^[.\s%!^]*$', text):
+            return []
+        # 若文字部分包含管道/重定向，代表整行是程式碼，跳過
+        if _ECHO_CODE_PATTERNS.search(text):
+            return []
+        # 含 %mas%URL：只翻譯 URL 前的說明文字
+        mas_match = _MAS_URL_SUFFIX.search(text)
+        if mas_match:
+            prefix_text = text[:mas_match.start()].rstrip()
+            if prefix_text and re.search(r'[a-zA-Z]', prefix_text):
+                segments.append((m.start(2), m.start(2) + len(prefix_text), prefix_text))
+        else:
+            segments.append((m.start(2), m.start(2) + len(text), text))
 
     return segments
 
