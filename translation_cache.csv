@@ -821,3 +821,4 @@ Check if antivirus or firewall is blocking the connection.,檢查防毒軟體或
 Autorun,自動運行
 CMD is working,CMD 正在工作
 "Command is running with x86 Powershell, run it with x64 Powershell instead...",命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行...
+Help:,幫助:

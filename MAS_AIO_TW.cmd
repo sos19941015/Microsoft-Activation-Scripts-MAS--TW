@@ -98,7 +98,7 @@ echo:
 echo 錯誤 - 腳本存在 LF 行結束問題或腳本結尾缺少空白行。
 echo:
 echo:
-echo 檢查此網頁尋求協助 - %mas% 疑難排解
+echo 檢查此網頁尋求協助 - %mas%troubleshoot
 echo:
 echo:
 ping 127.0.0.1 -n 20 >nul
@@ -2857,7 +2857,7 @@ echo:
 if not defined error (
 call :dk_color %Green% "Office is permanently activated."
 if defined ohub call :dk_color %Gray% "Office apps such as Word, Excel are activated, use them directly. Ignore 'Buy' button in Office dashboard app."
-echo 幫助：%mas%疑難排解
+echo 幫助: %mas%troubleshoot
 ) else (
 call :dk_color %Red% "Some errors were detected."
 if not defined ierror if not defined showfix call :dk_color %Blue% "%_fixmsg%"
@@ -18840,7 +18840,7 @@ echo:
 echo %updcommand%
 %updcommand%
 echo:
-echo 檢查此網頁尋求協助 - %mas% 疑難排解
+echo 檢查此網頁尋求協助 - %mas%troubleshoot
 goto :oe_goback
 
 ::=======================

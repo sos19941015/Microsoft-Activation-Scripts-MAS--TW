@@ -259,9 +259,16 @@ def translate_batch(texts: list[str], cache: dict, translator: GoogleTranslator)
 def should_skip_cmd_line(line: str) -> bool:
     return bool(_CMD_SKIP_PATTERNS.search(line))
 
+# %mas% 後面跟著的 URL 路徑後綴（如 troubleshoot、fix_service）絕對不翻譯
+_MAS_URL_SUFFIX = re.compile(r'%mas%\S*', re.IGNORECASE)
+
 def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
     """
     從 CMD 行中提取可翻譯的文字片段，回傳 [(start, end, text), ...]。
+    策略：
+      - echo 行：取 echo 關鍵字之後的全部文字作為一個片段
+      - call :dk_color 行：取每個引號內的字串片段
+      - 若片段內含 %mas%URL，分割後只翻譯純文字部分
     """
     segments = []
 
@@ -270,7 +277,15 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
     if m:
         text = m.group(2).rstrip()
         if text and not re.match(r"^[.\s%!^]*$", text):
-            segments.append((m.start(2), m.start(2) + len(text), text))
+            # 若含 %mas%URL，只翻譯 %mas% 之前的部分，URL 後綴保留
+            mas_match = _MAS_URL_SUFFIX.search(text)
+            if mas_match:
+                # 只翻譯 URL 前面的說明文字
+                prefix_text = text[:mas_match.start()].rstrip()
+                if prefix_text and re.search(r'[a-zA-Z]', prefix_text):
+                    segments.append((m.start(2), m.start(2) + len(prefix_text), prefix_text))
+            else:
+                segments.append((m.start(2), m.start(2) + len(text), text))
         return segments  # echo 行只取一段
 
     # call :dk_color / :dk_color2 / :dk_color3 — 取引號內文字
@@ -361,13 +376,25 @@ def patch_ps1(content: str) -> str:
         flags=re.DOTALL,
     )
 
-    # 移除雜湊校驗區塊（從 # Verify... 到對應的 } 結束）
-    # 使用非貪婪匹配，僅移除校驗邏輯本身而不影響後續程式碼
+    # 移除雜湊校驗區塊
+    # 精確匹配：從「# Verify script integrity」到包含 $hash -ne $releaseHash 的整個 if 區塊結束
     content = re.sub(
-        r"#\s*Verify script integrity.*?(?=\n\s*\n|\n\s*[a-zA-Z\$#])",
-        "# [已移除雜湊驗證，此版本使用本專案翻譯版 CMD]",
+        r"# Verify script integrity.*?\}\s*\n",
+        "# [已移除雜湊驗證，此版本使用本專案翻譯版 CMD]\n",
         content,
         flags=re.DOTALL,
+    )
+
+    # 二次保險：如果 $releaseHash 仍殘留，移除包含它的那幾行
+    content = re.sub(
+        r".*\$releaseHash.*\n",
+        "",
+        content,
+    )
+    content = re.sub(
+        r".*\$hash.*-ne.*\$releaseHash.*\n",
+        "",
+        content,
     )
 
     return content
@@ -389,7 +416,9 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
 def process_ps1(content: str, cache: dict) -> str:
     content = patch_ps1(content)
     translator = GoogleTranslator(source="auto", target="zh-TW")
-    lines = content.splitlines()
+    # keepends=True 保留原始換行符，避免 splitlines 丟失 CRLF/LF 資訊
+    lines = content.splitlines()   # 僅用於索引，後續重組用 splitlines(keepends=True)
+    lines_with_ends = content.splitlines(keepends=True)
 
     pending = []
     for li, line in enumerate(lines):
@@ -407,15 +436,24 @@ def process_ps1(content: str, cache: dict) -> str:
         log.info(f"PS1 翻譯進度：{i+1}–{min(i+BATCH_SIZE, len(protected_texts))}/{len(protected_texts)}")
         translated_all.extend(translate_batch(chunk, cache, translator))
 
+    # 對 lines（不含換行符）做替換，再把換行符接回去
     line_list = [list(line) for line in lines]
     for idx, (li, start, end, protected, phs) in enumerate(pending):
         tr = translated_all[idx] if idx < len(translated_all) else protected
         tr = restore_placeholders(tr, phs)
         line_list[li][start:end] = list(tr)
 
-    # 加入前導注釋行（確保 irm | iex 時第一個 token 不是關鍵字）
-    result_lines = ["# MAS Traditional Chinese Version - Auto Generated"] + ["".join(c) for c in line_list]
-    return "\r\n".join(result_lines) + "\r\n"
+    # 重組：加入前導注釋行，強制使用 CRLF
+    header = "# MAS Traditional Chinese Version - Auto Generated\r\n"
+    body_lines = []
+    for i, chars in enumerate(line_list):
+        text_only = "".join(chars)
+        # 取得原始換行符（CRLF 或 LF）
+        orig_ending = lines_with_ends[i][len(lines[i]):] if i < len(lines_with_ends) else "\r\n"
+        # 統一強制為 CRLF
+        body_lines.append(text_only + "\r\n")
+
+    return header + "".join(body_lines)
 
 # ─────────────────────────────────────────────
 # 主流程
