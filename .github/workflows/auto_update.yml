@@ -64,7 +64,12 @@ jobs:
             gh release delete "$TAG" --yes --cleanup-tag
           fi
 
-      # ── 6. 建立新 Release 並上傳兩個翻譯檔 ──
+      # ── 6. 產生並翻譯 Release Notes ──
+      - name: Generate Release Notes
+        if: steps.translate.outputs.updated == 'true'
+        run: python generate_release_notes.py
+
+      # ── 7. 建立新 Release 並上傳兩個翻譯檔 ──
       - name: Create GitHub Release
         if: steps.translate.outputs.updated == 'true'
         env:
@@ -72,29 +77,10 @@ jobs:
         run: |
           gh release create "${{ steps.date.outputs.tag }}" \
             --title "${{ steps.date.outputs.title }}" \
-            --notes "## 🤖 自動翻譯版本
-
-          本 Release 由 GitHub Actions 自動生成。
-
-          ### 📦 包含檔案
-          | 檔案 | 說明 |
-          |------|------|
-          | \`MAS_AIO_TW.cmd\` | 批次檔版本，雙擊執行 |
-          | \`MAS_AIO_TW.ps1\` | PowerShell 載入器 |
-
-          ### 🚀 一鍵執行（PowerShell 系統管理員）
-          \`\`\`powershell
-          irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.ps1 | iex
-          \`\`\`
-
-          ### ⚠️ 免責聲明
-          翻譯內容由自動化腳本生成，不保證 100% 準確。如有問題請使用官方原版：\`irm https://get.activated.win | iex\`
-
-          ---
-          *原始專案：[massgravel/Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts)*" \
+            -F release_notes.md \
             MAS_AIO_TW.cmd MAS_AIO_TW.ps1
 
-      # ── 7. 將更新後的 hash.txt 與快取推回儲存庫 ──
+      # ── 8. 將更新後的 hash.txt 與快取推回儲存庫 ──
       - name: Commit Updated Cache and Hash
         if: steps.translate.outputs.updated == 'true'
         run: |
