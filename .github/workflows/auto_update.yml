@@ -1,66 +1,103 @@
 name: Auto Update MAS Traditional Chinese
-# Version: 1.0.1 - Triggering re-scan
 
 on:
-  push: # 每次推送代碼時執行
-    branches: [ main ]
   schedule:
-    - cron: '0 0 * * *' # 每天凌晨執行一次
-  workflow_dispatch: # 支援手動觸發
+    - cron: '0 2 * * *'   # 每天台灣時間上午 10:00 (UTC+8) 執行
+  workflow_dispatch:        # 支援手動觸發
+
+# 防止同時有多個 workflow 在跑
+concurrency:
+  group: mas-auto-update
+  cancel-in-progress: false
 
 permissions:
-  contents: write # 允許推送 Hash 紀錄以及建立 Release
+  contents: write
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
+      # ── 1. 取得程式碼（含 hash.txt 與 translation_cache.csv）──
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
+      # ── 2. 建立 Python 環境（加快 cache 避免重複安裝）──
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
+          cache: 'pip'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # ── 3. 執行翻譯腳本，結果會寫入 GITHUB_OUTPUT ──
       - name: Run Translation Script
+        id: translate
         run: python translate.py
 
-      - name: Check Update Status
-        id: check_file
-        run: |
-          if [ -f "MAS_AIO_TW.cmd" ] || [ -f "MAS_AIO_TW.ps1" ]; then
-            echo "updated=true" >> $GITHUB_OUTPUT
-          else
-            echo "updated=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Get current date
-        if: steps.check_file.outputs.updated == 'true'
+      # ── 4. 有更新才繼續後續步驟 ──
+      - name: Get release date tag
+        if: steps.translate.outputs.updated == 'true'
         id: date
-        run: echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
+        run: |
+          echo "tag=v$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
+          echo "title=MAS 繁體中文翻譯版 $(date +'%Y/%m/%d')" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
-        if: steps.check_file.outputs.updated == 'true'
+      # ── 5. 刪除當天已存在的 Release（避免版本號衝突）──
+      - name: Delete existing release if same tag exists
+        if: steps.translate.outputs.updated == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ steps.date.outputs.date }}" \
-            --title "MAS 繁體中文自動翻譯版 v${{ steps.date.outputs.date }}" \
-            --notes "自動監控官方原始碼並翻譯：`MAS_AIO_TW.cmd` (批次檔) 與 `MAS_AIO_TW.ps1` (PowerShell)。" \
+          TAG="${{ steps.date.outputs.tag }}"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "刪除已存在的 Release：$TAG"
+            gh release delete "$TAG" --yes --cleanup-tag
+          fi
+
+      # ── 6. 建立新 Release 並上傳兩個翻譯檔 ──
+      - name: Create GitHub Release
+        if: steps.translate.outputs.updated == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.date.outputs.tag }}" \
+            --title "${{ steps.date.outputs.title }}" \
+            --notes "## 🤖 自動翻譯版本
+
+          本 Release 由 GitHub Actions 自動生成。
+
+          ### 📦 包含檔案
+          | 檔案 | 說明 |
+          |------|------|
+          | \`MAS_AIO_TW.cmd\` | 批次檔版本，雙擊執行 |
+          | \`MAS_AIO_TW.ps1\` | PowerShell 載入器 |
+
+          ### 🚀 一鍵執行（PowerShell 系統管理員）
+          \`\`\`powershell
+          irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.ps1 | iex
+          \`\`\`
+
+          ### ⚠️ 免責聲明
+          翻譯內容由自動化腳本生成，不保證 100% 準確。如有問題請使用官方原版：\`irm https://get.activated.win | iex\`
+
+          ---
+          *原始專案：[massgravel/Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts)*" \
             MAS_AIO_TW.cmd MAS_AIO_TW.ps1
 
-      - name: Commit and Push Updates
-        if: steps.check_file.outputs.updated == 'true'
+      # ── 7. 將更新後的 hash.txt 與快取推回儲存庫 ──
+      - name: Commit Updated Cache and Hash
+        if: steps.translate.outputs.updated == 'true'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add hash.txt translation_cache.csv
-          git commit -m "chore: update hash and translation cache [skip ci]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add hash.txt translation_cache.csv translate.log
+          git diff --staged --quiet || git commit -m "chore: update hash and translation cache [skip ci]"
           git push

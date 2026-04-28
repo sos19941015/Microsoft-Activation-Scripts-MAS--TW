@@ -1,0 +1,39 @@
+20:03:18 [INFO] 翻譯快取載入完成，共 774 筆記錄。
+20:03:18 [INFO] ── 檢查 CMD 更新 ──
+20:03:18 [INFO] CMD 無變動，跳過。
+20:03:18 [INFO] ── 檢查 PS1 更新 ──
+20:03:19 [INFO] PS1 偵測到更新（或輸出檔不存在），開始處理...
+20:03:19 [INFO] PS1 翻譯進度：1–23/23
+20:03:36 [WARNING] 翻譯 API 第 1/3 次失敗：the first two maketrans arguments must have equal length
+20:03:44 [WARNING] 翻譯 API 第 2/3 次失敗：the first two maketrans arguments must have equal length
+20:03:55 [WARNING] 翻譯 API 第 3/3 次失敗：the first two maketrans arguments must have equal length
+20:03:55 [ERROR] 翻譯失敗，保留原文。
+20:03:55 [INFO] PS1 已寫入 → MAS_AIO_TW.ps1
+20:03:55 [INFO] 翻譯快取已儲存，共 774 筆記錄。
+20:03:55 [INFO] 全部處理完成。
+20:04:07 [INFO] 翻譯快取載入完成，共 774 筆記錄。
+20:04:07 [INFO] ── 檢查 CMD 更新 ──
+20:04:08 [INFO] CMD 偵測到更新（或輸出檔不存在），開始處理...
+20:04:08 [INFO] CMD 翻譯進度：1–30/456
+20:04:12 [INFO] CMD 翻譯進度：31–60/456
+20:04:17 [INFO] CMD 翻譯進度：61–90/456
+20:04:17 [INFO] CMD 翻譯進度：91–120/456
+20:04:20 [INFO] CMD 翻譯進度：121–150/456
+20:04:23 [INFO] CMD 翻譯進度：151–180/456
+20:04:25 [INFO] CMD 翻譯進度：181–210/456
+20:04:28 [INFO] CMD 翻譯進度：211–240/456
+20:04:34 [INFO] CMD 翻譯進度：241–270/456
+20:04:36 [INFO] CMD 翻譯進度：271–300/456
+20:04:36 [INFO] CMD 翻譯進度：301–330/456
+20:04:36 [INFO] CMD 翻譯進度：331–360/456
+20:04:36 [INFO] CMD 翻譯進度：361–390/456
+20:04:37 [INFO] CMD 翻譯進度：391–420/456
+20:04:42 [INFO] CMD 翻譯進度：421–450/456
+20:04:42 [INFO] CMD 翻譯進度：451–456/456
+20:04:42 [INFO] CMD 已寫入 → MAS_AIO_TW.cmd
+20:04:42 [INFO] ── 檢查 PS1 更新 ──
+20:04:43 [INFO] PS1 偵測到更新（或輸出檔不存在），開始處理...
+20:04:43 [INFO] PS1 翻譯進度：1–23/23
+20:04:48 [INFO] PS1 已寫入 → MAS_AIO_TW.ps1
+20:04:48 [INFO] 翻譯快取已儲存，共 823 筆記錄。
+20:04:48 [INFO] 全部處理完成。

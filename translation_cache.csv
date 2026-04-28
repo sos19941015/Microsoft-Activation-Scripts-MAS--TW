@@ -772,3 +772,52 @@ Checking installed __PH_0__ versions...,檢查已安裝的 __PH_0__ 版本...
 "Only ""__PH_0__"" product is installed.","僅安裝""__PH_0__""產品。"
 "Failed to create __PH_0__ file in temp folder, aborting!",無法在臨時資料夾中建立 __PH_0__ 文件，正在中止!
 "Failed to retrieve __PH_0__ from any of the available repositories, aborting!",無法從任何可用儲存庫檢索 __PH_0__，正在中止!
+https://www.catalog.update.__PH_0__.com/Search.aspx?q=KB968930,https://www.catalog.update.__PH_0__.com/Search.aspx?q=KB968930
+Right click on this script and select 'Run as administrator'.,"右鍵單擊該腳本並選擇""以管理員身份運行""。"
+[2] __PH_0__               - __PH_1__,[2] __PH_0__ - __PH_1__
+[3] __PH_0__             - __PH_2__ / __PH_3__ / __PH_1__,[3] __PH_0__ - __PH_2__ / __PH_3__ / __PH_1__
+[2] __PH_0__      [__PH_1__],[2] __PH_0__ [__PH_1__]
+[3] __PH_0__    [__PH_2__ / __PH_1__ / __PH_3__],[3] __PH_0__ [__PH_2__ / __PH_1__ / __PH_3__]
+[1] Install __PH_0__ __PH_1__ Activation,[1] 安裝 __PH_0__ __PH_1__ 激活
+"Checking Installed Products             [SingleImage product found, Professional __PH_0__ key will be used for activation]",檢查已安裝的產品 [找到 SingleImage 產品，Professional __PH_0__ 金鑰將用於啟動]
+.NET 3.5 Framework is not installed in your system.,您的系統中未安裝.NET 3.5 Framework。
+https://www.__PH_0__.com/en-us/download/details.aspx?id=25150,https://www.__PH_0__.com/en-us/download/details.aspx?id=25150
+__PH_0__ licenses only,僅 __PH_0__ 許可證
+.NET 3.5 Framework is corrupt or missing. Aborting...,.NET 3.5 Framework 已損壞或遺失。正在中止...
+Processing __PH_1__ __PH_0__...,正在處理 __PH_1__ __PH_0__...
+__PH_0__ activation doesn't modify any __PH_1__ components and doesn't install any new files.,__PH_0__ 啟動不會修改任何 __PH_1__ 元件，也不會安裝任何新檔案。
+Converting __PH_1__ To __PH_2__             [%%# To __PH_0__],將 __PH_1__ 轉換為 __PH_2__ [%%# 轉換為 __PH_0__]
+Converting __PH_1__ To __PH_2__             [%%# To __PH_0__] [Using Mondo because %%# is not found in the script],將 __PH_1__ 轉換為 __PH_2__ [%%# 轉換為 __PH_0__] [使用 Mondo，因為在腳本中找不到 %%#]
+Activating __PH_0__ Products...,正在啟動 __PH_0__ 產品...
+No installed __PH_2__ __PH_0__ / __PH_1__ products found.,未找到已安裝的 __PH_2__ __PH_0__ / __PH_1__ 產品。
+Converting __PH_2__ To __PH_3__             [__PH_0__ To __PH_1__],將 __PH_2__ 轉換為 __PH_3__ [__PH_0__ 到 __PH_1__]
+Renewing K-M-S activation for all installed __PH_0__ products,為所有已安裝的 __PH_0__ 產品續訂 K-M-S 激活
+No installed __PH_2__ __PH_0__ / __PH_1__ product found,未找到已安裝的 __PH_2__ __PH_0__ / __PH_1__ 產品
+Checking: __PH_1__ version of __PH_0__ is not installed,檢查:未安裝 __PH_0__ 的 __PH_1__ 版本
+The use of this script is to renew your __PH_0__/__PH_1__ license using __PH_2__ K-M-S.,使用此腳本的目的是使用 __PH_2__ K-M-S 續訂您的 __PH_0__/__PH_1__ 許可證。
+dism /english /__PH_0__ /cleanup-image /restorehealth,dism /english /__PH_0__ /cleanup-image /restorehealth
+"[__PH_0__]  __PH_1__ [GAC, not __PH_2__]",[__PH_0__] __PH_1__ [GAC，而非 __PH_2__]
+DISM /__PH_2__ /Set-Edition:__PH_0__ /ProductKey:__PH_1__ /AcceptEula,DISM /__PH_2__ /套裝版本:__PH_0__ /產品金鑰:__PH_1__ /AcceptEula
+"Installed __PH_3__ appears to be from the __PH_4__ channel __PH_0____PH_1____PH_2__,",安裝的 __PH_3__ 似乎來自 __PH_4__ 頻道 __PH_0____PH_1____PH_2__，
+[1] __PH_0__ Suites     - __PH_1__,[1] __PH_0__ 套房 - __PH_1__
+[2] __PH_0__ Suites     - __PH_1__,[2] __PH_0__ 套房 - __PH_1__
+[3] __PH_0__ SingleApps - __PH_1__,[3] __PH_0__ SingleApps - __PH_1__
+[4] __PH_0__ SingleApps - __PH_1__,[4] __PH_0__ SingleApps - __PH_1__
+Need help? Check our homepage:,需要幫助嗎？查看我們的主頁:
+https://massgrave.dev,https://massgrave.dev
+PowerShell is not running in Full Language Mode.,PowerShell 未在完整語言模式下運作。
+Help - https://massgrave.dev/fix_powershell,幫助 - https://massgrave.dev/fix_powershell
+Error: $(__PH_0__.Exception.Message),錯誤:$(__PH_0__.Exception.Message)
+Powershell failed to load .NET command.,Powershell 無法載入 .NET 指令。
+Help - https://massgrave.dev/in-place_repair_upgrade,幫助 - https://massgrave.dev/in-place_repair_upgrade
+3rd party Antivirus might be blocking the script -,第 3 方防毒軟體可能會阻止該腳本 -
+$(__PH_0__ -join,$(__PH_0__ -加入
+Help - __PH_0__,幫助 - __PH_0__
+Downloading...,正在下載...
+Please wait,請稍等
+Check if antivirus or firewall is blocking the connection.,檢查防毒軟體或防火牆是否阻止連線。
+"Hash (__PH_0__) mismatch, aborting!`nReport this issue at __PH_1__",哈希 (__PH_0__) 不匹配，正在中止! `n在 __PH_1__ 報告此問題
+"Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path",發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下命令來修復...`nRemove-ItemProperty -Path
+Autorun,自動運行
+CMD is working,CMD 正在工作
+"Command is running with x86 Powershell, run it with x64 Powershell instead...",命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行...

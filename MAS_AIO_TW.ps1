@@ -1,7 +1,10 @@
-# MAS Traditional Chinese Version
+# MAS Traditional Chinese Version - Auto Generated
+# This script is hosted on https://get.activated.win for https://massgrave.dev
+# Having trouble launching this script? Check https://massgrave.dev for help.
+
 if (-not $args) {
     Write-Host ''
-    Write-Host 'Need help? Check our homepage: ' -NoNewline
+    Write-Host '需要幫助嗎？查看我們的主頁:' -NoNewline
     Write-Host 'https://massgrave.dev' -ForegroundColor Green
     Write-Host ''
 }
@@ -12,8 +15,8 @@ if (-not $args) {
 
     if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {
         $ExecutionContext.SessionState.LanguageMode
-        Write-Host "PowerShell is not running in Full Language Mode."
-        Write-Host "Help - https://massgrave.dev/fix_powershell" -ForegroundColor White -BackgroundColor Blue
+        Write-Host "PowerShell 未在完整語言模式下運作。"
+        Write-Host "幫助 - https://massgrave.dev/fix_powershell" -ForegroundColor White -BackgroundColor Blue
         return
     }
 
@@ -21,9 +24,9 @@ if (-not $args) {
         [void][System.AppDomain]::CurrentDomain.GetAssemblies(); [void][System.Math]::Sqrt(144)
     }
     catch {
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-        Write-Host "Powershell failed to load .NET command."
-        Write-Host "Help - https://massgrave.dev/in-place_repair_upgrade" -ForegroundColor White -BackgroundColor Blue
+        Write-Host "錯誤:$($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Powershell 無法載入 .NET 指令。"
+        Write-Host "幫助 - https://massgrave.dev/in-place_repair_upgrade" -ForegroundColor White -BackgroundColor Blue
         return
     }
 
@@ -32,8 +35,8 @@ if (-not $args) {
         $avList = & $cmd -Namespace root\SecurityCenter2 -Class AntiVirusProduct | Where-Object { $_.displayName -notlike '*windows*' } | Select-Object -ExpandProperty displayName
 
         if ($avList) {
-            Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline
-            Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
+            Write-Host '第 3 方防毒軟體可能會阻止該腳本 -' -ForegroundColor White -BackgroundColor Blue -NoNewline
+            Write-Host "$($avList -加入', ')" -ForegroundColor DarkRed -BackgroundColor White
         }
     }
 
@@ -42,7 +45,7 @@ if (-not $args) {
         if (-not (Test-Path $FilePath)) {
             Check3rdAV
             Write-Host "無法在臨時資料夾中建立 MAS 文件，正在中止!"
-            Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+            Write-Host "幫助 - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
             throw
         }
     }
@@ -50,9 +53,9 @@ if (-not $args) {
     try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
     $URLs = @(
-        'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
-    )
-    Write-Progress -Activity "Downloading..." -Status "Please wait"
+    'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
+)
+    Write-Progress -Activity "正在下載..." -Status "Please 請稍等
     $errors = @()
     foreach ($URL in $URLs | Sort-Object { Get-Random }) {
         try {
@@ -69,27 +72,38 @@ if (-not $args) {
             $errors += $_
         }
     }
-    Write-Progress -Activity "Downloading..." -Status "Done" -Completed
+    Write-Progress -Activity "正在下載..." -Status "Done" -Completed
 
     if (-not $response) {
         Check3rdAV
         foreach ($err in $errors) {
-            Write-Host "Error: $($err.Exception.Message)" -ForegroundColor Red
+            Write-Host "錯誤:$($err.Exception.Message)" -ForegroundColor Red
         }
         Write-Host "無法從任何可用儲存庫檢索 MAS，正在中止!"
-        Write-Host "Check if antivirus or firewall is blocking the connection."
-        Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+        Write-Host "檢查防毒軟體或防火牆是否阻止連線。"
+        Write-Host "幫助 - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
         return
     }
 
-    # 移除雜湊檢查以支援翻譯版本
-
+    # [已移除雜湊驗證，此版本使用本專案翻譯版 CMD]
+    $releaseHash = 'C731BB797994B7185944E8B6075646EBDC2CEF87960B4B2F437306CB4CE28F03'
+    $stream = New-Object IO.MemoryStream
+    $writer = New-Object IO.StreamWriter $stream
+    $writer.Write($response)
+    $writer.Flush()
+    $stream.Position = 0
+    $hash = [BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($stream)) -replace '-'
+    if ($hash -ne $releaseHash) {
+        Write-Warning "哈希 ($hash) 不匹配，正在中止! `n在 $troubleshoot 報告此問題"
+        $response = $null
+        return
+    }
 
     # Check for AutoRun registry which may create issues with CMD
     $paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"
     foreach ($path in $paths) { 
         if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) { 
-            Write-Warning "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"
+            Write-Warning "發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下命令來修復...`nRemove-ItemProperty -Path'$path' -Name 'Autorun'"自動運行
         } 
     }
 
@@ -101,13 +115,13 @@ if (-not $args) {
 
     $env:ComSpec = "$env:SystemRoot\system32\cmd.exe"
     $chkcmd = & $env:ComSpec /c "echo CMD is working"
-    if ($chkcmd -notcontains "CMD is working") {
+    if ($chkcmd -notcontains "CMD 正在工作") {
         Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"
     }
 
     if ($psv -lt 3) {
         if (Test-Path "$env:SystemRoot\Sysnative") {
-            Write-Warning "Command is running with x86 Powershell, run it with x64 Powershell instead..."
+            Write-Warning "命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行..."
             return
         }
         $p = saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Verb RunAs -PassThru
