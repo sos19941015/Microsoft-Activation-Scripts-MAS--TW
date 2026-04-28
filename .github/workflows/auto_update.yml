@@ -1,6 +1,8 @@
 name: Auto Update MAS Traditional Chinese
 
 on:
+  push:
+    branches: [ "main" ]
   schedule:
     - cron: '0 2 * * *'   # 每天台灣時間上午 10:00 (UTC+8) 執行
   workflow_dispatch:        # 支援手動觸發
