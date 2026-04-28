@@ -306,6 +306,9 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
         # 若文字部分包含管道/重定向，代表整行是程式碼，跳過
         if _ECHO_CODE_PATTERNS.search(text):
             return []
+        # 若 echo 的內容是常見的 Windows 命令（通常用於產生另一個 bat），則跳過
+        if re.match(r'^(?:@?echo\b|cd\b|sfc\b|call\b|start\b|del\b|copy\b|ping\b|cscript\b|wscript\b|reg\b|bcdedit\b|slmgr\b|net\b|sc\b|fsutil\b|wmic\b)', text, re.IGNORECASE):
+            return []
         # 含 %mas%URL：只翻譯 URL 前的說明文字
         mas_match = _MAS_URL_SUFFIX.search(text)
         if mas_match:
@@ -425,11 +428,18 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
     segments = []
     # Write-Host "text" 或 Write-Host 'text'（含 -ForegroundColor 等參數前）
     for m in re.finditer(r'''(?:Write-Host|Write-Output)\s+[^"']*["']([^"']{3,})["']''', line, re.IGNORECASE):
-        segments.append((m.start(1), m.end(1), m.group(1)))
+        seg = m.group(1)
+        # 若整段是被 $() 包裹的純程式碼（如 $($avList -join ', ')），則跳過
+        if re.match(r'^\$\(.*?\)$', seg.strip()):
+            continue
+        segments.append((m.start(1), m.end(1), seg))
     # 純字串行：以引號包裹的獨立文字（選單、說明）
     if not segments:
         for m in re.finditer(r'''["']([a-zA-Z][^"']{5,})["']''', line):
-            segments.append((m.start(1), m.end(1), m.group(1)))
+            seg = m.group(1)
+            if re.match(r'^\$\(.*?\)$', seg.strip()):
+                continue
+            segments.append((m.start(1), m.end(1), seg))
     return segments
 
 def process_ps1(content: str, cache: dict) -> str:
