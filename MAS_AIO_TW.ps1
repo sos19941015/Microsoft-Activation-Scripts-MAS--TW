@@ -36,7 +36,7 @@ if (-not $args) {
 
         if ($avList) {
             Write-Host '第 3 方防毒軟體可能會阻止該腳本 -' -ForegroundColor White -BackgroundColor Blue -NoNewline
-            Write-Host "$($avList -加入', ')" -ForegroundColor DarkRed -BackgroundColor White
+            Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
         }
     }
 
@@ -90,7 +90,7 @@ if (-not $args) {
     $paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"
     foreach ($path in $paths) { 
         if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) { 
-            Write-Warning "發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下命令來修復...`nRemove-ItemProperty -Path'$path' -Name 'Autorun'"自動運行
+            Write-Warning "發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下指令來修復...`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"
         } 
     }
 

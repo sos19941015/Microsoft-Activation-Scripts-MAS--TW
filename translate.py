@@ -451,20 +451,20 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
     if _PS1_SKIP_PATTERNS.search(line):
         return []
     segments = []
-    # Write-Host "text" 或 Write-Host 'text'（含 -ForegroundColor 等參數前）
-    for m in re.finditer(r'''(?:Write-Host|Write-Output)\s+[^"']*["']([^"']{3,})["']''', line, re.IGNORECASE):
-        seg = m.group(1)
+    # Write-Host/Warning/Error/Output "text"（支援後面接參數）
+    for m in re.finditer(r'''(?:Write-Host|Write-Output|Write-Warning|Write-Error)\s+[^"']*?(["'])(.*?)\1''', line, re.IGNORECASE):
+        seg = m.group(2)
         # 若整段是被 $() 包裹的純程式碼（如 $($avList -join ', ')），則跳過
         if re.match(r'^\$\(.*?\)$', seg.strip()):
             continue
-        segments.append((m.start(1), m.end(1), seg))
+        segments.append((m.start(2), m.end(2), seg))
     # 純字串行：以引號包裹的獨立文字（選單、說明）
     if not segments:
-        for m in re.finditer(r'''["']([a-zA-Z][^"']{5,})["']''', line):
-            seg = m.group(1)
+        for m in re.finditer(r'''(["'])([a-zA-Z][^"']{5,})\1''', line):
+            seg = m.group(2)
             if re.match(r'^\$\(.*?\)$', seg.strip()):
                 continue
-            segments.append((m.start(1), m.end(1), seg))
+            segments.append((m.start(2), m.end(2), seg))
     return segments
 
 def process_ps1(content: str, cache: dict) -> str:
