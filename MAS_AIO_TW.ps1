@@ -115,7 +115,7 @@ if (-not $args) {
         $p.WaitForExit()
     }
     else {
-        saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el $args""" -Wait -Verb RunAs
+        saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Wait -Verb RunAs
     }	
 	
     CheckFile $FilePath

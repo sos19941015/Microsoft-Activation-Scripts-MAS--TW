@@ -434,6 +434,7 @@ def patch_ps1(content: str) -> str:
     在翻譯前對 PS1 內容做結構性修改：
     1. 替換下載網址為本專案的 CMD 版本
     2. 移除 SHA256 雜湊校驗區塊
+    3. 強制帶上 -qedit，避免 loader 刪掉內部重新啟動前的臨時 CMD
     """
     new_cmd_url = f"{MY_RAW_BASE}/MAS_AIO_TW.cmd"
 
@@ -463,6 +464,15 @@ def patch_ps1(content: str) -> str:
     content = re.sub(
         r".*\$hash.*-ne.*\$releaseHash.*\n",
         "",
+        content,
+    )
+
+    # 讓高版本 PowerShell 分支也帶上 -qedit。
+    # 否則 MAS 會在內部自行重新啟動到 conhost/cmd，父進程先退出後，
+    # loader 可能過早刪除臨時 CMD，導致 UAC 後看不到視窗。
+    content = re.sub(
+        r'saps -FilePath \$env:ComSpec -ArgumentList "/c """"\$FilePath"" -el \$args""" -Wait -Verb RunAs',
+        'saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Wait -Verb RunAs',
         content,
     )
 
