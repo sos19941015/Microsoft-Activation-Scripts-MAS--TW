@@ -684,3 +684,4 @@ Error Found In SPP Registries,SPP 註冊表中發現錯誤
 [1] Continue [2] __PH_0__ :,[1] 繼續 [2] __PH_0__ :
 [1] Continue [0] __PH_0__ :,[1] 繼續 [0] __PH_0__ :
 "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '__PH_0__' -Name 'Autorun'",發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下指令來修復...`nRemove-ItemProperty -Path '__PH_0__' -Name 'Autorun'
+Done,完畢

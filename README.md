@@ -5,17 +5,19 @@
 
 ---
 
-## 📖 關於本專案 (About)
+## 📖 關於本專案
 
-這是一個致力於將知名的開源工具 **MAS (Microsoft Activation Scripts)** 全自動翻譯為繁體中文的專案。
+這是一個將 **MAS (Microsoft Activation Scripts)** 自動翻譯為繁體中文的專案。
 
-**MAS 是一個開源的 Windows 與 Office 啟用工具，包含了 HWID、Ohook、TSforge 以及 Online KMS 等多種啟用方式，並附帶進階的故障排除功能。**
+MAS 是一個開源的 Windows 與 Office 啟用工具，包含 HWID、Ohook、TSforge 與 Online KMS 等模式，並附帶診斷與故障排除能力。
 
-由於官方腳本更新頻繁且內容龐大，手動翻譯難以維護。本專案透過高度客製化的 Python 腳本，運用正規表示式精準拆解原始碼，分離出「程式碼指令」與「使用者介面文字」，並串接 Google 翻譯 API 進行批量翻譯，最後重新組合成安全、可執行的繁體中文版腳本。專案結合了 GitHub Actions 每日自動監控官方更新，確保您能隨時下載到最新的中文化版本。
+由於官方腳本更新頻繁且內容龐大，手動翻譯難以維護。本專案透過 Python 腳本，自動抓取上游來源、抽取可翻譯的 UI 文字、保護批次檔與 PowerShell 語法，再重建成可執行的繁體中文版本。
 
 ---
 
-## 🚀 一鍵執行（PowerShell 系統管理員）
+## 🚀 一鍵執行
+
+請以系統管理員開啟 PowerShell 執行：
 
 ```powershell
 irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.ps1 | iex
@@ -30,7 +32,64 @@ irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-M
 | 檔案 | 說明 |
 |------|------|
 | `MAS_AIO_TW.cmd` | 批次檔版本，以系統管理員身分雙擊執行 |
-| `MAS_AIO_TW.ps1` | PowerShell 載入器，配合上方 `irm` 指令使用 |
+| `MAS_AIO_TW.ps1` | PowerShell 載入器，適合搭配 `irm` 指令使用 |
+
+---
+
+## 🔄 專案流程
+
+```mermaid
+flowchart TD
+    A["Upstream MAS sources"] --> A1["MAS_AIO.cmd from massgravel repo"]
+    A --> A2["PowerShell loader from get.activated.win / index.html"]
+
+    A1 --> B["translate.py"]
+    A2 --> B
+
+    B --> B1["Download source content"]
+    B1 --> B2["Compute SHA256"]
+    B2 --> C{"hash.txt changed?"}
+
+    C -- "No" --> Z["Stop / no update"]
+    C -- "Yes" --> D["Protect code tokens and placeholders"]
+
+    D --> D1["CMD path: extract translatable spans"]
+    D --> D2["PS1 path: patch loader and extract UI strings"]
+
+    D1 --> E["Translate with GoogleTranslator"]
+    D2 --> E
+
+    E --> F["Restore placeholders"]
+    F --> G["Rebuild output files"]
+
+    G --> G1["MAS_AIO_TW.cmd"]
+    G --> G2["MAS_AIO_TW.ps1"]
+    G --> H["Update translation_cache.csv"]
+    G --> I["Update hash.txt"]
+    G --> J["Write translate.log"]
+
+    H --> K["GitHub Actions workflow"]
+    I --> K
+    J --> K
+    G1 --> K
+    G2 --> K
+
+    K --> L{"updated=true?"}
+    L -- "No" --> Z
+    L -- "Yes" --> M["generate_release_notes.py"]
+
+    M --> N["Fetch latest upstream release info"]
+    N --> O["Fetch upstream changelog"]
+    O --> P["Translate changelog"]
+    P --> Q["Generate release_notes.md"]
+
+    Q --> R["Create GitHub Release"]
+    G1 --> R
+    G2 --> R
+
+    R --> S["Publish release"]
+    K --> T["Commit hash and cache back to repo"]
+```
 
 ---
 
@@ -38,36 +97,50 @@ irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-M
 
 | 特性 | 說明 |
 |------|------|
-| 🔄 **自動更新** | 每日 UTC 02:00 監控官方原始碼，有更新立即重新翻譯並發布 Release |
-| ⚡ **翻譯快取** | 使用 CSV 翻譯記憶庫，版本微更新時只翻譯差異部分，速度極快 |
-| 🛡️ **程式碼保護** | 精確識別並保護所有 Batch 變數（`%var%`、`!var!`）、管道符號、CMD/PS 指令，確保腳本不崩潰 |
-| 📝 **詳細日誌** | 每次執行產生 `translate.log`，方便追蹤翻譯過程與除錯 |
-| 🌐 **雙格式支援** | 同時翻譯 `.cmd` 批次檔與 `.ps1` PowerShell 載入器 |
+| 自動更新 | GitHub Actions 每日檢查上游變更並自動重建 |
+| 翻譯快取 | 使用 `translation_cache.csv` 減少重複翻譯 |
+| 語法保護 | 保護 `%var%`、`!var!`、PowerShell 字串與控制流程，避免翻壞腳本 |
+| 雙格式支援 | 同時生成 `.cmd` 與 `.ps1` 版本 |
+| 自動發版 | 偵測到更新後自動產生 Release Notes 並發佈 Release |
 
 ---
 
 ## 🛠️ 本地執行
 
 ```bash
-# 安裝相依套件
 pip install -r requirements.txt
-
-# 執行翻譯（首次約需 5–10 分鐘，後續因快取只需幾秒）
 python translate.py
 ```
 
 ---
 
+## 🧠 翻譯安全準則
+
+這次專案也整理出一份「翻譯但不破壞原語法與執行邏輯」的 skill，放在：
+
+- [skills/syntax-safe-translation/SKILL.md](skills/syntax-safe-translation/SKILL.md)
+- [skills/syntax-safe-translation/agents/openai.yaml](skills/syntax-safe-translation/agents/openai.yaml)
+
+這份文件總結了：
+
+- 哪些字串屬於 UI，可翻譯
+- 哪些字串屬於邏輯，不可翻譯
+- 如何保護 `%var%`、`!var!`、`$var`、URL、雜湊值與命令列片段
+- 為什麼同一行多段字串替換要從右往左進行
+- 為什麼翻譯後一定要做 parser 或語法驗證
+
+---
+
 ## 🙏 致謝
 
-特別感謝 **[massgravel](https://github.com/massgravel)** 開發並維護 [Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts) 這個強大、純淨的開源工具。
+特別感謝 **[massgravel](https://github.com/massgravel)** 開發並維護 [Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts)。
 
 ---
 
 ## ⚠️ 免責聲明
 
-- 翻譯內容由 Google Translate API 自動產生，**不保證語意完全正確**。
-- 本專案僅為學習與研究自動化翻譯流程之用。
-- 若執行過程遇到任何錯誤或異常行為，請務必使用官方原版：
-  - 執行：`irm https://get.activated.win | iex`
-  - 或參考：[massgravel/Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts)
+- 翻譯內容由自動化腳本生成，不保證語意完全正確。
+- 本專案僅用於研究自動化翻譯流程。
+- 若執行過程出現錯誤或異常行為，請務必使用官方原版：
+  - `irm https://get.activated.win | iex`
+  - [massgravel/Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts)

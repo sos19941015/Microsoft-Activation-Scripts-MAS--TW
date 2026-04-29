@@ -213,6 +213,19 @@ def normalize_quotes(text: str) -> str:
     })
     return text.translate(table)
 
+def apply_segment_replacements(line: str, replacements: list[tuple[int, int, str]]) -> str:
+    """
+    依照原始索引對單行文字做多段替換。
+    由右往左套用，避免前面的長度變化影響後面的索引。
+    """
+    if not replacements:
+        return line
+
+    result = line
+    for start, end, replacement in sorted(replacements, key=lambda item: item[0], reverse=True):
+        result = result[:start] + replacement + result[end:]
+    return result
+
 # ─────────────────────────────────────────────
 # 翻譯引擎（含快取 + 重試）
 # ─────────────────────────────────────────────
@@ -375,18 +388,18 @@ def process_cmd(content: str, cache: dict) -> str:
         translated_all.extend(translate_batch(chunk, cache, translator))
 
     # 第三遍：替換回行內
-    line_list = [list(line) for line in lines]
+    replacements_by_line = [[] for _ in lines]
     for idx, (li, start, end, protected, phs, leading, trailing) in enumerate(pending):
         tr = translated_all[idx] if idx < len(translated_all) else protected
         tr = restore_placeholders(tr, phs)
         replacement = leading + tr + trailing
-        line_list[li][start:end] = list(replacement)
+        replacements_by_line[li].append((start, end, replacement))
 
     # 組合並插入 chcp
     final_lines = []
     inserted_chcp = False
-    for chars in line_list:
-        line = "".join(chars)
+    for li, line in enumerate(lines):
+        line = apply_segment_replacements(line, replacements_by_line[li])
         
         # 解決 Windows CMD chcp 65001 解析 Bug：若行尾是非 ASCII 字元，會吞噬下一行
         if line and ord(line[-1]) > 127:
@@ -447,10 +460,20 @@ def patch_ps1(content: str) -> str:
     return content
 
 def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
-    """從 PS1 行中提取可翻譯的字串片段。"""
+    """從 PS1 行中提取可翻譯的 UI 字串片段。"""
     if _PS1_SKIP_PATTERNS.search(line):
         return []
+
     segments = []
+
+    # Write-Progress -Activity/-Status "text"
+    if re.search(r"\bWrite-Progress\b", line, re.IGNORECASE):
+        for m in re.finditer(r'''-(?:Activity|Status)\s+(["'])(.*?)\1''', line, re.IGNORECASE):
+            seg = m.group(2)
+            if re.search(r"[a-zA-Z]", seg):
+                segments.append((m.start(2), m.end(2), seg))
+        return segments
+
     # Write-Host/Warning/Error/Output "text"（支援後面接參數）
     for m in re.finditer(r'''(?:Write-Host|Write-Output|Write-Warning|Write-Error)\s+[^"']*?(["'])(.*?)\1''', line, re.IGNORECASE):
         seg = m.group(2)
@@ -458,13 +481,6 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
         if re.match(r'^\$\(.*?\)$', seg.strip()):
             continue
         segments.append((m.start(2), m.end(2), seg))
-    # 純字串行：以引號包裹的獨立文字（選單、說明）
-    if not segments:
-        for m in re.finditer(r'''(["'])([a-zA-Z][^"']{5,})\1''', line):
-            seg = m.group(2)
-            if re.match(r'^\$\(.*?\)$', seg.strip()):
-                continue
-            segments.append((m.start(2), m.end(2), seg))
     return segments
 
 def process_ps1(content: str, cache: dict) -> str:
@@ -491,17 +507,17 @@ def process_ps1(content: str, cache: dict) -> str:
         translated_all.extend(translate_batch(chunk, cache, translator))
 
     # 對 lines（不含換行符）做替換，再把換行符接回去
-    line_list = [list(line) for line in lines]
+    replacements_by_line = [[] for _ in lines]
     for idx, (li, start, end, protected, phs) in enumerate(pending):
         tr = translated_all[idx] if idx < len(translated_all) else protected
         tr = restore_placeholders(tr, phs)
-        line_list[li][start:end] = list(tr)
+        replacements_by_line[li].append((start, end, tr))
 
     # 重組：加入前導注釋行，強制使用 CRLF
     header = "# MAS Traditional Chinese Version - Auto Generated\r\n"
     body_lines = []
-    for i, chars in enumerate(line_list):
-        text_only = "".join(chars)
+    for i, line in enumerate(lines):
+        text_only = apply_segment_replacements(line, replacements_by_line[i])
         # 取得原始換行符（CRLF 或 LF）
         orig_ending = lines_with_ends[i][len(lines[i]):] if i < len(lines_with_ends) else "\r\n"
         # 統一強制為 CRLF

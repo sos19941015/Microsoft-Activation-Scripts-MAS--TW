@@ -1,0 +1,7 @@
+interface:
+  display_name: "Syntax-Safe Translation"
+  short_description: "Translate code-adjacent text without breaking syntax or runtime logic."
+  default_prompt: "Use $syntax-safe-translation to localize scripts while preserving parser-visible syntax and execution behavior."
+
+policy:
+  allow_implicit_invocation: true

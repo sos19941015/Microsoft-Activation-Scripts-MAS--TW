@@ -55,7 +55,7 @@ if (-not $args) {
     $URLs = @(
     'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
 )
-    Write-Progress -Activity "正在下載..." -Status "Please 請稍等
+    Write-Progress -Activity "正在下載..." -Status "請稍等"
     $errors = @()
     foreach ($URL in $URLs | Sort-Object { Get-Random }) {
         try {
@@ -72,7 +72,7 @@ if (-not $args) {
             $errors += $_
         }
     }
-    Write-Progress -Activity "正在下載..." -Status "Done" -Completed
+    Write-Progress -Activity "正在下載..." -Status "完畢" -Completed
 
     if (-not $response) {
         Check3rdAV
@@ -102,7 +102,7 @@ if (-not $args) {
 
     $env:ComSpec = "$env:SystemRoot\system32\cmd.exe"
     $chkcmd = & $env:ComSpec /c "echo CMD is working"
-    if ($chkcmd -notcontains "CMD 正在工作") {
+    if ($chkcmd -notcontains "CMD is working") {
         Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"
     }
 
