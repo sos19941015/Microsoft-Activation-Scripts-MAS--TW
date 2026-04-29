@@ -449,7 +449,7 @@ echo:
 echo:
 echo:
 if %winbuild% GEQ 10240 if %winbuild% LEQ 19045 if not defined _serexist if not defined _evalexist if not defined _ltscexist (
-call :dk_color2 %_Green% "       提示:" %_White% "  若要在 W10 EOL 之後啟動 ESU 更新，請使用 TSforge 選項。 
+call :dk_color2 %_Green% "       提示:" %_White% " 若要在 W10 EOL 之後啟動 ESU 更新，請使用 TSforge 選項。"
 )
 echo:
 echo:
@@ -2250,7 +2250,7 @@ if %_unattended%==1 timeout /t 2 & exit /b
 
 if defined fixes (
 call :dk_color %White% "遵循上述所有藍線。   "
-call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略 
+call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " 按 [0] 忽略"
 choice /C:10 /N
 if !errorlevel!==2 exit /b
 if !errorlevel!==1 (start %selfgit% & start %github% & for %%# in (%fixes%) do (start %%#))
@@ -12140,12 +12140,12 @@ echo:
 if %_norentsk%==0 (
 echo               [5] 啟動更新任務[是]
 ) else (
-call :dk_color2 %_White% "              [5] 啟動更新任務        " %_Yellow% "[No]"[不]
+call :dk_color2 %_White% "              [5] 啟動更新任務        " %_Yellow% "[不]"
 )
 if %_NoEditionChange%==0 (
 echo               [6] 如果需要更改版本 [是]
 ) else (
-call :dk_color2 %_White% "              [6] 如果需要更改版本            " %_Yellow% "[No]"[不]
+call :dk_color2 %_White% "              [6] 如果需要更改版本            " %_Yellow% "[不]"
 )
 echo               [7] 卸載 Online %KS%
 echo               _______________________________________________       
@@ -18932,7 +18932,7 @@ call :oe_tempcleanup
 echo:
 if defined fixes (
 call :dk_color %White% "遵循上述所有藍線。   "
-call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " Press [0] to Ignore" 按 [0] 忽略 
+call :dk_color2 %Blue% "按 [1] 開啟支援網頁 " %Gray% " 按 [0] 忽略"
 choice /C:10 /N
 if !errorlevel!==2 goto :oemenu
 if !errorlevel!==1 (start %selfgit% & start %github% & for %%# in (%fixes%) do (start %%#))
