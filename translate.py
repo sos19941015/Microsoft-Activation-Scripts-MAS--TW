@@ -467,13 +467,20 @@ def patch_ps1(content: str) -> str:
         content,
     )
 
-    # 讓高版本 PowerShell 分支也帶上 -qedit。
-    # 否則 MAS 會在內部自行重新啟動到 conhost/cmd，父進程先退出後，
-    # loader 可能過早刪除臨時 CMD，導致 UAC 後看不到視窗。
+    # 改用分段 ArgumentList，避免巢狀引號在 cmd / PowerShell / UAC 之間被吃壞。
     content = re.sub(
-        r'saps -FilePath \$env:ComSpec -ArgumentList "/c """"\$FilePath"" -el \$args""" -Wait -Verb RunAs',
-        'saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Wait -Verb RunAs',
+        r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
+        '$p = saps -FilePath $env:ComSpec -ArgumentList \'/c\', $FilePath, \'-el\', \'-qedit\', $args -Verb RunAs -PassThru',
         content,
+    )
+    content = re.sub(
+        r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
+        'saps -FilePath $env:ComSpec -ArgumentList \'/c\', $FilePath, \'-el\', \'-qedit\', $args -Wait -Verb RunAs',
+        content,
+    )
+    content = content.replace(
+        'saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el $args""" -Wait -Verb RunAs',
+        'saps -FilePath $env:ComSpec -ArgumentList \'/c\', $FilePath, \'-el\', \'-qedit\', $args -Wait -Verb RunAs',
     )
 
     return content

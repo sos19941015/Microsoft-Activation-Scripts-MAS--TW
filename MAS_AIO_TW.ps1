@@ -111,11 +111,11 @@ if (-not $args) {
             Write-Warning "命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行..."
             return
         }
-        $p = saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Verb RunAs -PassThru
+        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
-        saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Wait -Verb RunAs
+        saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Wait -Verb RunAs
     }	
 	
     CheckFile $FilePath
