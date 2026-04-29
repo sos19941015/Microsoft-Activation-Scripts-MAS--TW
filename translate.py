@@ -148,6 +148,12 @@ _CMD_SKIP_PATTERNS = re.compile(
 # echo 行：若文字部分包含這些符號就是程式碼，整行跳過
 _ECHO_CODE_PATTERNS = re.compile(r'[|<>&]|\^[|<>&]', re.IGNORECASE)
 
+# echo 行：若內容帶有 ANSI 控制序列或批次參數展開，通常屬於程式碼而非 UI
+_ECHO_BATCH_CODE_PATTERNS = re.compile(
+    r'%esc%|\[%~\d|%~[\w\d:]+|%%\w',
+    re.IGNORECASE,
+)
+
 # PS1：整行不翻譯的條件
 _PS1_SKIP_PATTERNS = re.compile(
     r"""
@@ -321,6 +327,9 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
             return []
         # 若文字部分包含管道/重定向，代表整行是程式碼，跳過
         if _ECHO_CODE_PATTERNS.search(text):
+            return []
+        # 若包含 ANSI / 批次參數控制片段，也視為程式碼，跳過
+        if _ECHO_BATCH_CODE_PATTERNS.search(text):
             return []
         # 若 echo 的內容是常見的 Windows 命令（通常用於產生另一個 bat），則跳過
         if re.match(r'^(?:@?echo\b|cd\b|sfc\b|call\b|start\b|del\b|copy\b|ping\b|cscript\b|wscript\b|reg\b|bcdedit\b|slmgr\b|net\b|sc\b|fsutil\b|wmic\b)', text, re.IGNORECASE):

@@ -1307,7 +1307,7 @@ if %keyerror% NEQ 0 set "keyerror=[0x%=ExitCode%]"
 if defined generickey (set "keyecho=Installing Generic Product Key         ") else (set "keyecho=Installing Product Key                 ")
 if %keyerror% EQU 0 (
 if %sps%==SoftwareLicensingService call :dk_refresh
-echo %keyecho% %~1 [成功]
+echo %keyecho% %~1 [Successful]
 ) else (
 call :dk_color %Red% "%keyecho% %~1 [失敗] %keyerror%"
 if not defined showfix (
@@ -2222,7 +2222,7 @@ $wpaKey.Close()
 :dk_color
 
 if %_NCS% EQU 1 (
-echo %esc%[%~1%~2%esc%[0米 
+echo %esc%[%~1%~2%esc%[0m
 ) else if exist %ps% (
 %psc% write-host -back '%1' -fore '%2' '%3'
 ) else if not exist %ps% (
@@ -2233,7 +2233,7 @@ exit /b
 :dk_color2
 
 if %_NCS% EQU 1 (
-echo %esc%[%~1%~2%esc%[%~3%~4%esc%[0米 
+echo %esc%[%~1%~2%esc%[%~3%~4%esc%[0m
 ) else if exist %ps% (
 %psc% write-host -back '%1' -fore '%2' '%3' -NoNewline; write-host -back '%4' -fore '%5' '%6'
 ) else if not exist %ps% (
@@ -4970,7 +4970,7 @@ echo "%allapps%" | find /i "%%A" %nul1% && (
 set key=%%B
 set eval=1
 if /i "%%E"=="NoAct" set noact=1
-echo 檢查啟動 ID [%%A] [%%C]
+echo Checking Activation ID                  [%%A] [%%C]
 )
 )
 )
@@ -5077,7 +5077,7 @@ set esuexistsup=1
 set esueditionlist=
 set esuexistbutnosup=
 set tsids=!tsids! %%A
-echo 檢查啟動 ID [%%A] [%%B]
+echo Checking Activation ID                  [%%A] [%%B]
 ) || (
 if not defined esueditionlist set esueditionlist=%%C
 set esuexistbutnosup=1
@@ -5585,7 +5585,7 @@ for /f "tokens=1-2 delims=_" %%A in ("%%#") do (
 echo "%ohostids%" | find /i "%%A" %nul1% && (
 set ohostexist=1
 set tsids=!tsids! %%A
-echo 檢查啟動 ID [%%A] [%%B]
+echo Checking Activation ID                  [%%A] [%%B]
 )
 )
 )
@@ -5643,7 +5643,7 @@ for /f "tokens=1-2 delims=_" %%A in ("%%#") do (
 echo "%allapps%" | find /i "%%A" %nul1% && (
 set appxexist=1
 set tsids=!tsids! %%A
-echo 檢查啟動 ID [%%A] [%%B]
+echo Checking Activation ID                  [%%A] [%%B]
 )
 )
 )
@@ -17355,9 +17355,9 @@ echo:
 for %%A in (%_ntarget%) do (
 set /a counter+=1
 if /i %%A==IoTEnterprise (
-echo [!counter!] %%A [GAC，而非 LTSC]
+echo [!counter!]  %%A [GAC, not LTSC]
 ) else (
-echo [!counter!] %%A
+echo [!counter!]  %%A
 )
 set targetedition!counter!=%%A
 )
@@ -18150,7 +18150,7 @@ _masterxml
 ) do (
 if not defined %%A (
 %eline%
-echo 未能找到 %%A。正在中止...
+echo Failed to find %%A. Aborting...
 call :dk_color %Blue% "從下列 URL 下載並安裝 Office，然後再試一次。"
 set fixes=%fixes% %mas%genuine-installation-media
 call :dk_color %_Yellow% "%mas%genuine-installation-media"
@@ -18160,7 +18160,7 @@ goto dk_done
 
 if %winbuild% LSS 10240 if defined ltscfound (
 %eline%
-echo 安裝的 Office 似乎來自 Volume 頻道 %ltsc19%%ltsc21%%ltsc24%， 
+echo Installed Office appears to be from the Volume channel %ltsc19%%ltsc21%%ltsc24%,
 echo 您的 Windows 建置版本 %winbuild% 並未正式支援此功能。 
 echo 正在中止...
 set fixes=%fixes% %mas%troubleshoot
@@ -18313,7 +18313,7 @@ echo:
 for /f "usebackq delims=" %%A in (%SystemRoot%\Temp\%list%.txt) do (
 set /a counter+=1
 if !counter! LSS 10 (
-echo [!counter!] %%A
+echo [!counter!]  %%A
 ) else (
 echo [!counter!] %%A
 )
@@ -18735,7 +18735,7 @@ goto :oe_goback
 )
 if defined ltscfound (
 %eline%
-echo 已安裝 Office 更新頻道:%ltsc19%%ltsc21%%ltsc24%
+echo Installed Office update channel: %ltsc19%%ltsc21%%ltsc24%
 echo 您的 Windows 內部版本 %winbuild% 上安裝了不支援的 Office 更新頻道。 
 goto :oe_goback
 )
@@ -18878,7 +18878,7 @@ echo %targetchannel% | find /i "2019 VL" %nul% && (
 for %%A in (en-gb es-mx fr-ca) do (
 echo %_allLangs% | find /i "%%A" %nul% && (
 %eline%
-echo Office 2019 永久 VL 更新頻道不支援 [%%A] 語言。正在中止...
+echo [%%A] language is not supported on the Office 2019 Perpetual VL update channel. Aborting...
 goto :oe_goback
 )
 )
