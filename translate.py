@@ -40,7 +40,6 @@ TARGETS = [
 HASH_FILE        = "hash.txt"
 CACHE_FILE       = "translation_cache.csv"
 MY_RAW_BASE      = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main"
-PS1_FILE_OUTPUT  = "MAS_AIO_TW_File.ps1"
 BATCH_SIZE       = 30   # 每批翻譯數量（降低至 30 以提高穩定性）
 RETRY_LIMIT      = 3    # API 重試次數
 RETRY_DELAY      = 2    # 重試間隔（秒）
@@ -507,45 +506,13 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
     return segments
 
 def process_ps1(content: str, cache: dict) -> str:
+    del cache  # PS1 保持英文 loader，不做翻譯，避免編碼/載入相容性問題
     content = patch_ps1(content)
-    translator = GoogleTranslator(source="auto", target="zh-TW")
-    # keepends=True 保留原始換行符，避免 splitlines 丟失 CRLF/LF 資訊
-    lines = content.splitlines()   # 僅用於索引，後續重組用 splitlines(keepends=True)
-    lines_with_ends = content.splitlines(keepends=True)
+    lines = content.splitlines()
 
-    pending = []
-    for li, line in enumerate(lines):
-        for start, end, text in extract_ps1_segments(line):
-            core = text.strip()
-            if not re.search(r"[a-zA-Z]", core) or len(core) < 3:
-                continue
-            protected, phs = protect_placeholders(core, "ps1")
-            pending.append((li, start, end, protected, phs))
-
-    protected_texts = [p[3] for p in pending]
-    translated_all = []
-    for i in range(0, len(protected_texts), BATCH_SIZE):
-        chunk = protected_texts[i : i + BATCH_SIZE]
-        log.info(f"PS1 翻譯進度：{i+1}–{min(i+BATCH_SIZE, len(protected_texts))}/{len(protected_texts)}")
-        translated_all.extend(translate_batch(chunk, cache, translator))
-
-    # 對 lines（不含換行符）做替換，再把換行符接回去
-    replacements_by_line = [[] for _ in lines]
-    for idx, (li, start, end, protected, phs) in enumerate(pending):
-        tr = translated_all[idx] if idx < len(translated_all) else protected
-        tr = restore_placeholders(tr, phs)
-        replacements_by_line[li].append((start, end, tr))
-
-    # 重組：加入前導注釋行，強制使用 CRLF
+    # 保留英文 loader，只加上本專案標頭並統一 CRLF
     header = "# MAS Traditional Chinese Version - Auto Generated\r\n"
-    body_lines = []
-    for i, line in enumerate(lines):
-        text_only = apply_segment_replacements(line, replacements_by_line[i])
-        # 取得原始換行符（CRLF 或 LF）
-        orig_ending = lines_with_ends[i][len(lines[i]):] if i < len(lines_with_ends) else "\r\n"
-        # 統一強制為 CRLF
-        body_lines.append(text_only + "\r\n")
-
+    body_lines = [line + "\r\n" for line in lines]
     return header + "".join(body_lines)
 
 # ─────────────────────────────────────────────
@@ -587,12 +554,6 @@ def main():
         with open(target["output"], "w", encoding=target["encoding"], newline="") as f:
             f.write(result)
         log.info(f"{name} 已寫入 → {target['output']}")
-
-        # 為 PowerShell 額外輸出一份 BOM 版本，供 powershell -File 本地執行
-        if target["type"] == "ps1":
-            with open(PS1_FILE_OUTPUT, "w", encoding="utf-8-sig", newline="") as f:
-                f.write(result)
-            log.info(f"{name} 檔案版已寫入 → {PS1_FILE_OUTPUT}")
 
         hashes[name] = curr_hash
         updated = True
