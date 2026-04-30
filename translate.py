@@ -33,7 +33,7 @@ TARGETS = [
         "url": "https://raw.githubusercontent.com/massgravel/massgravel.github.io/main/index.html",
         "output": "MAS_AIO_TW.ps1",
         "type": "ps1",
-        "encoding": "utf-8",       # 無 BOM，避免 irm | iex 解析失敗
+        "encoding": "utf-8-sig",   # 帶 BOM，確保 Windows PowerShell -File 正常解析；iex 亦可接受
     },
 ]
 
@@ -435,7 +435,6 @@ def patch_ps1(content: str) -> str:
     1. 替換下載網址為本專案的 CMD 版本
     2. 移除 SHA256 雜湊校驗區塊
     3. 強制帶上 -qedit，避免 loader 刪掉內部重新啟動前的臨時 CMD
-    4. 加入 loader 除錯日誌，便於追查使用者端啟動問題
     """
     new_cmd_url = f"{MY_RAW_BASE}/MAS_AIO_TW.cmd"
 
@@ -468,45 +467,16 @@ def patch_ps1(content: str) -> str:
         content,
     )
 
-    # 加入輕量 debug logger，將 loader 關鍵事件寫到 TEMP
-    debug_block = """    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
-
-    $DebugLog = Join-Path $env:TEMP 'MAS_loader_debug.log'
-    function Write-DebugLog {
-        param([string]$Message)
-        try {
-            $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-            Add-Content -Path $DebugLog -Value "[$timestamp] $Message"
-        }
-        catch {}
-    }
-    Write-DebugLog 'Loader started.'
-"""
-    if "MAS_loader_debug.log" not in content:
-        content = content.replace(
-            "    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}",
-            debug_block,
-            1,
-        )
-
     # 對 cmd.exe 使用單一命令列字串，避免 Windows PowerShell 對 $args 的型別綁定問題。
     content = re.sub(
         r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
-        "Write-DebugLog \"Launching elevated cmd: $FilePath (legacy PS branch).\"\n        $argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru",
+        "$argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru",
         content,
     )
     content = re.sub(
         r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
-        "Write-DebugLog \"Launching elevated cmd: $FilePath (modern PS branch).\"\n        $argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()\n        Write-DebugLog \"Elevated cmd exit code: $($p.ExitCode)\"",
+        "$argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()",
         content,
-    )
-    content = content.replace(
-        '    CheckFile $FilePath' + "\n" + '    Remove-Item -Path $FilePath',
-        '    CheckFile $FilePath' + "\n" + '    Write-DebugLog \"Keeping temp cmd for debugging: $FilePath\"',
-    )
-    content = content.replace(
-        '    CheckFile $FilePath' + "\r\n" + '    Remove-Item -Path $FilePath',
-        '    CheckFile $FilePath' + "\r\n" + '    Write-DebugLog \"Keeping temp cmd for debugging: $FilePath\"',
     )
 
     return content

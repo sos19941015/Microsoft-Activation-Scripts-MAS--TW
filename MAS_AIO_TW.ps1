@@ -1,4 +1,4 @@
-# MAS Traditional Chinese Version - Auto Generated
+﻿# MAS Traditional Chinese Version - Auto Generated
 # This script is hosted on https://get.activated.win for https://massgrave.dev
 # Having trouble launching this script? Check https://massgrave.dev for help.
 
@@ -51,18 +51,6 @@ if (-not $args) {
     }
 
     try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
-
-    $DebugLog = Join-Path $env:TEMP 'MAS_loader_debug.log'
-    function Write-DebugLog {
-        param([string]$Message)
-        try {
-            $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-            Add-Content -Path $DebugLog -Value "[$timestamp] $Message"
-        }
-        catch {}
-    }
-    Write-DebugLog 'Loader started.'
-
 
     $URLs = @(
     'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
@@ -123,21 +111,18 @@ if (-not $args) {
             Write-Warning "命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行..."
             return
         }
-        Write-DebugLog "Launching elevated cmd: $FilePath (legacy PS branch)."
         $argLine = ('"{0}" -el -qedit' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
         $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
-        Write-DebugLog "Launching elevated cmd: $FilePath (modern PS branch)."
         $argLine = ('"{0}" -el -qedit' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
         $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
         $p.WaitForExit()
-        Write-DebugLog "Elevated cmd exit code: $($p.ExitCode)"
     }	
 	
     CheckFile $FilePath
-    Write-DebugLog "Keeping temp cmd for debugging: $FilePath"
+    Remove-Item -Path $FilePath
 } @args
