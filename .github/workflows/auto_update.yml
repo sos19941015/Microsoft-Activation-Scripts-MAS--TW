@@ -5,9 +5,17 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '0 2 * * *'   # 每天台灣時間上午 10:00 (UTC+8) 執行
-  workflow_dispatch:        # 支援手動觸發
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force a GitHub Release even if upstream content hash did not change'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
-# 防止同時有多個 workflow 在跑
 concurrency:
   group: mas-auto-update
   cancel-in-progress: false
@@ -21,13 +29,11 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # ── 1. 取得程式碼（含 hash.txt 與 translation_cache.csv）──
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      # ── 2. 建立 Python 環境（加快 cache 避免重複安裝）──
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -39,22 +45,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ── 3. 執行翻譯腳本，結果會寫入 GITHUB_OUTPUT ──
       - name: Run Translation Script
         id: translate
         run: python translate.py
 
-      # ── 4. 有更新才繼續後續步驟 ──
+      - name: Decide Release Mode
+        id: release_gate
+        run: |
+          if [ "${{ steps.translate.outputs.updated }}" = "true" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force_release || 'false' }}" = "true" ]; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Get release date tag
-        if: steps.translate.outputs.updated == 'true'
+        if: steps.release_gate.outputs.should_release == 'true'
         id: date
         run: |
           echo "tag=v$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
           echo "title=MAS 繁體中文翻譯版 $(date +'%Y/%m/%d')" >> $GITHUB_OUTPUT
 
-      # ── 5. 刪除當天已存在的 Release（避免版本號衝突）──
       - name: Delete existing release if same tag exists
-        if: steps.translate.outputs.updated == 'true'
+        if: steps.release_gate.outputs.should_release == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -64,14 +76,12 @@ jobs:
             gh release delete "$TAG" --yes --cleanup-tag
           fi
 
-      # ── 6. 產生並翻譯 Release Notes ──
       - name: Generate Release Notes
-        if: steps.translate.outputs.updated == 'true'
+        if: steps.release_gate.outputs.should_release == 'true'
         run: python generate_release_notes.py
 
-      # ── 7. 建立新 Release 並上傳兩個翻譯檔 ──
       - name: Create GitHub Release
-        if: steps.translate.outputs.updated == 'true'
+        if: steps.release_gate.outputs.should_release == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -80,7 +90,6 @@ jobs:
             -F release_notes.md \
             MAS_AIO_TW.cmd MAS_AIO_TW.ps1
 
-      # ── 8. 將更新後的 hash.txt 與快取推回儲存庫 ──
       - name: Commit Updated Cache and Hash
         if: steps.translate.outputs.updated == 'true'
         run: |
