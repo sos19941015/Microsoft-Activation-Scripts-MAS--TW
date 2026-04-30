@@ -46,9 +46,16 @@ Goal: translate user-facing text without changing parser-visible structure, exec
 - Do not translate lines starting with `:label`, `rem`, `if`, `for`, `set`, `setlocal`, `endlocal`, `goto`, `exit`, `call` to external tools, or executable invocations unless you are extracting a known UI-only substring.
 - Protect batch expansions exactly, including `%var%`, `!var!`, `%~dp0`, `%1`, `%*`, and loop variables like `%%i`.
 - Be careful with `echo` lines. Only translate the portion after `echo` when the remainder is plain UI text. If it contains pipes, redirects, escaped operators, variables with control meaning, or command composition, treat it as logic.
+- If an `echo` line contains ANSI/control fragments such as `%esc%`, `%~1`, `%~2`, `%~dp0`, or loop variables, skip translation for the whole line. These often look like strings but are really terminal control code.
 - For helper calls like `call :dk_color "text"` or other label-based UI helpers, extract only the quoted user-facing text spans and leave the command structure untouched.
 - Keep spacing and escaping stable. In batch files, small changes to `^`, `%`, `!`, `&`, `|`, `<`, `>`, or trailing spaces can change behavior.
 - If a translated line ends with non-ASCII text, verify the target runtime and encoding strategy. Some CMD flows need explicit `chcp 65001` or a trailing ASCII-safe character to avoid line-join issues.
+
+## PowerShell File Rules
+
+- Distinguish between PowerShell code executed from a string and PowerShell code executed from a `.ps1` file. A script may appear fine under `iex` yet still fail under `powershell -File`.
+- If the script contains translated non-ASCII UI text and must support Windows PowerShell file execution, prefer `UTF-8 with BOM` output.
+- Be careful with `Start-Process -ArgumentList`. Do not pass raw `$args` arrays into places that expect a single string. Build a stable command string when launching `cmd.exe /c ...`.
 
 ## Guardrails
 
@@ -92,6 +99,12 @@ Goal: translate user-facing text without changing parser-visible structure, exec
   `echo %windir% ^| findstr /i system32`
   because the text is part of control flow or command composition.
 
+### PowerShell-unsafe pattern
+
+- Do not assume this is safe in all hosts:
+  `Start-Process -ArgumentList '/c', $FilePath, '-el', '-qedit', $args`
+  In Windows PowerShell, `$args` may be an `Object[]` and break parameter binding. Build the final command line deliberately.
+
 ## Editing Strategy
 
 - Prefer fixing the generator over patching generated output by hand.
@@ -102,6 +115,7 @@ Goal: translate user-facing text without changing parser-visible structure, exec
 
 - Regenerate the output artifact.
 - Run a parser or syntax check on the generated file.
+- For PowerShell loaders, test both `powershell -File` and `iex` paths when both execution styles matter.
 - Diff the result against the source and inspect:
   quoted strings
   comparisons

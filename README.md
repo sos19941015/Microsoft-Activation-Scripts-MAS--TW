@@ -112,6 +112,21 @@ pip install -r requirements.txt
 python translate.py
 ```
 
+目前這條本地翻譯管線已驗證可正常運作：
+
+- `translate.py` 會先比對上游內容 hash，並搭配 `translation_cache.csv` 做增量翻譯
+- 翻譯引擎使用 `deep-translator` 的 `GoogleTranslator`
+- 能重新產生可執行的 `MAS_AIO_TW.cmd` 與 `MAS_AIO_TW.ps1`
+- `MAS_AIO_TW.ps1` 已額外驗證可同時支援：
+  - `powershell -File`
+  - `Parser.ParseFile(...)`
+  - `irm ... | iex`
+
+這次修正後確認的兩個關鍵點：
+
+- Batch/CMD 的 UI 翻譯不能碰到 ANSI 控制序列、批次參數展開、`echo` 控制碼或多段字串拼接結構
+- Windows PowerShell 對含中文的 `.ps1` 檔案建議輸出為 `UTF-8 with BOM`，否則 `-File` 模式可能解析失敗
+
 ---
 
 ## 🧠 翻譯安全準則
