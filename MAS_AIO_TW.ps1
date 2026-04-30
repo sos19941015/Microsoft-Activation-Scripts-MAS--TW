@@ -52,6 +52,18 @@ if (-not $args) {
 
     try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
+    $DebugLog = Join-Path $env:TEMP 'MAS_loader_debug.log'
+    function Write-DebugLog {
+        param([string]$Message)
+        try {
+            $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+            Add-Content -Path $DebugLog -Value "[$timestamp] $Message"
+        }
+        catch {}
+    }
+    Write-DebugLog 'Loader started.'
+
+
     $URLs = @(
     'https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.cmd'
 )
@@ -111,13 +123,17 @@ if (-not $args) {
             Write-Warning "命令正在使用 x86 Powershell 運行，請改為使用 x64 Powershell 運行..."
             return
         }
+        Write-DebugLog "Launching elevated cmd: $FilePath (legacy PS branch)."
         $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
-        saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Wait -Verb RunAs
+        Write-DebugLog "Launching elevated cmd: $FilePath (modern PS branch)."
+        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru
+        $p.WaitForExit()
+        Write-DebugLog "Elevated cmd exit code: $($p.ExitCode)"
     }	
 	
     CheckFile $FilePath
-    Remove-Item -Path $FilePath
+    Write-DebugLog "Keeping temp cmd for debugging: $FilePath"
 } @args
