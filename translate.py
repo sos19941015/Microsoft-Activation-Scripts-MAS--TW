@@ -477,12 +477,12 @@ def patch_ps1(content: str) -> str:
     # Windows PowerShell when running the loader via irm | iex.
     content = re.sub(
         r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
-        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru''',
+        '$p = saps -FilePath $FilePath -ArgumentList "-el -qedit $args" -Verb RunAs -PassThru',
         content,
     )
     content = re.sub(
         r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
-        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()''',
+        'saps -FilePath $FilePath -ArgumentList "-el -qedit $args" -Wait -Verb RunAs',
         content,
     )
 
@@ -513,18 +513,106 @@ def extract_ps1_segments(line: str) -> list[tuple[int, int, str]]:
     return segments
 
 def process_ps1(content: str, cache: dict) -> str:
-    del cache  # PS1 保持英文 loader，不做翻譯，避免編碼/載入相容性問題
-    content = patch_ps1(content)
-    lines = content.splitlines()
+    del content
+    del cache
 
-    # 保留英文 loader，只加上本專案標頭並統一 CRLF
-    header = "# MAS Traditional Chinese Version - Auto Generated\r\n"
-    body_lines = [line + "\r\n" for line in lines]
-    return header + "".join(body_lines)
+    cmd_url = f"{MY_RAW_BASE}/MAS_AIO_TW.cmd"
+    loader = f'''# MAS Traditional Chinese Version - Auto Generated
+param(
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$Parameters
+)
 
-# ─────────────────────────────────────────────
-# 主流程
-# ─────────────────────────────────────────────
+if (-not $Parameters -and -not $args) {{
+    Write-Host ''
+    Write-Host 'Need help? Check our homepage: ' -NoNewline
+    Write-Host 'https://massgrave.dev' -ForegroundColor Green
+    Write-Host ''
+}}
+
+& {{
+    $psv = (Get-Host).Version.Major
+    $troubleshoot = 'https://massgrave.dev/troubleshoot'
+    if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {{
+        Write-Host 'PowerShell is not running in Full Language Mode.'
+        Write-Host 'Help - https://massgrave.dev/fix_powershell' -ForegroundColor White -BackgroundColor Blue
+        return
+    }}
+
+    try {{
+        [void][System.AppDomain]::CurrentDomain.GetAssemblies()
+        [void][System.Math]::Sqrt(144)
+    }}
+    catch {{
+        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host 'Powershell failed to load .NET command.'
+        Write-Host 'Help - https://massgrave.dev/in-place_repair_upgrade' -ForegroundColor White -BackgroundColor Blue
+        return
+    }}
+
+    function Check3rdAV {{
+        $cmd = if ($psv -ge 3) {{ 'Get-CimInstance' }} else {{ 'Get-WmiObject' }}
+        try {{
+            $avList = & $cmd -Namespace root\\SecurityCenter2 -Class AntiVirusProduct -ErrorAction SilentlyContinue |
+                Where-Object {{ $_.displayName -notlike '*windows*' }} |
+                Select-Object -ExpandProperty displayName
+            if ($avList) {{
+                Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline
+                Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
+            }}
+        }}
+        catch {{}}
+    }}
+
+    function CheckFile {{
+        param([string]$FilePath)
+        if (-not (Test-Path $FilePath)) {{
+            Check3rdAV
+            Write-Host 'Failed to create MAS file in temp folder, aborting!'
+            Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+            throw
+        }}
+    }}
+
+    try {{ [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 }} catch {{}}
+
+    $downloadUrl = '{cmd_url}'
+    $tempFile = Join-Path ([System.IO.Path]::GetTempPath()) (([System.IO.Path]::GetRandomFileName()) + '.cmd')
+
+    Write-Progress -Activity 'Downloading...' -Status 'Please wait'
+    try {{
+        if ($psv -ge 3) {{
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $tempFile -UseBasicParsing
+        }}
+        else {{
+            $wc = New-Object System.Net.WebClient
+            $wc.DownloadFile($downloadUrl, $tempFile)
+        }}
+    }}
+    catch {{
+        Check3rdAV
+        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host 'Failed to retrieve MAS from the repository, aborting!'
+        Write-Host 'Check if antivirus or firewall is blocking the connection.'
+        Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+        return
+    }}
+    Write-Progress -Activity 'Downloading...' -Status 'Done' -Completed
+
+    CheckFile $tempFile
+    $env:ComSpec = "$env:SystemRoot\\system32\\cmd.exe"
+    $chkcmd = & $env:ComSpec /c 'echo CMD is working'
+    if ($chkcmd -notcontains 'CMD is working') {{
+        Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"
+    }}
+
+    $joinedArgs = @($Parameters + $args) -join ' '
+    $cmdArgs = ('/c chcp 65001 >nul & ""{{0}}"" {{1}}' -f $tempFile, $joinedArgs).Trim()
+    Start-Process -FilePath $env:ComSpec -ArgumentList $cmdArgs -Wait
+}}
+'''.strip('\n')
+    return loader.replace('\n', '\r\n') + '\r\n'
+
 PROCESSORS = {
     "cmd": process_cmd,
     "ps1": process_ps1,
