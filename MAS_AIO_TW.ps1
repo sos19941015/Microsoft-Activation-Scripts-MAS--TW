@@ -97,6 +97,7 @@ if (-not $args) {
     $rand = [Guid]::NewGuid().Guid
     $isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
     $FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
+    $response = $response.TrimStart([char]0xFEFF)
     $cmdContent = "@::: $rand `r`n$response"
         $utf8Bom = New-Object System.Text.UTF8Encoding $true
         [System.IO.File]::WriteAllText($FilePath, $cmdContent, $utf8Bom)

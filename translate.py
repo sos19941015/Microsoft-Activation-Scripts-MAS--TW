@@ -26,14 +26,14 @@ TARGETS = [
         "url": "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/master/MAS/All-In-One-Version-KL/MAS_AIO.cmd",
         "output": "MAS_AIO_TW.cmd",
         "type": "cmd",
-        "encoding": "utf-8-sig",   # BOM 讓 Windows 記事本正確識別
+        "encoding": "utf-8",
     },
     {
         "name": "PS1",
         "url": "https://raw.githubusercontent.com/massgravel/massgravel.github.io/main/index.html",
         "output": "MAS_AIO_TW.ps1",
         "type": "ps1",
-        "encoding": "utf-8",       # 無 BOM，供 irm ... | iex 使用
+        "encoding": "utf-8",
     },
 ]
 
@@ -364,6 +364,7 @@ def extract_cmd_segments(line: str) -> list[tuple[int, int, str]]:
 
 def process_cmd(content: str, cache: dict) -> str:
     translator = GoogleTranslator(source="auto", target="zh-TW")
+    content = content.lstrip("\ufeff")
     lines = content.splitlines()
 
     # 第一遍：收集需要翻譯的片段
@@ -451,6 +452,15 @@ def patch_ps1(content: str) -> str:
     )
     content = re.sub(r".*\$releaseHash.*\n", "", content)
     content = re.sub(r".*\$hash.*-ne.*\$releaseHash.*\n", "", content)
+
+    # GitHub raw may surface a UTF-8 BOM as a literal leading U+FEFF in the
+    # downloaded string. Strip it before prepending our temp-file marker.
+    content = re.sub(
+        r'(\$FilePath = if .*?\n)',
+        r'\1    $response = $response.TrimStart([char]0xFEFF)\n',
+        content,
+        count=1,
+    )
 
     # The translated CMD contains CJK text. Write the temp batch with an
     # explicit UTF-8 BOM so cmd.exe reads it with the intended encoding.
