@@ -489,15 +489,15 @@ def patch_ps1(content: str) -> str:
             1,
         )
 
-    # 改用分段 ArgumentList，避免巢狀引號在 cmd / PowerShell / UAC 之間被吃壞。
+    # 對 cmd.exe 使用單一命令列字串，避免 Windows PowerShell 對 $args 的型別綁定問題。
     content = re.sub(
         r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
-        "Write-DebugLog \"Launching elevated cmd: $FilePath (legacy PS branch).\"\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru",
+        "Write-DebugLog \"Launching elevated cmd: $FilePath (legacy PS branch).\"\n        $argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru",
         content,
     )
     content = re.sub(
         r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
-        "Write-DebugLog \"Launching elevated cmd: $FilePath (modern PS branch).\"\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru\n        $p.WaitForExit()\n        Write-DebugLog \"Elevated cmd exit code: $($p.ExitCode)\"",
+        "Write-DebugLog \"Launching elevated cmd: $FilePath (modern PS branch).\"\n        $argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()\n        Write-DebugLog \"Elevated cmd exit code: $($p.ExitCode)\"",
         content,
     )
     content = content.replace(

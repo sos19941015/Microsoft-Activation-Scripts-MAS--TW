@@ -124,12 +124,16 @@ if (-not $args) {
             return
         }
         Write-DebugLog "Launching elevated cmd: $FilePath (legacy PS branch)."
-        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru
+        $argLine = ('"{0}" -el -qedit' -f $FilePath)
+        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
+        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
         Write-DebugLog "Launching elevated cmd: $FilePath (modern PS branch)."
-        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $FilePath, '-el', '-qedit', $args -Verb RunAs -PassThru
+        $argLine = ('"{0}" -el -qedit' -f $FilePath)
+        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
+        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
         $p.WaitForExit()
         Write-DebugLog "Elevated cmd exit code: $($p.ExitCode)"
     }	
