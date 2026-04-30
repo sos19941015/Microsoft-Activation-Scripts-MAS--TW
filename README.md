@@ -23,6 +23,8 @@ MAS 是一個開源的 Windows 與 Office 啟用工具，包含 HWID、Ohook、T
 irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main/MAS_AIO_TW.ps1 | iex
 ```
 
+這是本專案最主要、最優先保證的使用路徑。
+
 ---
 
 ## 📦 手動下載
@@ -32,8 +34,8 @@ irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-M
 | 檔案 | 說明 |
 |------|------|
 | `MAS_AIO_TW.cmd` | 批次檔版本，以系統管理員身分雙擊執行 |
-| `MAS_AIO_TW.ps1` | PowerShell 載入器，適合搭配 `irm ... | iex` 使用 |
-| `MAS_AIO_TW_File.ps1` | PowerShell 檔案版，適合本地 `powershell -File` 執行 |
+| `MAS_AIO_TW.ps1` | 主要 PowerShell 載入器，專供 `irm ... | iex` 使用 |
+| `MAS_AIO_TW_File.ps1` | 輔助 PowerShell 檔案版，主要用於本地 `powershell -File` 驗證 |
 
 ---
 
@@ -119,8 +121,8 @@ python translate.py
 - 翻譯引擎使用 `deep-translator` 的 `GoogleTranslator`
 - 能重新產生可執行的 `MAS_AIO_TW.cmd`、`MAS_AIO_TW.ps1` 與 `MAS_AIO_TW_File.ps1`
 - PowerShell 載入器分成兩種用途：
-  - `MAS_AIO_TW.ps1`：給 `irm ... | iex`
-  - `MAS_AIO_TW_File.ps1`：給 `powershell -File`
+  - `MAS_AIO_TW.ps1`：主要產物，給 `irm ... | iex`
+  - `MAS_AIO_TW_File.ps1`：輔助驗證產物，給 `powershell -File`
 
 這次修正後確認的兩個關鍵點：
 
