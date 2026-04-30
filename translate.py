@@ -431,14 +431,11 @@ def process_cmd(content: str, cache: dict) -> str:
 # ─────────────────────────────────────────────
 def patch_ps1(content: str) -> str:
     """
-    在翻譯前對 PS1 內容做結構性修改：
-    1. 替換下載網址為本專案的 CMD 版本
-    2. 移除 SHA256 雜湊校驗區塊
-    3. 強制帶上 -qedit，避免 loader 刪掉內部重新啟動前的臨時 CMD
+    Patch the upstream PowerShell loader so it downloads our translated CMD
+    while preserving the original control flow and launch behavior.
     """
     new_cmd_url = f"{MY_RAW_BASE}/MAS_AIO_TW.cmd"
 
-    # 替換 $URLs 陣列（支援單行或多行格式）
     content = re.sub(
         r"\$URLs\s*=\s*@\(.*?\)",
         f"$URLs = @(\n    '{new_cmd_url}'\n)",
@@ -446,36 +443,36 @@ def patch_ps1(content: str) -> str:
         flags=re.DOTALL,
     )
 
-    # 移除雜湊校驗區塊
-    # 精確匹配：從「# Verify script integrity」到包含 $hash -ne $releaseHash 的整個 if 區塊結束
     content = re.sub(
         r"# Verify script integrity.*?\}\s*\n",
-        "# [已移除雜湊驗證，此版本使用本專案翻譯版 CMD]\n",
+        "# [Integrity check removed for translated downstream CMD]\n",
         content,
         flags=re.DOTALL,
     )
+    content = re.sub(r".*\$releaseHash.*\n", "", content)
+    content = re.sub(r".*\$hash.*-ne.*\$releaseHash.*\n", "", content)
 
-    # 二次保險：如果 $releaseHash 仍殘留，移除包含它的那幾行
+    # The translated CMD contains CJK text. Write the temp batch with an
+    # explicit UTF-8 BOM so cmd.exe reads it with the intended encoding.
     content = re.sub(
-        r".*\$releaseHash.*\n",
-        "",
+        r'Set-Content -Path \$FilePath -Value "@::: \$rand `r`n\$response"',
+        '$cmdContent = "@::: $rand `r`n$response"\n'
+        '        $utf8Bom = New-Object System.Text.UTF8Encoding $true\n'
+        '        [System.IO.File]::WriteAllText($FilePath, $cmdContent, $utf8Bom)',
         content,
     )
-    content = re.sub(
-        r".*\$hash.*-ne.*\$releaseHash.*\n",
-        "",
-        content,
-    )
 
-    # 對 cmd.exe 使用單一命令列字串，避免 Windows PowerShell 對 $args 的型別綁定問題。
+    # Flatten PowerShell $args into a single cmd.exe command string before
+    # passing them through Start-Process. This avoids binding issues in
+    # Windows PowerShell when running the loader via irm | iex.
     content = re.sub(
         r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
-        "$argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru",
+        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru''',
         content,
     )
     content = re.sub(
         r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
-        "$argLine = ('\"{0}\" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()",
+        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()''',
         content,
     )
 

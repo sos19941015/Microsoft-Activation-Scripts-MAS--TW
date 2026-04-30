@@ -85,7 +85,7 @@ if (-not $args) {
         return
     }
 
-    # [已移除雜湊驗證，此版本使用本專案翻譯版 CMD]
+    # [Integrity check removed for translated downstream CMD]
     # Check for AutoRun registry which may create issues with CMD
     $paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"
     foreach ($path in $paths) { 
@@ -97,7 +97,9 @@ if (-not $args) {
     $rand = [Guid]::NewGuid().Guid
     $isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
     $FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
-    Set-Content -Path $FilePath -Value "@::: $rand `r`n$response"
+    $cmdContent = "@::: $rand `r`n$response"
+        $utf8Bom = New-Object System.Text.UTF8Encoding $true
+        [System.IO.File]::WriteAllText($FilePath, $cmdContent, $utf8Bom)
     CheckFile $FilePath
 
     $env:ComSpec = "$env:SystemRoot\system32\cmd.exe"
