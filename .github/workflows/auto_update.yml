@@ -88,7 +88,7 @@ jobs:
           gh release create "${{ steps.date.outputs.tag }}" \
             --title "${{ steps.date.outputs.title }}" \
             -F release_notes.md \
-            MAS_AIO_TW.cmd MAS_AIO_TW.ps1
+            MAS_AIO_TW.cmd MAS_AIO_TW.ps1 MAS_AIO_TW_File.ps1
 
       - name: Commit Updated Cache and Hash
         if: steps.translate.outputs.updated == 'true'

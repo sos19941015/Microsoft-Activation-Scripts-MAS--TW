@@ -33,13 +33,14 @@ TARGETS = [
         "url": "https://raw.githubusercontent.com/massgravel/massgravel.github.io/main/index.html",
         "output": "MAS_AIO_TW.ps1",
         "type": "ps1",
-        "encoding": "utf-8-sig",   # 帶 BOM，確保 Windows PowerShell -File 正常解析；iex 亦可接受
+        "encoding": "utf-8",       # 無 BOM，供 irm ... | iex 使用
     },
 ]
 
 HASH_FILE        = "hash.txt"
 CACHE_FILE       = "translation_cache.csv"
 MY_RAW_BASE      = "https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-MAS--TW/main"
+PS1_FILE_OUTPUT  = "MAS_AIO_TW_File.ps1"
 BATCH_SIZE       = 30   # 每批翻譯數量（降低至 30 以提高穩定性）
 RETRY_LIMIT      = 3    # API 重試次數
 RETRY_DELAY      = 2    # 重試間隔（秒）
@@ -586,6 +587,12 @@ def main():
         with open(target["output"], "w", encoding=target["encoding"], newline="") as f:
             f.write(result)
         log.info(f"{name} 已寫入 → {target['output']}")
+
+        # 為 PowerShell 額外輸出一份 BOM 版本，供 powershell -File 本地執行
+        if target["type"] == "ps1":
+            with open(PS1_FILE_OUTPUT, "w", encoding="utf-8-sig", newline="") as f:
+                f.write(result)
+            log.info(f"{name} 檔案版已寫入 → {PS1_FILE_OUTPUT}")
 
         hashes[name] = curr_hash
         updated = True

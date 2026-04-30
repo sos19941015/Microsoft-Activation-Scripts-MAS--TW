@@ -1,4 +1,4 @@
-# MAS Traditional Chinese Version - Auto Generated
+﻿# MAS Traditional Chinese Version - Auto Generated
 # This script is hosted on https://get.activated.win for https://massgrave.dev
 # Having trouble launching this script? Check https://massgrave.dev for help.
 

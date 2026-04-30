@@ -32,7 +32,8 @@ irm https://raw.githubusercontent.com/sos19941015/Microsoft-Activation-Scripts-M
 | 檔案 | 說明 |
 |------|------|
 | `MAS_AIO_TW.cmd` | 批次檔版本，以系統管理員身分雙擊執行 |
-| `MAS_AIO_TW.ps1` | PowerShell 載入器，適合搭配 `irm` 指令使用 |
+| `MAS_AIO_TW.ps1` | PowerShell 載入器，適合搭配 `irm ... | iex` 使用 |
+| `MAS_AIO_TW_File.ps1` | PowerShell 檔案版，適合本地 `powershell -File` 執行 |
 
 ---
 
@@ -116,11 +117,10 @@ python translate.py
 
 - `translate.py` 會先比對上游內容 hash，並搭配 `translation_cache.csv` 做增量翻譯
 - 翻譯引擎使用 `deep-translator` 的 `GoogleTranslator`
-- 能重新產生可執行的 `MAS_AIO_TW.cmd` 與 `MAS_AIO_TW.ps1`
-- `MAS_AIO_TW.ps1` 已額外驗證可同時支援：
-  - `powershell -File`
-  - `Parser.ParseFile(...)`
-  - `irm ... | iex`
+- 能重新產生可執行的 `MAS_AIO_TW.cmd`、`MAS_AIO_TW.ps1` 與 `MAS_AIO_TW_File.ps1`
+- PowerShell 載入器分成兩種用途：
+  - `MAS_AIO_TW.ps1`：給 `irm ... | iex`
+  - `MAS_AIO_TW_File.ps1`：給 `powershell -File`
 
 這次修正後確認的兩個關鍵點：
 
