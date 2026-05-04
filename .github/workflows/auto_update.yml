@@ -52,11 +52,13 @@ jobs:
       - name: Decide Release Mode
         id: release_gate
         run: |
-          if [ "${{ steps.translate.outputs.updated }}" = "true" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force_release || 'false' }}" = "true" ]; then
-            echo "should_release=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_release=false" >> $GITHUB_OUTPUT
+          should_release="false"
+          if [ "${{ steps.translate.outputs.updated }}" = "true" ]; then
+            should_release="true"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force_release || 'false' }}" = "true" ]; then
+            should_release="true"
           fi
+          echo "should_release=$should_release" >> $GITHUB_OUTPUT
 
       - name: Get release date tag
         if: steps.release_gate.outputs.should_release == 'true'
