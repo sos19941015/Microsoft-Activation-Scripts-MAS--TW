@@ -453,11 +453,20 @@ def patch_ps1(content: str) -> str:
     content = re.sub(r".*\$releaseHash.*\n", "", content)
     content = re.sub(r".*\$hash.*-ne.*\$releaseHash.*\n", "", content)
 
+    content = re.sub(
+        r"(\$troubleshoot = 'https://massgrave\.dev/troubleshoot'\r?\n)",
+        r"\1    $DebugLog = Join-Path $env:TEMP 'MAS_loader_debug.log'\r\n"
+        r"    function Write-DebugLog { param([string]$Message) Add-Content -Path $DebugLog -Value ((Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' ' + $Message) }\r\n"
+        r"    Write-DebugLog ('Loader started. args=' + (@($args) -join ' '))\r\n",
+        content,
+        count=1,
+    )
+
     # GitHub raw may surface a UTF-8 BOM as a literal leading U+FEFF in the
     # downloaded string. Strip it before prepending our temp-file marker.
     content = re.sub(
         r'(\$FilePath = if .*?\n)',
-        r'\1    $response = $response.TrimStart([char]0xFEFF)\n',
+        r'\1    Write-DebugLog ("Temp cmd path: " + $FilePath)\n    $response = $response.TrimStart([char]0xFEFF)\n',
         content,
         count=1,
     )
@@ -477,13 +486,35 @@ def patch_ps1(content: str) -> str:
     # Windows PowerShell when running the loader via irm | iex.
     content = re.sub(
         r'\$p = saps -FilePath \$env:ComSpec -ArgumentList .*? -Verb RunAs -PassThru',
-        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru''',
+        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        Write-DebugLog ("Launching elevated cmd with argLine: " + $argLine)\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru''',
         content,
     )
     content = re.sub(
         r'saps -FilePath \$env:ComSpec -ArgumentList .*? -Wait -Verb RunAs',
-        '''$argLine = ('"{0}" -el -qedit' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru\n        $p.WaitForExit()''',
+        '''$argLine = ('"{0}" -el' -f $FilePath)\n        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }\n        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)\n        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs\n        Write-DebugLog ("Elevated cmd (psv>=3) finished")''',
         content,
+    )
+    # After the broad PassThru replacement above, the PS>=3 branch may still
+    # contain the old qedit+PassThru block. Force it back to the upstream
+    # behavior (no -qedit in this branch, and direct -Wait call).
+    content = re.sub(
+        r'else \{\r?\n\s*\$argLine = \(\'"\{0\}" -el -qedit\' -f \$FilePath\)\r?\n\s*if \(\$args\) \{ \$argLine \+= \' \' \+ \(\(\$args \| ForEach-Object \{ \$_.ToString\(\) \}\) -join \' \' \) \}\r?\n\s*Write-DebugLog \("Launching elevated cmd with argLine: " \+ \$argLine\)\r?\n\s*\$p = saps -FilePath \$env:ComSpec -ArgumentList \'/c\', \$argLine -Verb RunAs -PassThru\r?\n\s*\$p.WaitForExit\(\)\r?\n(?:\s*Write-DebugLog \("Elevated cmd exit code: " \+ \$p.ExitCode\)\r?\n)?\s*\}',
+        '''else {
+        $argLine = ('"{0}" -el' -f $FilePath)
+        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
+        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)
+        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs
+        Write-DebugLog ("Elevated cmd (psv>=3) finished")
+    }''',
+        content,
+        flags=re.DOTALL,
+    )
+
+    content = re.sub(
+        r"Remove-Item -Path \$FilePath",
+        'Write-DebugLog ("Keeping temp file for debug: " + $FilePath)',
+        content,
+        count=1,
     )
 
     return content

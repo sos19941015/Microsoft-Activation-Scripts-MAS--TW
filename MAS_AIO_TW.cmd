@@ -3,7 +3,7 @@
 @::Is a real person even the one deciding to flag this or is it Copilot told to flag anything it decides not to like?
 @::If a campaign is using this script as a cover, please flag parts of the campaign instead of the script. This isn't the first time we experienced collateral damage due to campaigns completely unrelated to us.
 @::If you disagree that MAS is not malicious, we would appreciate if you contacted us to explain what constitutes MAS as "Sonbokli" and we'll look into it. Thank you. 
-@set masver=3.10
+@set masver=3.11
 @setlocal DisableDelayedExpansion
 @echo off
 chcp 65001 >nul
@@ -5022,7 +5022,7 @@ set esuexistsup=
 set esueditionlist=
 set esuexistbutnosup=
 
-for %%# in (EnterpriseS IoTEnterpriseS IoTEnterpriseSK) do (if /i %tsedition%==%%# set isltsc=1)
+if %winbuild% GTR 14393 for %%# in (EnterpriseS IoTEnterpriseS IoTEnterpriseSK) do (if /i %tsedition%==%%# set isltsc=1)
 if exist "%SystemRoot%\Servicing\Packages\Microsoft-Windows-Server*Edition~*.mum" set isServer=1
 
 if /i %tsedition%==Embedded (
@@ -5060,6 +5060,7 @@ REM Windows8.1
 11be7019-a309-4763-9a09-091d1722ffe3_Client-FES-ESU-Year3[1-3y]_-EmbeddedIndustry-EmbeddedIndustryE-
 REM WindowsServer2012/2012R2
 55b1dd2d-2209-4ea0-a805-06298bad25b3_Server-ESU-Year3[1-3y]_-ServerDatacenter-ServerDatacenterCore-ServerDatacenterV-ServerDatacenterVCore-ServerStandard-ServerStandardCore-ServerStandardV-ServerStandardVCore-
+1b60284a-63b5-42da-8ec9-eaab825e2bc8_Server-ESU-Year5[4-5y]_-ServerDatacenter-ServerDatacenterCore-ServerDatacenterV-ServerDatacenterVCore-ServerStandard-ServerStandardCore-ServerStandardV-ServerStandardVCore-
 REM Windows10
 f520e45e-7413-4a34-a497-d2765967d094_Client-ESU-Year1_-%w10EsuEditions%-%w10EsuEditionsLaterAdded%
 1043add5-23b1-4afb-9a0f-64343c8f3f8d_Client-ESU-Year2_-%w10EsuEditions%-%w10EsuEditionsLaterAdded%
@@ -5068,6 +5069,9 @@ f520e45e-7413-4a34-a497-d2765967d094_Client-ESU-Year1_-%w10EsuEditions%-%w10EsuE
 REM WindowsServer2016
 91bcac0a-d7d3-4d2b-bd0c-72fed675f01b_Server-ESU-Year3[1-3y]_-ServerDatacenter-ServerDatacenterCore-ServerDatacenterV-ServerDatacenterVCore-ServerStandard-ServerStandardCore-ServerStandardV-ServerStandardVCore-
 4cd0ab30-73a4-4dde-972c-512f05be31df_Server-ESU-Year6[4-6y]_-ServerDatacenter-ServerDatacenterCore-ServerDatacenterV-ServerDatacenterVCore-ServerStandard-ServerStandardCore-ServerStandardV-ServerStandardVCore-
+REM Windows10LTSB2016
+f2571710-2c24-4677-8fb5-a07d41d3c1aa_Client-ESU-Year3[1-3y]_-EnterpriseS-EnterpriseSN-
+22badfe6-7d55-4485-874b-7ec317442134_Client-ESU-Year6[4-6y]_-EnterpriseS-EnterpriseSN-
 ) do (
 for /f "tokens=1-3 delims=_" %%A in ("%%#") do (
 echo "%allapps%" | find /i "%%A" %nul1% && (
@@ -5123,7 +5127,7 @@ goto :ts_off
 set esuavail=
 if defined _vis if defined isServer set esuavail=1
 if %winbuild% LEQ 7602 if not defined _vis if not defined isThinpc set esuavail=1
-if %winbuild% GTR 7602 if %winbuild% LSS 14393 if defined isServer set esuavail=1
+if %winbuild% GTR 7602 if %winbuild% LEQ 14393 if defined isServer set esuavail=1
 if %winbuild% GEQ 10240 if %winbuild% LEQ 19045 if not defined isServer set esuavail=1
 if %winbuild% EQU 9600 set esuavail=1
 
@@ -18375,6 +18379,11 @@ if defined Lync_st set Lync_st=Off
 set OneDrive_st=Off
 if defined suites (set Teams_st=Off) else (set Teams_st=)
 
+set OutlookForWindows_st=
+if %winbuild% GEQ 19041 if defined Outlook_st echo %targetedition% | find /i "O365" %nul1% && (
+set OutlookForWindows_st=Off
+)
+
 :oe_excludeapps
 
 cls
@@ -18387,19 +18396,20 @@ call :dk_color %Gray% "若要從安裝中排除下面列出的應用程序，請
 if defined editedition call :dk_color %Gray% "Note: The On/Off status below does not reflect the current status of the installed apps."
 %line%
 if defined suites echo:
-if defined Access_st     echo [A] Access           : %Access_st%
-if defined Excel_st      echo [E] Excel            : %Excel_st%
-if defined OneNote_st    echo [N] OneNote          : %OneNote_st%
-if defined Outlook_st    echo [O] Outlook          : %Outlook_st%
-if defined PowerPoint_st echo [P] PowerPoint       : %PowerPoint_st%
-if defined Project_st    echo [J] Project          : %Project_st%
-if defined Publisher_st  echo [R] Publisher        : %Publisher_st%
-if defined Visio_st      echo [V] Visio            : %Visio_st%
-if defined Word_st       echo [W] Word             : %Word_st%
+if defined Access_st            echo [A] Access              : %Access_st%
+if defined Excel_st             echo [E] Excel               : %Excel_st%
+if defined OneNote_st           echo [N] OneNote             : %OneNote_st%
+if defined Outlook_st           echo [O] Outlook ^(Classic^)   : %Outlook_st%
+if defined PowerPoint_st        echo [P] PowerPoint          : %PowerPoint_st%
+if defined Project_st           echo [J] Project             : %Project_st%
+if defined Publisher_st         echo [R] Publisher           : %Publisher_st%
+if defined Visio_st             echo [V] Visio               : %Visio_st%
+if defined Word_st              echo [W] Word                : %Word_st%
 echo:
-if defined Lync_st       echo [L] SkypeForBusiness : %Lync_st%
-if defined OneDrive_st   echo [D] OneDrive         : %OneDrive_st%
-if defined Teams_st      echo [T] Teams            : %Teams_st%
+if defined Lync_st              echo [L] SkypeForBusiness    : %Lync_st%
+if defined OutlookForWindows_st echo [K] Outlook ^(New^)       : %OutlookForWindows_st%
+if defined OneDrive_st          echo [D] OneDrive            : %OneDrive_st%
+if defined Teams_st             echo [T] Teams               : %Teams_st%
 %line%
 echo:
 echo [1] 繼續 
@@ -18407,22 +18417,23 @@ echo [0] 返回
 %line%
 echo:
 call :dk_color %_Green% "使用鍵盤選擇選單選項:"
-choice /C:AENOPJRVWLDT10 /N
+choice /C:AENOPJRVWLKDT10 /N
 set _el=!errorlevel!
-if !_el!==14 goto :oemenu
-if !_el!==13 call :excludelist & goto :oe_editionchangefinal
-if !_el!==12 if defined Teams_st      (if "%Teams_st%"=="Off"      (set Teams_st=ON)      else (set Teams_st=Off))
-if !_el!==11 if defined OneDrive_st   (if "%OneDrive_st%"=="Off"   (set OneDrive_st=ON)   else (set OneDrive_st=Off))
-if !_el!==10 if defined Lync_st       (if "%Lync_st%"=="Off"       (set Lync_st=ON)       else (set Lync_st=Off))
-if !_el!==9  if defined Word_st       (if "%Word_st%"=="Off"       (set Word_st=ON)       else (set Word_st=Off))
-if !_el!==8  if defined Visio_st      (if "%Visio_st%"=="Off"      (set Visio_st=ON)      else (set Visio_st=Off))
-if !_el!==7  if defined Publisher_st  (if "%Publisher_st%"=="Off"  (set Publisher_st=ON)  else (set Publisher_st=Off))
-if !_el!==6  if defined Project_st    (if "%Project_st%"=="Off"    (set Project_st=ON)    else (set Project_st=Off))
-if !_el!==5  if defined PowerPoint_st (if "%PowerPoint_st%"=="Off" (set PowerPoint_st=ON) else (set PowerPoint_st=Off))
-if !_el!==4  if defined Outlook_st    (if "%Outlook_st%"=="Off"    (set Outlook_st=ON)    else (set Outlook_st=Off))
-if !_el!==3  if defined OneNote_st    (if "%OneNote_st%"=="Off"    (set OneNote_st=ON)    else (set OneNote_st=Off))
-if !_el!==2  if defined Excel_st      (if "%Excel_st%"=="Off"      (set Excel_st=ON)      else (set Excel_st=Off))
-if !_el!==1  if defined Access_st     (if "%Access_st%"=="Off"     (set Access_st=ON)     else (set Access_st=Off))
+if !_el!==15 goto :oemenu
+if !_el!==14 call :excludelist & goto :oe_editionchangefinal
+if !_el!==13 if defined Teams_st             (if "%Teams_st%"=="Off"             (set Teams_st=ON)             else (set Teams_st=Off))
+if !_el!==12 if defined OneDrive_st          (if "%OneDrive_st%"=="Off"          (set OneDrive_st=ON)          else (set OneDrive_st=Off))
+if !_el!==11 if defined OutlookForWindows_st (if "%OutlookForWindows_st%"=="Off" (set OutlookForWindows_st=ON) else (set OutlookForWindows_st=Off))
+if !_el!==10 if defined Lync_st              (if "%Lync_st%"=="Off"              (set Lync_st=ON)              else (set Lync_st=Off))
+if !_el!==9  if defined Word_st              (if "%Word_st%"=="Off"              (set Word_st=ON)              else (set Word_st=Off))
+if !_el!==8  if defined Visio_st             (if "%Visio_st%"=="Off"             (set Visio_st=ON)             else (set Visio_st=Off))
+if !_el!==7  if defined Publisher_st         (if "%Publisher_st%"=="Off"         (set Publisher_st=ON)         else (set Publisher_st=Off))
+if !_el!==6  if defined Project_st           (if "%Project_st%"=="Off"           (set Project_st=ON)           else (set Project_st=Off))
+if !_el!==5  if defined PowerPoint_st        (if "%PowerPoint_st%"=="Off"        (set PowerPoint_st=ON)        else (set PowerPoint_st=Off))
+if !_el!==4  if defined Outlook_st           (if "%Outlook_st%"=="Off"           (set Outlook_st=ON)           else (set Outlook_st=Off))
+if !_el!==3  if defined OneNote_st           (if "%OneNote_st%"=="Off"           (set OneNote_st=ON)           else (set OneNote_st=Off))
+if !_el!==2  if defined Excel_st             (if "%Excel_st%"=="Off"             (set Excel_st=ON)             else (set Excel_st=Off))
+if !_el!==1  if defined Access_st            (if "%Access_st%"=="Off"            (set Access_st=ON)            else (set Access_st=Off))
 goto :oe_excludeapps
 
 :excludelist
@@ -18439,6 +18450,7 @@ publisher
 visio
 word
 lync
+outlookforwindows
 onedrive
 teams
 ) do (

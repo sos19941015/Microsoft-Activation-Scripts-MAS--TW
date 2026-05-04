@@ -12,6 +12,9 @@ if (-not $args) {
 & {
     $psv = (Get-Host).Version.Major
     $troubleshoot = 'https://massgrave.dev/troubleshoot'
+    $DebugLog = Join-Path $env:TEMP 'MAS_loader_debug.log'
+    function Write-DebugLog { param([string]$Message) Add-Content -Path $DebugLog -Value ((Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' ' + $Message) }
+    Write-DebugLog ('Loader started. args=' + (@($args) -join ' '))
 
     if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {
         $ExecutionContext.SessionState.LanguageMode
@@ -97,6 +100,7 @@ if (-not $args) {
     $rand = [Guid]::NewGuid().Guid
     $isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
     $FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
+    Write-DebugLog ("Temp cmd path: " + $FilePath)
     $response = $response.TrimStart([char]0xFEFF)
     $cmdContent = "@::: $rand `r`n$response"
         $utf8Bom = New-Object System.Text.UTF8Encoding $true
@@ -116,16 +120,18 @@ if (-not $args) {
         }
         $argLine = ('"{0}" -el -qedit' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
+        Write-DebugLog ("Launching elevated cmd with argLine: " + $argLine)
         $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
-        $argLine = ('"{0}" -el -qedit' -f $FilePath)
+        $argLine = ('"{0}" -el' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
-        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
-        $p.WaitForExit()
+        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)
+        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs
+        Write-DebugLog ("Elevated cmd (psv>=3) finished")
     }	
 	
     CheckFile $FilePath
-    Remove-Item -Path $FilePath
+    Write-DebugLog ("Keeping temp file for debug: " + $FilePath)
 } @args
