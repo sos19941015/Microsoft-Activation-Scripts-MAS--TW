@@ -50,11 +50,13 @@ Goal: translate user-facing text without changing parser-visible structure, exec
 - For helper calls like `call :dk_color "text"` or other label-based UI helpers, extract only the quoted user-facing text spans and leave the command structure untouched.
 - Keep spacing and escaping stable. In batch files, small changes to `^`, `%`, `!`, `&`, `|`, `<`, `>`, or trailing spaces can change behavior.
 - If a translated line ends with non-ASCII text, verify the target runtime and encoding strategy. Some CMD flows need explicit `chcp 65001` or a trailing ASCII-safe character to avoid line-join issues.
-
+- `cmd.exe` has a critical parsing bug: if a batch file contains both a **UTF-8 BOM** and **Unix-style LF (`\n`)** line endings, byte-offset calculations break completely. The interpreter will misalign and try to execute fragments of text (like the middle of a comment), causing immediate crashes. Always ensure translated batch files are saved with standard Windows **CRLF (`\r\n`)** line endings.
 ## PowerShell File Rules
 
 - Distinguish between PowerShell code executed from a string and PowerShell code executed from a `.ps1` file. A script may appear fine under `iex` yet still fail under `powershell -File`.
 - If the script contains translated non-ASCII UI text and must support Windows PowerShell file execution, prefer `UTF-8 with BOM` output.
+- When modifying PowerShell loaders that download and execute batch files, **never strip elevation arguments** (like `-Verb RunAs` or `-el`) to bypass UAC. Doing so breaks the execution context required by the downstream batch script.
+- If a loader downloads raw script content from version control (e.g., GitHub Raw), line endings may arrive normalized as LF. Before saving this string to a `.cmd` file with a UTF-8 BOM, **you must normalize LF to CRLF** (e.g., using ``$text -replace "(?<!`r)`n", "`r`n"``). Failing to do so triggers the `cmd.exe` offset crash bug.
 - Be careful with `Start-Process -ArgumentList`. Do not pass raw `$args` arrays into places that expect a single string. Build a stable command string when launching `cmd.exe /c ...`.
 
 ## Guardrails
