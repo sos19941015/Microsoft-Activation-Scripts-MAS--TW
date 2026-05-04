@@ -101,7 +101,7 @@ if (-not $args) {
     $isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
     $FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
     Write-DebugLog ("Temp cmd path: " + $FilePath)
-    $response = $response.TrimStart([char]0xFEFF)
+    $response = $response.TrimStart([char]0xFEFF) -replace "(?<!`r)`n", "`r`n"
     $cmdContent = "@::: $rand `r`n$response"
         $utf8Bom = New-Object System.Text.UTF8Encoding $true
         [System.IO.File]::WriteAllText($FilePath, $cmdContent, $utf8Bom)
@@ -125,11 +125,11 @@ if (-not $args) {
         $p.WaitForExit()
     }
     else {
-        $argLine = ('"{0}"' -f $FilePath)
+        $argLine = ('"{0}" -el' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
-        Write-DebugLog ("Launching cmd (psv>=3, no pre-elevation) with argLine: " + $argLine)
-        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait
-        Write-DebugLog ("Cmd (psv>=3) finished")
+        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)
+        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs
+        Write-DebugLog ("Elevated cmd (psv>=3) finished")
     }	
 	
     CheckFile $FilePath
