@@ -125,11 +125,11 @@ if (-not $args) {
         $p.WaitForExit()
     }
     else {
-        $argLine = ('"{0}" -el' -f $FilePath)
+        $argLine = ('"{0}"' -f $FilePath)
         if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
-        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)
-        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs
-        Write-DebugLog ("Elevated cmd (psv>=3) finished")
+        Write-DebugLog ("Launching cmd (psv>=3, no pre-elevation) with argLine: " + $argLine)
+        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait
+        Write-DebugLog ("Cmd (psv>=3) finished")
     }	
 	
     CheckFile $FilePath
