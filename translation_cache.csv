@@ -685,3 +685,6 @@ Error Found In SPP Registries,SPP 註冊表中發現錯誤
 [1] Continue [0] __PH_0__ :,[1] 繼續 [0] __PH_0__ :
 "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '__PH_0__' -Name 'Autorun'",發現自動運行註冊表，CMD可能崩潰! `n手動複製貼上以下指令來修復...`nRemove-ItemProperty -Path '__PH_0__' -Name 'Autorun'
 Done,完畢
+Other options - StaticCID,其他選項 - 靜態 CID
+Return to the previous menu and select StaticCID activation method. Internet connection is required to activate.,返回上一層選單，選擇StaticCID啟動方式。需要網路連線才能啟動。
+Unable to generate GUID with PowerShell.,無法使用 PowerShell 產生 GUID。

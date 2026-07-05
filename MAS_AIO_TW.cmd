@@ -3,7 +3,7 @@
 @::Is a real person even the one deciding to flag this or is it Copilot told to flag anything it decides not to like?
 @::If a campaign is using this script as a cover, please flag parts of the campaign instead of the script. This isn't the first time we experienced collateral damage due to campaigns completely unrelated to us.
 @::If you disagree that MAS is not malicious, we would appreciate if you contacted us to explain what constitutes MAS as "Sonbokli" and we'll look into it. Thank you. 
-@set masver=3.11
+@set masver=3.12
 @setlocal DisableDelayedExpansion
 @echo off
 chcp 65001 >nul
@@ -42,9 +42,20 @@ set "Path=%SystemRoot%\Sysnative;%SystemRoot%;%SystemRoot%\Sysnative\Wbem;%Syste
 set "ComSpec=%SysPath%\cmd.exe"
 set "PSModulePath=%ProgramFiles%\WindowsPowerShell\Modules;%SysPath%\WindowsPowerShell\v1.0\Modules"
 
+cd /d "%SysPath%"
+
+:: Workaround for https://github.com/microsoft/terminal/issues/15212, when %0 starts with a quote %0 parameter expansion is not specialcased.
+:: Changing %0 to something that is not quoted bypasses the issue.
+goto arg_workaround_end
+:arg_workaround
+set "_cmdf=%~f0"
+exit /b
+:arg_workaround_end
+
+call :arg_workaround
+
 set re1=
 set re2=
-set "_cmdf=%~f0"
 for %%# in (%*) do (
 if /i "%%#"=="re1" set re1=1
 if /i "%%#"=="re2" set re2=1
@@ -92,8 +103,7 @@ cls
 
 ::  Check LF line ending
 
-pushd "%~dp0"
->nul findstr /v "$" "%~nx0" && (
+>nul findstr /v "$" "%_cmdf%" && (
 echo:
 echo 錯誤 - 腳本存在 LF 行結束問題或腳本結尾缺少空白行。 
 echo:
@@ -102,10 +112,8 @@ echo 檢查此網頁尋求協助 - %mas%troubleshoot
 echo:
 echo:
 ping 127.0.0.1 -n 20 >nul
-popd
 exit /b
 )
-popd
 
 ::========================================================================================================================================
 
@@ -189,10 +197,9 @@ goto dk_done
 set "_work=%~dp0"
 if "%_work:~-1%"=="\" set "_work=%_work:~0,-1%"
 
-set "_batf=%~f0"
-set "_batp=%_batf:'=''%"
+set "_batp=%_cmdf:'=''%"
 
-set _PSarg="""%~f0""" -el %_args%
+set _PSarg="""%_cmdf%""" -el %_args%
 set _PSarg=%_PSarg:'=''%
 
 set "_ttemp=%userprofile%\AppData\Local\Temp"
@@ -201,7 +208,7 @@ setlocal EnableDelayedExpansion
 
 ::========================================================================================================================================
 
-echo "!_batf!" | find /i "!_ttemp!" %nul1% && (
+echo "!_cmdf!" | find /i "!_ttemp!" %nul1% && (
 if /i not "!_work!"=="!_ttemp!" (
 %eline%
 echo 該腳本是從臨時資料夾啟動的。 
@@ -331,11 +338,11 @@ reg query HKCU\Console /v QuickEdit %nul2% | find /i "0x0" %nul1% && set resetQE
 reg add HKCU\Console /v QuickEdit /t REG_DWORD /d 0 /f %nul1%
 
 if defined terminal (
-start conhost.exe "!_batf!" %_args% -qedit
+start conhost.exe "!_cmdf!" %_args% -qedit
 start reg add HKCU\Console /v QuickEdit /t REG_DWORD /d %resetQE% /f %nul1%
 exit /b
 ) else if %resetQE% EQU 1 (
-start cmd.exe /c ""!_batf!" %_args% -qedit"
+start cmd.exe /c ""!_cmdf!" %_args% -qedit"
 start reg add HKCU\Console /v QuickEdit /t REG_DWORD /d %resetQE% /f %nul1%
 exit /b
 )
@@ -2332,7 +2339,7 @@ set key=%%B
 REM Generate ticket
 
 if %1==ticket if "%key%"=="%%B" (
-set "SessionIdStr=OSMajorVersion=5;OSMinorVersion=1;OSPlatformId=2;PP=0;Pfn=Microsoft.Windows.%%C.%%D_8wekyb3d8bbwe;PKeyIID=465145217131314304264339481117862266242033457260311819664735280;"
+set "SessionIdStr=OSMajorVersion=5;OSMinorVersion=1;OSPlatformId=2;PP=0;Pfn=Microsoft.Windows.%%C.%%D_8wekyb3d8bbwe;PKeyIID=221306452340115677963964261259250411589493550039199940431586886;"
 %psc% "$f=[IO.File]::ReadAllText('!_batp!') -split ':sign\:.*';. ([scriptblock]::Create($f[1]))"
 )
 
@@ -3230,17 +3237,8 @@ set ierror=mklink sppcs.dll
 goto :oh_hookinstall_error
 )
 
-set exhook=
-if exist "!_work!\BIN\%_hook%" set exhook=1
-
 if not exist "%_hookPath%\sppc.dll" (
-if defined exhook (
-pushd "!_work!\BIN\"
-copy /y /b "%_hook%" "%_hookPath%\sppc.dll" %nul%
-popd
-) else (
 call :oh_extractdll "%_hookPath%\sppc.dll" "%offset%"
-)
 )
 if not exist "%_hookPath%\sppc.dll" (
 set ierror=Copy
@@ -3249,11 +3247,7 @@ goto :oh_hookinstall_error
 
 echo:
 echo 符號連結系統的 sppc.dll ["%_hookPath%\sppcs.dll"] [成功]
-if defined exhook (
-echo 正在將自訂 %_hook% 複製到 ["%_hookPath%\sppc.dll"] [成功]
-) else (
 echo 將自訂 %_hook% 提取到 ["%_hookPath%\sppc.dll"] [成功]
-)
 
 goto :oh_hookinstall_error
 
@@ -3319,18 +3313,8 @@ set ierror=mklink sppcs.dll
 goto :oh_hookinstall_error
 )
 
-set exhook=
-if exist "!_work!\BIN\%_hook68%" if exist "!_work!\BIN\%_hook86%"  set exhook=1
-
-if defined exhook (
-pushd "!_work!\BIN\"
-if defined _osppPath68 (copy /y /b "%_hook68%" "%_osppPath68%\OSPPC.DLL" %nul%)
-if defined _osppPath86 (copy /y /b "%_hook86%" "%_osppPath86%\OSPPC.DLL" %nul%)
-popd
-) else (
 if defined _osppPath68 (set _hook=%_hook68%&call :oh_extractdll "%_osppPath68%\OSPPC.DLL" "%offset68%")
 if defined _osppPath86 (set _hook=%_hook86%&call :oh_extractdll "%_osppPath86%\OSPPC.DLL" "%offset86%")
-)
 
 if defined _osppPath68 (if not exist "%_osppPath68%\OSPPC.DLL" set ierror=1)
 if defined _osppPath86 (if not exist "%_osppPath86%\OSPPC.DLL" set ierror=1)
@@ -3343,13 +3327,8 @@ goto :oh_hookinstall_error
 echo:
 if defined _osppPath68 (echo Renaming OSPPC.DLL to sppcs.dll         ["%_osppPath68%\sppcs.dll"])
 if defined _osppPath86 (echo Renaming OSPPC.DLL to sppcs.dll         ["%_osppPath86%\sppcs.dll"])
-if defined exhook (
-if defined _osppPath68 (echo Copying Custom %_hook68% to            ["%_osppPath68%\OSPPC.DLL"])
-if defined _osppPath86 (echo Copying Custom %_hook86% to            ["%_osppPath86%\OSPPC.DLL"])
-) else (
 if defined _osppPath68 (echo Extracting Custom %_hook68% to         ["%_osppPath68%\OSPPC.DLL"])
 if defined _osppPath86 (echo Extracting Custom %_hook86% to         ["%_osppPath86%\OSPPC.DLL"])
-)
 
 echo 符號連結重新命名 sppcs.dll ["%_hookPath%\sppcs.dll"]
 
@@ -4097,7 +4076,7 @@ $Writer.Write($unixTimestamp)
 $Writer.Flush()
 
 # Write the current state of the MemoryStream to a temporary file
-$tempFilePath = "$env:windir\Temp\$([System.IO.Path]::GetRandomFileName())"
+$tempFilePath = "$env:windir\Temp\$([Guid]::NewGuid().Guid)"
 [IO.File]::WriteAllBytes($tempFilePath, $MemoryStream.ToArray())
 
 # Update hash using the temporary file
@@ -4148,12 +4127,6 @@ $MemoryStream.Close()
 ::  Here you can check how to extract sppc.dll files from base64
 ::
 ::  For any further question, feel free to contact us on mass{}grave{dot}dev/contactus
-::
-::========================================================================================================================================
-::
-::  If you want to use a different sppc.dll or without base64 format, then create a folder named "BIN" where this script is located and 
-::  place these two files in that "BIN" folder. sppc32.dll, sppc64.dll
-::  Script will auto pick that instead of using the below from base64 section. You can also delete the below code in that case.
 ::
 ::========================================================================================================================================
 ::
@@ -4468,7 +4441,9 @@ echo:
 echo        ______________________________________________________________
 echo: 
 call :dk_color2 %_White% "             [1] " %_Green% "汽車"
-echo                  Builds ^>= 26100 - StaticCID (KMS4k if offline)
+echo                  Builds ^>= 26100 - Windows only  - KMS4k
+echo                                    其他選項 - 靜態 CID
+echo:
 echo                  Builds ^<  26100 - ZeroCID
 echo              __________________________________________________
 echo: 
@@ -4589,6 +4564,9 @@ if /i %_actmethod%==KMS4k set tsmethod=KMS4k
 if /i %_actmethod%==Auto (
 if %winbuild% GEQ 26100 (
 set tsmethod=StaticCID
+if !_actwin!==1 if not !_actwinesuoff!==1 (
+set tsmethod=KMS4k
+)
 ) else (
 set tsmethod=ZeroCID
 )
@@ -4704,7 +4682,7 @@ call :dk_color %Red% "檢查啟動 ID [未找到] [%tsedition%] [%osSKU%]"
 set error=1
 if /i %tsmethod%==KMS4k (
 if /i %_actmethod%==Auto (
-call :dk_color %Blue% "連接網路並重試。腳本將使用StaticCID啟動方法。"
+call :dk_color %Blue% "返回上一層選單，選擇StaticCID啟動方式。需要網路連線才能啟動。"
 ) else (
 call :dk_color %Blue% "使用上一選單中的非 KMS4K 啟動選項。"
 )
@@ -5876,7 +5854,7 @@ if %_actman%==0 (if not defined showfix call :dk_color %Blue% "%_fixmsg%")
 set fixes=%fixes% %mas%troubleshoot
 call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
 ) else (
-if /i %tsmethod%==KMS4k if %winbuild% GEQ 26100 (
+if /i %tsmethod%==KMS4k if %winbuild% GEQ 26100 if %_actwin%==1 (
 echo:
 call :dk_color %Gray% "在 Windows 設定中，您可能會看到啟動續訂通知，可以忽略該通知。"
 if /i %_actmethod%==Auto call :dk_color %Gray% "To avoid this notification, run the script with an internet connection to use the StaticCID method."
@@ -11262,27 +11240,27 @@ namespace LibTSforge.PhysicalStore
 }
 '@
 $ErrorActionPreference = 'Stop'
-$binPath = "$env:_work\BIN\LibTSforge.dll"
 $psMajorVer = (Get-Host).Version.Major
 $build = [System.Environment]::OSVersion.Version.Build
 
-if (Test-Path -LiteralPath $binPath) {
-    Write-Host "LibTSforge.dll found in BIN folder. Loading the DLL..."
-    Add-Type -Path $binPath
-}
-else {
-    $cp = [CodeDom.Compiler.CompilerParameters] [string[]]@("System.dll", "System.Core.dll", "System.ServiceProcess.dll", "System.Xml.dll", "System.Xml.Linq.dll")
-    if ($psMajorVer -le 2) { $cp.CompilerOptions = "/define:POWERSHELL2 /unsafe" } else { $cp.CompilerOptions = "/unsafe" }
-    $lang = if ($psMajorVer -gt 2) { "CSharp" } else { "CSharpVersion3" }
+$cp = [CodeDom.Compiler.CompilerParameters] [string[]]@("System.dll", "System.Core.dll", "System.ServiceProcess.dll", "System.Xml.dll", "System.Xml.Linq.dll")
+if ($psMajorVer -le 2) { $cp.CompilerOptions = "/define:POWERSHELL2 /unsafe" } else { $cp.CompilerOptions = "/unsafe" }
+$lang = if ($psMajorVer -gt 2) { "CSharp" } else { "CSharpVersion3" }
 
-    $ctemp = "$env:SystemRoot\Temp\"
-    if (-Not (Test-Path -Path $ctemp)) { New-Item -Path $ctemp -ItemType Directory > $null }
-    $env:TMP = $ctemp
-    $env:TEMP = $ctemp
+$ctemp = "$env:SystemRoot\Temp\$([Guid]::NewGuid().Guid)\"
+if (-Not (Test-Path -Path $ctemp)) { New-Item -Path $ctemp -ItemType Directory > $null }
+$env:TMP = $ctemp
+$env:TEMP = $ctemp
 
-    $cp.GenerateInMemory = $true
-    Add-Type -Language $lang -TypeDefinition $src -CompilerParameters $cp
+$cp.GenerateInMemory = $true
+Add-Type -Language $lang -TypeDefinition $src -CompilerParameters $cp
+
+try {
+    $cp.TempFiles.Dispose()
+} catch {
+# Older .NET Framework versions do not have that method, but they also don't create the folder that it removes.
 }
+Remove-Item -Path $ctemp
 
 if ($env:_debug -eq '0') {
     [LibTSforge.Logger]::HideOutput = $true
@@ -11384,7 +11362,7 @@ if (-not $env:resetstuff) {
                     if ($env:tsmethod -eq "KMS4k") {
                         if ($build -ge 26100) {
                             Write-Host "[$prodName] is activated with KMS4k for over 4,000 years." -ForegroundColor White -BackgroundColor DarkGreen
-                            Write-Host "From build 26100.7019, Windows will always display and stay at 180 days remaining if the actual period is longer." -ForegroundColor White -BackgroundColor Darkgray
+                            Write-Host "From build 26100.7019, Windows will always display a remaining activation period of 180 days in Settings." -ForegroundColor White -BackgroundColor Darkgray
                         }
                         else {
                             Write-Host "[$prodName] is activated till $([DateTime]::Now.AddMinutes($GracePeriodStatus).ToString('yyyy-MM-dd HH:mm:ss')) with $env:tsmethod." -ForegroundColor White -BackgroundColor DarkGreen
@@ -16902,8 +16880,8 @@ goto :at_menu
 
 ::  https://stackoverflow.com/a/46268232
 
-set "ddf="%SystemRoot%\Temp\%Random%%Random%%Random%%Random%""
-%nul% del /q /f %ddf%
+for /f %%G in ('%psc% "[Guid]::NewGuid().Guid"') do set "randguid=%%G"
+set "ddf="%SystemRoot%\Temp\%Random%%randguid%""
 echo/.New Cabinet>%ddf%
 echo/.set Cabinet=ON>>%ddf%
 echo/.set CabinetFileCountThreshold=0;>>%ddf%
@@ -16925,7 +16903,6 @@ for /f "tokens=* delims=" %%D in ('dir /a:-D/b/s "%SystemRoot%\logs\%1"') do (
  echo/"%%~fD"  /inf=no;>>%ddf%
 )
 makecab /F %ddf% /D DiskDirectory1="" /D CabinetNameTemplate="!desktop!\%2_%_time%.cab"
-del /q /f %ddf%
 exit /b
 
 ::========================================================================================================================================
@@ -17891,7 +17868,7 @@ if($false -eq ($installCandidates.Keys -contains $SetEdition)) {
     Exit 1
 }
 
-$xmlPath = $Env:SystemRoot + '\Temp' + '\CbsUpgrade.xml'
+$xmlPath = $Env:SystemRoot + '\Temp' + "\$([Guid]::NewGuid().Guid)CbsUpgrade.xml"
 
 Write-UpgradeXml -RemovalCandidates $removalCandidates `
     -InstallCandidates $installCandidates[$SetEdition] `
@@ -18185,6 +18162,18 @@ call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%trouble
 goto dk_done
 )
 
+set "o_randguid="
+for /f %%G in ('%psc% "[Guid]::NewGuid().Guid" ^| findstr /r "^[0123456789abcdef]*-[0123456789abcdef]*-[0123456789abcdef]*-[0123456789abcdef]*-[0123456789abcdef]*$"') do set "o_randguid=%%G"
+if not defined o_randguid (
+%eline%
+echo 無法使用 PowerShell 產生 GUID。 
+echo 正在中止...
+set fixes=%fixes% %mas%troubleshoot
+call :dk_color2 %Blue% "檢查此網頁尋求協助 - " %_Yellow% " %mas%troubleshoot"
+goto dk_done
+)
+md "%SystemRoot%\Temp\%o_randguid%\"
+
 ::========================================================================================================================================
 
 :oemenu
@@ -18283,7 +18272,7 @@ mode 98, 45
 %psc% "&{$W=$Host.UI.RawUI.WindowSize;$B=$Host.UI.RawUI.BufferSize;$W.Height=44;$B.Height=100;$Host.UI.RawUI.WindowSize=$W;$Host.UI.RawUI.BufferSize=$B;}" %nul%
 )
 
-if not exist %SystemRoot%\Temp\%list%.txt (
+if not exist %SystemRoot%\Temp\%o_randguid%\%list%.txt (
 %eline%
 echo 無法產生可用版本清單。 
 set fixes=%fixes% %mas%troubleshoot
@@ -18305,7 +18294,7 @@ if %winbuild% LSS 10240 (
 echo 2019/2021/2024 等不受支援的產品不在此清單中。 
 ) else (
 for %%# in (2019 2021 2024) do (
-find /i "%%#" "%SystemRoot%\Temp\%list%.txt" %nul1% || (
+find /i "%%#" "%SystemRoot%\Temp\%o_randguid%\%list%.txt" %nul1% || (
 if defined _notfound (set _notfound=%%#, !_notfound!) else (set _notfound=%%#)
 )
 )
@@ -18314,7 +18303,7 @@ if defined _notfound call :dk_color %Gray% "Office !_notfound! is not in this li
 %line%
 echo:
 
-for /f "usebackq delims=" %%A in (%SystemRoot%\Temp\%list%.txt) do (
+for /f "usebackq delims=" %%A in (%SystemRoot%\Temp\%o_randguid%\%list%.txt) do (
 set /a counter+=1
 if !counter! LSS 10 (
 echo [!counter!]  %%A
@@ -18347,7 +18336,7 @@ set suites=
 echo %list% | find /i "Suites" %nul1% && (
 set suites=1
 %psc% "$f=[IO.File]::ReadAllText('!_batp!') -split ':getappnames\:.*';. ([scriptblock]::Create($f[1]))"
-if not exist %SystemRoot%\Temp\getAppIds.txt (
+if not exist %SystemRoot%\Temp\%o_randguid%\getAppIds.txt (
 %eline%
 echo 無法產生可用應用程式清單。 
 set fixes=%fixes% %mas%troubleshoot
@@ -18369,7 +18358,7 @@ Visio
 Word
 ) do (
 if defined suites (
-find /i "%%#" "%SystemRoot%\Temp\getAppIds.txt" %nul1% && (set %%#_st=On) || (set %%#_st=)
+find /i "%%#" "%SystemRoot%\Temp\%o_randguid%\getAppIds.txt" %nul1% && (set %%#_st=On) || (set %%#_st=)
 ) else (
 set %%#_st=
 )
@@ -18993,11 +18982,11 @@ exit /b
 
 :oe_tempcleanup
 
-del /f /q %SystemRoot%\Temp\SingleApps_Volume.txt %nul%
-del /f /q %SystemRoot%\Temp\SingleApps_Retail.txt %nul%
-del /f /q %SystemRoot%\Temp\Suites_Volume.txt %nul%
-del /f /q %SystemRoot%\Temp\Suites_Retail.txt %nul%
-del /f /q %SystemRoot%\Temp\getAppIds.txt %nul%
+del %SystemRoot%\Temp\%o_randguid%\SingleApps_Volume.txt %nul%
+del %SystemRoot%\Temp\%o_randguid%\SingleApps_Retail.txt %nul%
+del %SystemRoot%\Temp\%o_randguid%\Suites_Volume.txt %nul%
+del %SystemRoot%\Temp\%o_randguid%\Suites_Retail.txt %nul%
+del %SystemRoot%\Temp\%o_randguid%\getAppIds.txt %nul%
 exit /b
 
 ::========================================================================================================================================
@@ -19151,7 +19140,7 @@ if ($windowsBuild -lt 9200) {
 :getlist:
 $xmlPath1 = $env:_c2rXml
 $xmlPath2 = $env:_masterxml
-$outputDir = $env:SystemRoot + "\Temp\"
+$outputDir = $env:SystemRoot + "\Temp\$env:o_randguid\"
 $buildNumber = [System.Environment]::OSVersion.Version.Build
 $excludedKeywords = @("2019", "2021", "2024")
 $productReleaseIds = @()
@@ -19211,7 +19200,7 @@ foreach ($section in $categories.Keys) {
 :getappnames:
 $xmlPath = $env:_masterxml
 $targetSkuId = $env:targetedition
-$outputDir = $env:SystemRoot + "\Temp\"
+$outputDir = $env:SystemRoot + "\Temp\$env:o_randguid\"
 $outputFile = Join-Path -Path $outputDir -ChildPath "getAppIds.txt"
 $excludeIds = @("shared", "PowerPivot", "PowerView", "MondoOnly", "OSM", "OSMUX", "Groove", "DCF")
 
