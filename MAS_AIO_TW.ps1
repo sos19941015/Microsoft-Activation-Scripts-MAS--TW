@@ -3,10 +3,10 @@
 # Having trouble launching this script? Check https://massgrave.dev for help.
 
 if (-not $args) {
-    Write-Host ''
+    Write-Host
     Write-Host 'Need help? Check our homepage: ' -NoNewline
     Write-Host 'https://massgrave.dev' -ForegroundColor Green
-    Write-Host ''
+    Write-Host
 }
 
 & {
@@ -118,18 +118,11 @@ if (-not $args) {
             Write-Warning "Command is running with x86 Powershell, run it with x64 Powershell instead..."
             return
         }
-        $argLine = ('"{0}" -el -qedit' -f $FilePath)
-        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
-        Write-DebugLog ("Launching elevated cmd with argLine: " + $argLine)
-        $p = saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Verb RunAs -PassThru
+        $p = Start-Process -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Verb RunAs -PassThru
         $p.WaitForExit()
     }
     else {
-        $argLine = ('"{0}" -el' -f $FilePath)
-        if ($args) { $argLine += ' ' + (($args | ForEach-Object { $_.ToString() }) -join ' ') }
-        Write-DebugLog ("Launching elevated cmd (psv>=3) with argLine: " + $argLine)
-        saps -FilePath $env:ComSpec -ArgumentList '/c', $argLine -Wait -Verb RunAs
-        Write-DebugLog ("Elevated cmd (psv>=3) finished")
+        Start-Process -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el $args""" -Wait -Verb RunAs
     }	
 	
     CheckFile $FilePath
